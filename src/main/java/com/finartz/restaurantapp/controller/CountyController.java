@@ -1,0 +1,44 @@
+package com.finartz.restaurantapp.controller;
+
+import com.finartz.restaurantapp.model.County;
+import com.finartz.restaurantapp.model.County;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController("county")
+public class CountyController {
+
+    @Autowired
+    private CountyService countyService;
+
+    @PostMapping
+    public ResponseEntity<County> create(@RequestBody County county){
+        return new ResponseEntity(countyService.create(county), HttpStatus.CREATED);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<County> get(@PathVariable Long id){
+        return new ResponseEntity(countyService.getById(id), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<County>> getAll(){
+        return new ResponseEntity(countyService.getAll(), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<County> update(@RequestBody County county){
+        return new ResponseEntity(countyService.update(county), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<County> deleteById(@PathVariable Long id){
+        countyService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+}
