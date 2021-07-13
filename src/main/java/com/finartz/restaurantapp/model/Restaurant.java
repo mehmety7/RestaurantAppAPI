@@ -20,6 +20,7 @@ public class Restaurant extends BaseDTO{
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20) default 'WAITING' ")
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
