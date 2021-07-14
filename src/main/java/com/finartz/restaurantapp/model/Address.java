@@ -35,5 +35,8 @@ public class Address extends BaseDTO{
     private Branch branch;
 
     private String district;
+
     private String other_content;
+
+    private Boolean enable;
 }

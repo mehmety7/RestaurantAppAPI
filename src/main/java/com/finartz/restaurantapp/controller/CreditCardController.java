@@ -8,36 +8,35 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/creditcard")
+@RestController("creditcard")
 public class CreditCardController {
 
     @Autowired
-    private CreditCardService cardService;
+    private CreditCardService creditcardService;
 
-    @PostMapping("create")
-    public ResponseEntity<CreditCard> create(@RequestBody CreditCard card){
-        return new ResponseEntity<>(cardService.create(card), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<CreditCard> create(@RequestBody CreditCard creditcard){
+        return new ResponseEntity(creditcardService.create(creditcard), HttpStatus.CREATED);
     }
 
-    @PutMapping("update")
-    public ResponseEntity<CreditCard> update(@RequestBody CreditCard card){
-        return new ResponseEntity<>(cardService.update(card), HttpStatus.OK);
-    }
-
-    @GetMapping("get/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<CreditCard> get(@PathVariable Long id){
-        return new ResponseEntity<>(cardService.getById(id), HttpStatus.OK);
+        return new ResponseEntity(creditcardService.getById(id), HttpStatus.OK);
     }
 
-    @GetMapping("getAll")
+    @GetMapping
     public ResponseEntity<List<CreditCard>> getAll(){
-        return new ResponseEntity<>(cardService.getAll(), HttpStatus.OK)
+        return new ResponseEntity(creditcardService.getAll(), HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id){
-        cardService.deleteById(id);
+    @PutMapping
+    public ResponseEntity<CreditCard> update(@RequestBody CreditCard creditcard){
+        return new ResponseEntity(creditcardService.update(creditcard), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<CreditCard> deleteById(@PathVariable Long id){
+        creditcardService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -23,7 +23,12 @@ public class Item {
     @Column(name = "unit_type")
     private String unitType;
 
-    @ManyToMany(mappedBy = "itemList", fetch = FetchType.EAGER) // item bazında arama yapılınca meal'lar goruntulenebilsin
+    @ManyToMany(mappedBy = "itemList")
     private List<Meal> mealList;
 
+    public Item(Long id, String name, String unitType) {
+        this.id = id;
+        this.name = name;
+        this.unitType = unitType;
+    }
 }

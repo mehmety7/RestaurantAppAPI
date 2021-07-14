@@ -19,13 +19,14 @@ public class Meal extends BaseDTO{
     private Long id;
 
     private String name;
+
     private Float price;
 
     @ManyToOne
     @JoinColumn(name = "menu_id", referencedColumnName = "id", nullable = false)
     private Menu menu;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(name = "meal_item"
             , joinColumns = @JoinColumn(name = "meal_id", referencedColumnName = "id", nullable = false)
             , inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false))

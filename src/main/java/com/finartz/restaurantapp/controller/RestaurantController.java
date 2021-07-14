@@ -8,36 +8,36 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/restaurant/")
+@RestController("restaurant")
 public class RestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
 
-    @PostMapping("create")
+    @PostMapping
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant){
-        return new ResponseEntity<>(restaurantService.create(restaurant), HttpStatus.CREATED);
+        return new ResponseEntity(restaurantService.create(restaurant), HttpStatus.CREATED);
     }
 
-    @PutMapping("update")
-    public ResponseEntity<Restaurant> update(@RequestBody Restaurant restaurant){
-        return new ResponseEntity<>(restaurantService.update(restaurant), HttpStatus.OK);
-    }
-
-    @GetMapping("get/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Restaurant> get(@PathVariable Long id){
-        return new ResponseEntity<>(restaurantService.getById(id), HttpStatus.OK);
+        return new ResponseEntity(restaurantService.getById(id), HttpStatus.OK);
     }
 
-    @GetMapping("getAll")
+    @GetMapping
     public ResponseEntity<List<Restaurant>> getAll(){
         return new ResponseEntity(restaurantService.getAll(), HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id){
+    @PutMapping
+    public ResponseEntity<Restaurant> update(@RequestBody Restaurant restaurant){
+        return new ResponseEntity(restaurantService.update(restaurant), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Restaurant> deleteById(@PathVariable Long id){
         restaurantService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
