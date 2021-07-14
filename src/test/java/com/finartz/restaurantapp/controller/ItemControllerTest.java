@@ -1,76 +1,48 @@
 package com.finartz.restaurantapp.controller;
 
+import com.finartz.restaurantapp.data.TestData;
 import com.finartz.restaurantapp.model.Item;
 import com.finartz.restaurantapp.repository.ItemRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
+import com.finartz.restaurantapp.service.ItemService;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
+import javax.transaction.Transactional;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(properties = "spring.main.banner-mode=off")
+@Transactional
 public class ItemControllerTest {
 
-    @Mock
-    private ItemRepository itemRepository;
-
-    @InjectMocks
+    @Autowired
     private ItemController itemController;
 
+    @Autowired
+    private ItemService itemService;
 
-    @Test
-    public void testAddItem()
-    {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+    @Autowired
+    private ItemRepository itemRepository;
 
-        when(itemRepository.save(any(Item.class))).thenReturn(true);
 
-        Item item = new Item(1L, "Hamburger", "piece");
-        ResponseEntity<Item> responseEntity = itemController.create(item);
-
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(201);
-        assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/1");
+    @Before
+    public void init() {
+        itemRepository.deleteAll();
+        itemService.create(TestData.createItems().get(0));
+        itemService.create(TestData.createItems().get(1));
     }
 
-
     @Test
-    public void testFindAll()
-    {
-        // given
-        Item item1 = new Item(1L, "Hamburger", "piece");
-        Item item2 = new Item(2L, "Cheeseburger", "piece");
-        List<Item> items = new ArrayList<>();
-        items.add(item1);
-        items.add(item2);
-
-        when(itemRepository.findAll()).thenReturn(items);
-
-        // when
-        ResponseEntity<List<Item>> result = itemController.getAll();
-
-        // then
-        assertThat(result.getBody().size()).isEqualTo(2);
-
-        assertThat(result.getBody().get(0).getName())
-                .isEqualTo(item1.getName());
-
-        assertThat(result.getBody().get(1).getName())
-                .isEqualTo(item2.getName());
+    public void findAll_Success() {
+        ResponseEntity<List<Item>> response = itemController.getAll();
+        Assert.assertEquals(2, response.getBody().size());
     }
 
 }
