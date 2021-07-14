@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "meals")
 public class Meal extends BaseDTO{
 
@@ -20,7 +22,7 @@ public class Meal extends BaseDTO{
 
     private String name;
 
-    private Float price;
+    private Double price;
 
     @ManyToOne
     @JoinColumn(name = "menu_id", referencedColumnName = "id", nullable = false)

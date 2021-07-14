@@ -1,27 +1,27 @@
 package com.finartz.restaurantapp.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLInsert;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name="cities")
 public class City extends BaseDTO{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="city_id", referencedColumnName = "id", nullable=false)
-    private Set<County> countySet;
+    @OneToMany(mappedBy = "city", fetch = FetchType.EAGER)
+    private List<County> countyList;
 
 }

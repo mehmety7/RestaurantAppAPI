@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.User;
+import com.finartz.restaurantapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("user")
+@RestController
+@RequestMapping("user")
 public class UserController {
 
     @Autowired
@@ -19,14 +21,19 @@ public class UserController {
         return new ResponseEntity(userService.create(user), HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public ResponseEntity<List<User>> getAll(){
+        return new ResponseEntity(userService.getAll(), HttpStatus.OK);
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<User> get(@PathVariable Long id){
         return new ResponseEntity(userService.getById(id), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAll(){
-        return new ResponseEntity(userService.getAll(), HttpStatus.OK);
+    @GetMapping("email/{email}")
+    public ResponseEntity findByEmail(@PathVariable String email) {
+        return new ResponseEntity(userService.findByEmail(email), HttpStatus.OK);
     }
 
     @PutMapping

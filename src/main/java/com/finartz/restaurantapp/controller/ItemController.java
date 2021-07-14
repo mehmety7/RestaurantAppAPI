@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("item")
+@RestController
+@RequestMapping("item")
 public class ItemController {
 
     @Autowired

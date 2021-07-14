@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.model;
 
 import com.finartz.restaurantapp.model.enumerated.Status;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,12 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name="restaurants")
 public class Restaurant extends BaseDTO{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20) default 'WAITING' ")

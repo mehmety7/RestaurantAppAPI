@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.model;
 
 import com.finartz.restaurantapp.model.enumerated.Status;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,12 +12,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="branchs")
+@Builder
+@Table(name="branches")
 public class Branch extends BaseDTO{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
 
     @Enumerated(EnumType.STRING)
     private Status status;

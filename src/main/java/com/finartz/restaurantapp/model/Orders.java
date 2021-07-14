@@ -1,9 +1,19 @@
 package com.finartz.restaurantapp.model;
 
-import javax.persistence.*;
-import java.sql.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.*;
+import java.util.Date;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "orders")
 public class Orders extends BaseDTO{
 
@@ -11,10 +21,11 @@ public class Orders extends BaseDTO{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @CreationTimestamp
     private Date date;
 
     @Column(name = "total_price")
-    private Float totalPrice;
+    private Double totalPrice;
 
     @OneToOne
     @JoinColumn(name = "basket_id", referencedColumnName = "id", nullable = false)
@@ -23,4 +34,5 @@ public class Orders extends BaseDTO{
     @OneToOne
     @JoinColumn(name = "card_id", referencedColumnName = "id")
     private CreditCard creditCard;
+
 }

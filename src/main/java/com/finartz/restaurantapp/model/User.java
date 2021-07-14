@@ -2,17 +2,18 @@ package com.finartz.restaurantapp.model;
 
 import com.finartz.restaurantapp.model.enumerated.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name="users")
 public class User extends BaseDTO{
 
