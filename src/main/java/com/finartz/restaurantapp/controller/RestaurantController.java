@@ -1,6 +1,9 @@
 package com.finartz.restaurantapp.controller;
 
+import com.finartz.restaurantapp.model.Branch;
 import com.finartz.restaurantapp.model.Restaurant;
+import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("restaurant")
+@RestController
+@RequestMapping("restaurant")
 public class RestaurantController {
 
     @Autowired
@@ -27,6 +31,11 @@ public class RestaurantController {
     @GetMapping
     public ResponseEntity<List<Restaurant>> getAll(){
         return new ResponseEntity(restaurantService.getAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/waiting")
+    public ResponseEntity<List<Branch>> getWaiting(){
+        return new ResponseEntity(restaurantService.getByStatus(Status.WAITING), HttpStatus.OK);
     }
 
     @PutMapping

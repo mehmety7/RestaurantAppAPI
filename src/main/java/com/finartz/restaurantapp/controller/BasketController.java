@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.Basket;
+import com.finartz.restaurantapp.service.BasketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("basket")
+@RestController
+@RequestMapping("basket")
 public class BasketController {
 
     @Autowired

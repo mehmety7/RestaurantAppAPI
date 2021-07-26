@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.data;
 
-import com.finartz.restaurantapp.model.*;
+import com.finartz.restaurantapp.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,8 @@ public class TestData {
         items.add(firstItem);
 
         Item secondItem = new Item();
-        firstItem.setName("Cheeseburger");
-        firstItem.setUnitType("piece");
+        secondItem.setName("Cheeseburger");
+        secondItem.setUnitType("piece");
         items.add(secondItem);
 
         return items;

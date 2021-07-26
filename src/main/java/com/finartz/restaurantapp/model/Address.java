@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,12 +12,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name="addresses")
 public class Address extends BaseDTO{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
 
     @OneToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
