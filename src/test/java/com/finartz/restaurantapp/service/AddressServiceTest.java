@@ -3,25 +3,28 @@ package com.finartz.restaurantapp.service;
 import com.finartz.restaurantapp.model.Address;
 import com.finartz.restaurantapp.repository.AddressRepository;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class AddressServiceTest {
 
-    @Autowired
+    @InjectMocks
     private AddressService addressService;
 
-    @MockBean
+    @Mock
     private AddressRepository addressRepository;
+
 
     @Test
     public void whenFetchAll_thenReturnAllAddress() {
@@ -36,6 +39,16 @@ public class AddressServiceTest {
     }
 
     @Test
+    public void whenFetchById_thenReturnAddress() {
+        Address address1 = Address.builder().id(1l).name("Ev").build();
+
+        Mockito.when(addressRepository.findById(1L)).thenReturn(Optional.of(address1));
+
+        Address fetchedAddress = addressService.getById(1l);
+        assertEquals(address1.getId(), fetchedAddress.getId());
+    }
+
+    @Test
     public void whenAddAddress_thenReturnSavedRecord() {
         Address address = Address.builder().name("Ev").build();
         Mockito.doReturn(address).when(addressRepository).save(ArgumentMatchers.any());
@@ -44,5 +57,7 @@ public class AddressServiceTest {
 
         assertEquals(address.getName(), returnedAddress.getName());
     }
+
+
 
 }
