@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.County;
 import com.finartz.restaurantapp.repository.CountyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +9,11 @@ import java.util.List;
 @Service
 public class CountyService {
 
-    @Autowired
-    private CountyRepository countyRepository;
+    private final CountyRepository countyRepository;
+
+    public CountyService(CountyRepository countyRepository) {
+        this.countyRepository = countyRepository;
+    }
 
     public County create(County county){
         County save = countyRepository.save(county);

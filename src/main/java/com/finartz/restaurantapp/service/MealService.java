@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.Meal;
 import com.finartz.restaurantapp.repository.MealRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,22 +9,22 @@ import java.util.List;
 @Service
 public class MealService {
 
-    @Autowired
-    private MealRepository mealRepository;
+    private final MealRepository mealRepository;
+
+    public MealService(MealRepository mealRepository) {
+        this.mealRepository = mealRepository;
+    }
 
     public Meal create(Meal meal){
-        Meal save = mealRepository.save(meal);
-        return save;
+        return mealRepository.save(meal);
     }
 
     public List<Meal> getAll(){
-        List<Meal> meals = mealRepository.findAll();
-        return meals;
+        return mealRepository.findAll();
     }
 
     public Meal getById(Long id){
-        Meal meal = mealRepository.getById(id);
-        return meal;
+        return mealRepository.getById(id);
     }
 
     public Meal update(Meal meal){
@@ -45,4 +44,5 @@ public class MealService {
         }
         return meal;
     }
+
 }

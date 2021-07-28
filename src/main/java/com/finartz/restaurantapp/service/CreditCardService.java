@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.CreditCard;
 import com.finartz.restaurantapp.repository.CreditCardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +9,11 @@ import java.util.List;
 @Service
 public class CreditCardService {
 
-    @Autowired
-    private CreditCardRepository creditCardRepository;
+    private final CreditCardRepository creditCardRepository;
+
+    public CreditCardService(CreditCardRepository creditCardRepository) {
+        this.creditCardRepository = creditCardRepository;
+    }
 
     public CreditCard create(CreditCard creditCard){
         CreditCard save = creditCardRepository.save(creditCard);

@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.Menu;
 import com.finartz.restaurantapp.repository.MenuRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,22 +9,22 @@ import java.util.List;
 @Service
 public class MenuService {
 
-    @Autowired
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
+
+    public MenuService(MenuRepository menuRepository) {
+        this.menuRepository = menuRepository;
+    }
 
     public Menu create(Menu menu){
-        Menu save = menuRepository.save(menu);
-        return save;
+        return menuRepository.save(menu);
     }
 
     public List<Menu> getAll(){
-        List<Menu> menus = menuRepository.findAll();
-        return menus;
+        return menuRepository.findAll();
     }
 
     public Menu getById(Long id){
-        Menu menu = menuRepository.getById(id);
-        return menu;
+        return menuRepository.getById(id);
     }
 
     public Menu update(Menu menu){

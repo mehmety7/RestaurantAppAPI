@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.Comment;
 import com.finartz.restaurantapp.repository.CommentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +9,11 @@ import java.util.List;
 @Service
 public class CommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
+
+    public CommentService(CommentRepository commentRepository) {
+        this.commentRepository = commentRepository;
+    }
 
     public Comment create(Comment comment){
         Comment save = commentRepository.save(comment);

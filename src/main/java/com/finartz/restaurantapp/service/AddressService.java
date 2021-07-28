@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.Address;
 import com.finartz.restaurantapp.repository.AddressRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,34 +9,34 @@ import java.util.List;
 @Service
 public class AddressService {
 
-    @Autowired
-    private AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
 
-    public Address create(Address address){
-        Address save = addressRepository.save(address);
-        return save;
+    public AddressService(AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
     }
 
-    public List<Address> getAll(){
-        List<Address> addresses = addressRepository.findAll();
-        return addresses;
+    public Address create(Address address) {
+        return addressRepository.save(address);
     }
 
-    public Address getById(Long id){
-        Address address = addressRepository.getById(id);
-        return address;
+    public List<Address> getAll() {
+        return addressRepository.findAll();
     }
 
-    public Address update(Address address){
+    public Address getById(Long id) {
+        return addressRepository.getById(id);
+    }
+
+    public Address update(Address address) {
         Address update = addressRepository.getById(address.getId());
-        if(update != null) {
+        if (update != null) {
             addressRepository.save(address);
             return update;
         }
         return address;
     }
 
-    public Address deleteById(Long id){
+    public Address deleteById(Long id) {
         Address address = addressRepository.getById(id);
         if (address != null) {
             addressRepository.deleteById(id);

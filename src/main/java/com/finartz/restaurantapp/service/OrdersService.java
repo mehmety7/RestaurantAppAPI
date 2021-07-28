@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.Orders;
 import com.finartz.restaurantapp.repository.OrdersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,22 +9,22 @@ import java.util.List;
 @Service
 public class OrdersService {
 
-    @Autowired
-    private OrdersRepository ordersRepository;
+    private final OrdersRepository ordersRepository;
+
+    public OrdersService(OrdersRepository ordersRepository) {
+        this.ordersRepository = ordersRepository;
+    }
 
     public Orders create(Orders orders){
-        Orders save = ordersRepository.save(orders);
-        return save;
+        return ordersRepository.save(orders);
     }
 
     public List<Orders> getAll(){
-        List<Orders> ordersList = ordersRepository.findAll();
-        return ordersList;
+        return ordersRepository.findAll();
     }
 
     public Orders getById(Long id){
-        Orders orders = ordersRepository.getById(id);
-        return orders;
+        return ordersRepository.getById(id);
     }
 
     public Orders update(Orders orders){

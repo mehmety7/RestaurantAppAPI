@@ -3,7 +3,6 @@ package com.finartz.restaurantapp.service;
 import com.finartz.restaurantapp.model.Restaurant;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.repository.RestaurantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,27 +10,26 @@ import java.util.List;
 @Service
 public class RestaurantService {
 
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
+
+    public RestaurantService(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
 
     public Restaurant create(Restaurant restaurant){
-        Restaurant save = restaurantRepository.save(restaurant);
-        return save;
+        return restaurantRepository.save(restaurant);
     }
 
     public List<Restaurant> getAll(){
-        List<Restaurant> restaurants = restaurantRepository.findAll();
-        return restaurants;
+        return restaurantRepository.findAll();
     }
 
     public Restaurant getById(Long id){
-        Restaurant restaurant = restaurantRepository.getById(id);
-        return restaurant;
+        return restaurantRepository.getById(id);
     }
 
     public List<Restaurant> getByStatus(Status status){
-        List<Restaurant> restaurants = restaurantRepository.findByStatus(status);
-        return restaurants;
+        return restaurantRepository.findByStatus(status);
     }
 
     public Restaurant update(Restaurant restaurant){

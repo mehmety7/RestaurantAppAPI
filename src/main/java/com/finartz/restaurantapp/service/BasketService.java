@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.Basket;
 import com.finartz.restaurantapp.repository.BasketRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,34 +9,37 @@ import java.util.List;
 @Service
 public class BasketService {
 
-    @Autowired
-    private BasketRepository basketRepository;
+    private final BasketRepository basketRepository;
 
-    public Basket create(Basket basket){
+    public BasketService(BasketRepository basketRepository) {
+        this.basketRepository = basketRepository;
+    }
+
+    public Basket create(Basket basket) {
         Basket save = basketRepository.save(basket);
         return save;
     }
 
-    public List<Basket> getAll(){
+    public List<Basket> getAll() {
         List<Basket> baskets = basketRepository.findAll();
         return baskets;
     }
 
-    public Basket getById(Long id){
+    public Basket getById(Long id) {
         Basket basket = basketRepository.getById(id);
         return basket;
     }
 
-    public Basket update(Basket basket){
+    public Basket update(Basket basket) {
         Basket update = basketRepository.getById(basket.getId());
-        if(update != null) {
+        if (update != null) {
             basketRepository.save(basket);
             return update;
         }
         return basket;
     }
 
-    public Basket deleteById(Long id){
+    public Basket deleteById(Long id) {
         Basket basket = basketRepository.getById(id);
         if (basket != null) {
             basketRepository.deleteById(id);
