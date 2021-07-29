@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class City extends BaseDTO{
     private String name;
 
     @OneToMany(mappedBy = "city", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<County> countyList;
 
 }

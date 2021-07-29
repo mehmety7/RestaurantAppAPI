@@ -3,7 +3,6 @@ package com.finartz.restaurantapp.controller;
 import com.finartz.restaurantapp.model.Branch;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.service.BranchService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("branch")
 public class BranchController {
 
-    @Autowired
-    private BranchService branchService;
+    private final BranchService branchService;
+
+    public BranchController(BranchService branchService) {
+        this.branchService = branchService;
+    }
 
     @PostMapping
     public ResponseEntity<Branch> create(@RequestBody Branch branch){

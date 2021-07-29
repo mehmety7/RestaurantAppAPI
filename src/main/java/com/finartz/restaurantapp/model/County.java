@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class County extends BaseDTO{
     private String name;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="city_id", referencedColumnName = "id")
     private City city;
 

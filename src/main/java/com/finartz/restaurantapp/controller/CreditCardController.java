@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.CreditCard;
 import com.finartz.restaurantapp.service.CreditCardService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import java.util.List;
 @RequestMapping("creditcard")
 public class CreditCardController {
 
-    @Autowired
-    private CreditCardService creditcardService;
+    private final CreditCardService creditcardService;
+
+    public CreditCardController(CreditCardService creditcardService) {
+        this.creditcardService = creditcardService;
+    }
 
     @PostMapping
     public ResponseEntity<CreditCard> create(@RequestBody CreditCard creditcard){

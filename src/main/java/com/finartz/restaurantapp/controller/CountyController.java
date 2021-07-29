@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.County;
 import com.finartz.restaurantapp.service.CountyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import java.util.List;
 @RequestMapping("county")
 public class CountyController {
 
-    @Autowired
-    private CountyService countyService;
+    private final CountyService countyService;
+
+    public CountyController(CountyService countyService) {
+        this.countyService = countyService;
+    }
 
     @PostMapping
     public ResponseEntity<County> create(@RequestBody County county){
