@@ -34,12 +34,12 @@ public class BranchController {
 
     @GetMapping("/waiting")
     public ResponseEntity<List<Branch>> getWaiting(){
-        return new ResponseEntity(branchService.getByStatus(Status.WAITING), HttpStatus.OK);
+        return new ResponseEntity(branchService.findByStatus(Status.WAITING), HttpStatus.OK);
     }
 
     @GetMapping("/bycounty")
-    public ResponseEntity<List<Branch>> getByCounty(Long county_id){
-        return new ResponseEntity(branchService.getByCounty(county_id), HttpStatus.OK);
+    public ResponseEntity<List<Branch>> findByAddress_County_Id(Long county_id){
+        return new ResponseEntity(branchService.findByAddress_County_Id(county_id), HttpStatus.OK);
     }
 
     @PutMapping

@@ -153,5 +153,17 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void whenFindByEmail_thenReturnUser() throws Exception {
+
+        User user = User.builder().email("ali@gmail.com").build();
+
+        Mockito.when(userService.findByEmail("ali@gmail.com")).thenReturn(user);
+
+        mockMvc.perform(get("/user/email/" + user.getEmail())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("email", Matchers.is("ali@gmail.com")));
+    }
 
 }

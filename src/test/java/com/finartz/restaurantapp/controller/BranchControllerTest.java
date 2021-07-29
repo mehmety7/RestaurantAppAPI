@@ -3,10 +3,7 @@ package com.finartz.restaurantapp.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.finartz.restaurantapp.model.Address;
-import com.finartz.restaurantapp.model.Branch;
-import com.finartz.restaurantapp.model.Menu;
-import com.finartz.restaurantapp.model.Restaurant;
+import com.finartz.restaurantapp.model.*;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.service.BranchService;
 import org.hamcrest.Matchers;
@@ -209,6 +206,24 @@ public class BranchControllerTest {
         mockMvc.perform(delete("/branch/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenGetRestaurantIsWaiting_thenReturnRestaurant() throws Exception {
+
+        User user = User.builder().build();
+
+        Branch branch = Branch.builder().status(Status.WAITING).build();
+
+        List<Branch> branchList = Arrays.asList(branch);
+
+        Mockito.when(branchService.findByStatus(Status.WAITING)).thenReturn(branchList);
+
+        mockMvc.perform(get("/branch/waiting")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.hasSize(1)));
+
     }
 
 }

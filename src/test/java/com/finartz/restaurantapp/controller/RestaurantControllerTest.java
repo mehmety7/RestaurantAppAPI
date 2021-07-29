@@ -192,7 +192,7 @@ public class RestaurantControllerTest {
 
         List<Restaurant> restaurantList = Arrays.asList(restaurant);
 
-        Mockito.when(restaurantService.getByStatus(Status.WAITING)).thenReturn(restaurantList);
+        Mockito.when(restaurantService.findByStatus(Status.WAITING)).thenReturn(restaurantList);
 
         mockMvc.perform(get("/restaurant/waiting")
                 .contentType(MediaType.APPLICATION_JSON))

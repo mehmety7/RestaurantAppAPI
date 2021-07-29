@@ -29,11 +29,11 @@ public class BranchService {
         return branchRepository.getById(id);
     }
 
-    public List<Branch> getByStatus(Status status) {
+    public List<Branch> findByStatus(Status status) {
         return branchRepository.findByStatus(status);
     }
 
-    public List<Branch> getByCounty(Long county_id) {
+    public List<Branch> findByAddress_County_Id(Long county_id) {
         return branchRepository.findByAddress_County_Id(county_id);
     }
 

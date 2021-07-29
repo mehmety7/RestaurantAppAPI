@@ -28,7 +28,7 @@ public class RestaurantService {
         return restaurantRepository.getById(id);
     }
 
-    public List<Restaurant> getByStatus(Status status){
+    public List<Restaurant> findByStatus(Status status){
         return restaurantRepository.findByStatus(status);
     }
 

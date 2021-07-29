@@ -35,7 +35,7 @@ public class RestaurantController {
 
     @GetMapping("/waiting")
     public ResponseEntity<List<Branch>> getWaiting(){
-        return new ResponseEntity(restaurantService.getByStatus(Status.WAITING), HttpStatus.OK);
+        return new ResponseEntity(restaurantService.findByStatus(Status.WAITING), HttpStatus.OK);
     }
 
     @PutMapping
