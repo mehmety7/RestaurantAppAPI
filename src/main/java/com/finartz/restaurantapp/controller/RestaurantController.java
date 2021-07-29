@@ -4,7 +4,6 @@ import com.finartz.restaurantapp.model.Branch;
 import com.finartz.restaurantapp.model.Restaurant;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.service.RestaurantService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,11 @@ import java.util.List;
 @RequestMapping("restaurant")
 public class RestaurantController {
 
-    @Autowired
-    private RestaurantService restaurantService;
+    private final RestaurantService restaurantService;
+
+    public RestaurantController(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
 
     @PostMapping
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant){

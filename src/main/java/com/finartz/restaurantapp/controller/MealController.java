@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.Meal;
 import com.finartz.restaurantapp.service.MealService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import java.util.List;
 @RequestMapping("meal")
 public class MealController {
 
-    @Autowired
-    private MealService mealService;
+    private final MealService mealService;
+
+    public MealController(MealService mealService) {
+        this.mealService = mealService;
+    }
 
     @PostMapping
     public ResponseEntity<Meal> create(@RequestBody Meal meal){

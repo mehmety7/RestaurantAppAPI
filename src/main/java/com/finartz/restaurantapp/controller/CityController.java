@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.City;
 import com.finartz.restaurantapp.service.CityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import java.util.List;
 @RequestMapping("city")
 public class CityController {
 
-    @Autowired
-    private CityService cityService;
+    private final CityService cityService;
+
+    public CityController(CityService cityService) {
+        this.cityService = cityService;
+    }
 
     @PostMapping
     public ResponseEntity<City> create(@RequestBody City city){

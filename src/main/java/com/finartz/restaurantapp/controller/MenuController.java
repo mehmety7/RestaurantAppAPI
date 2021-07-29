@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.Menu;
 import com.finartz.restaurantapp.service.MenuService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import java.util.List;
 @RequestMapping("menu")
 public class MenuController {
 
-    @Autowired
-    private MenuService menuService;
+    private final MenuService menuService;
+
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     @PostMapping
     public ResponseEntity<Menu> create(@RequestBody Menu menu){
