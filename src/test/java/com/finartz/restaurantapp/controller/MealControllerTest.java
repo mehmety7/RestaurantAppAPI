@@ -8,6 +8,7 @@ import com.finartz.restaurantapp.model.Item;
 import com.finartz.restaurantapp.model.Meal;
 import com.finartz.restaurantapp.service.MealService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -32,11 +33,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(MealController.class)
 public class MealControllerTest {
 
+    private static final String URI_MEAL = "/meal";
+    private static final String NAME_KRAL_MENU = "Kral Menü";
+    private static final String NAME_EFSANE_MENU = "Efsane Menü";
+    private static final Double PRICE_15_99 = 15.99;
+
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private MealService mealService;
+
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    }
 
     @Test
     public void whenGetAllMeal_thenReturnMeal() throws Exception {
@@ -47,8 +63,8 @@ public class MealControllerTest {
 
         Meal meal = Meal.builder()
                 .id(1L)
-                .name("Kral Menü")
-                .price(15.99)
+                .name(NAME_KRAL_MENU)
+                .price(PRICE_15_99)
                 .basketMealList(Arrays.asList(basketMeal))
                 .itemList(Arrays.asList(item))
                 .build();
@@ -57,11 +73,11 @@ public class MealControllerTest {
 
         Mockito.when(mealService.getAll()).thenReturn(mealList);
 
-        mockMvc.perform(get("/meal")
+        mockMvc.perform(get(URI_MEAL)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].name", Matchers.is("Kral Menü")));
+                .andExpect(jsonPath("$[0].name", Matchers.is(NAME_KRAL_MENU)));
 
     }
 
@@ -74,18 +90,18 @@ public class MealControllerTest {
 
         Meal meal = Meal.builder()
                 .id(1L)
-                .name("Kral Menü")
-                .price(15.99)
+                .name(NAME_KRAL_MENU)
+                .price(PRICE_15_99)
                 .basketMealList(Arrays.asList(basketMeal))
                 .itemList(Arrays.asList(item))
                 .build();
 
         Mockito.when(mealService.getById(1L)).thenReturn(meal);
 
-        mockMvc.perform(get("/meal/1")
+        mockMvc.perform(get(URI_MEAL + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", Matchers.is("Kral Menü")));
+                .andExpect(jsonPath("name", Matchers.is(NAME_KRAL_MENU)));
 
     }
 
@@ -98,23 +114,20 @@ public class MealControllerTest {
 
         Meal meal = Meal.builder()
                 .id(1L)
-                .name("Kral Menü")
-                .price(15.99)
+                .name(NAME_KRAL_MENU)
+                .price(PRICE_15_99)
                 .basketMealList(Arrays.asList(basketMeal))
                 .itemList(Arrays.asList(item))
                 .build();
 
         Mockito.when(mealService.create(meal)).thenReturn(meal);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(meal);
+        String requestJson = objectWriter.writeValueAsString(meal);
 
-        mockMvc.perform(post("/meal")
+        mockMvc.perform(post(URI_MEAL)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("name", Matchers.is("Kral Menü")));
+                .andExpect(jsonPath("name", Matchers.is(NAME_KRAL_MENU)));
     }
 
     @Test
@@ -126,25 +139,37 @@ public class MealControllerTest {
 
         Meal meal = Meal.builder()
                 .id(1L)
-                .name("Kral Menü")
-                .price(15.99)
+                .name(NAME_KRAL_MENU)
+                .price(PRICE_15_99)
                 .basketMealList(Arrays.asList(basketMeal))
                 .itemList(Arrays.asList(item))
                 .build();
 
-        meal.setName("Kral Fırsat Menüsü");
+        Meal modifyMeal = Meal.builder()
+                .id(1L)
+                .name(NAME_EFSANE_MENU)
+                .price(PRICE_15_99)
+                .basketMealList(Arrays.asList(basketMeal))
+                .itemList(Arrays.asList(item))
+                .build();
 
-        Mockito.when(mealService.update(meal)).thenReturn(meal);
+        Mockito.when(mealService.create(meal)).thenReturn(meal);
+        Mockito.when(mealService.update(modifyMeal)).thenReturn(modifyMeal);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(meal);
+        String requestJson1 = objectWriter.writeValueAsString(meal);
+        String requestJson2 = objectWriter.writeValueAsString(modifyMeal);
 
-        mockMvc.perform(put("/meal")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        mockMvc.perform(post(URI_MEAL)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("name", Matchers.is(NAME_KRAL_MENU)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
+
+        mockMvc.perform(put(URI_MEAL)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", Matchers.is("Kral Fırsat Menüsü")));
+                .andExpect(jsonPath("name", Matchers.is(NAME_EFSANE_MENU)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
     }
 
     @Test
@@ -156,20 +181,17 @@ public class MealControllerTest {
 
         Meal meal = Meal.builder()
                 .id(1L)
-                .name("Kral Menü")
-                .price(15.99)
+                .name(NAME_KRAL_MENU)
+                .price(PRICE_15_99)
                 .basketMealList(Arrays.asList(basketMeal))
                 .itemList(Arrays.asList(item))
                 .build();
 
         Mockito.when(mealService.deleteById(1L)).thenReturn(meal);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(meal);
+        String requestJson = objectWriter.writeValueAsString(meal);
 
-        mockMvc.perform(delete("/meal/1")
+        mockMvc.perform(delete(URI_MEAL + "/1")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isOk());
     }

@@ -1,84 +1,149 @@
 package com.finartz.restaurantapp.controller;
 
-import com.finartz.restaurantapp.data.TestData;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.Item;
-import com.finartz.restaurantapp.repository.ItemRepository;
 import com.finartz.restaurantapp.service.ItemService;
-import org.junit.Assert;
-import org.junit.Before;
+import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(SpringExtension.class)
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = "spring.main.banner-mode=off")
-@Transactional
+@WebMvcTest(ItemController.class)
 public class ItemControllerTest {
 
-    @Autowired
-    private ItemController itemController;
+    public static final String NAME_HAMBURGER = "Hamburger";
+    public static final String NAME_CHEESEBURGER = "Cheeseburger";
+    public static final String URI_ITEM = "/item";
+
 
     @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private ItemService itemService;
 
-    @Autowired
-    private ItemRepository itemRepository;
+    @Test
+    public void whenGetAll_thenReturnAllItems() throws Exception {
 
+        Item item = Item.builder().id(1l).name(NAME_HAMBURGER).build();
+        List<Item> itemList = Arrays.asList(item);
 
-    @Before
-    public void setUp() {
-        itemRepository.deleteAll();
-        itemService.create(TestData.createItems().get(0));
-        itemService.create(TestData.createItems().get(1));
+        Mockito.when(itemService.getAll()).thenReturn(itemList);
+
+        mockMvc.perform(get(URI_ITEM)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$[0].name", Matchers.is(NAME_HAMBURGER)));
+
     }
 
     @Test
-    public void testGetAll() {
-        ResponseEntity<List<Item>> response = itemController.getAll();
-        Assert.assertEquals(2, response.getBody().size());
-        System.out.println(response.getBody());
+    public void whenGetById_thenReturnItem() throws Exception {
+
+        Item item = Item.builder().id(1l).name(NAME_HAMBURGER).build();
+
+        Mockito.when(itemService.getById(1l)).thenReturn(item);
+
+        mockMvc.perform(get(URI_ITEM + "/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", Matchers.is(NAME_HAMBURGER)));
+
     }
 
     @Test
-    public void testGetById() {
-        ResponseEntity<Item> response = itemController.get(1L);
-        Assert.assertEquals("Hamburger", response.getBody().getName());
-        System.out.println(response.getBody());
+    public void whenCreateNewItem_thenReturnItem() throws Exception {
+
+        Item item = Item.builder().id(1l).name(NAME_HAMBURGER).build();
+
+        Mockito.when(itemService.create(item)).thenReturn(item);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(item);
+
+        mockMvc.perform(post(URI_ITEM)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", Matchers.is(NAME_HAMBURGER)));
     }
 
     @Test
-    public void testCreateNewItem() {
-        Item item = new Item(3L, "Pizza", "piece");
-        ResponseEntity<Item> response = itemController.create(item);
-        Assert.assertEquals(response.getBody(), item);
-        Assert.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+    public void whenUpdateItem_thenReturnItem() throws Exception {
+
+        Item item = Item.builder()
+                .id(1L)
+                .name(NAME_HAMBURGER)
+                .build();
+
+        Item modifyItem = Item.builder()
+                .id(1l)
+                .name(NAME_CHEESEBURGER)
+                .build();
+
+        Mockito.when(itemService.create(item)).thenReturn(item);
+        Mockito.when(itemService.update(modifyItem)).thenReturn(modifyItem);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson1 = ow.writeValueAsString(item);
+        String requestJson2 = ow.writeValueAsString(modifyItem);
+
+        mockMvc.perform(post(URI_ITEM)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", Matchers.is(NAME_HAMBURGER)))
+                .andExpect(jsonPath("$.id", Matchers.is(1)));
+
+        mockMvc.perform(put(URI_ITEM)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", Matchers.is(NAME_CHEESEBURGER)))
+                .andExpect(jsonPath("$.id", Matchers.is(1)));
+
     }
 
     @Test
-    public void testUpdateItem() {
-        ResponseEntity<List<Item>> response = itemController.getAll();
-        System.out.println(response.getBody().get(0).getName());
-        response.getBody().get(0).setName("Kebab");
-        ResponseEntity<Item> response2 = itemController.update(response.getBody().get(0));
-        System.out.println(response2.getBody().getName());
-        Assert.assertEquals(response2.getBody().getName(), "Kebab");
-        Assert.assertEquals(response2.getStatusCode(), HttpStatus.OK);
-    }
+    public void whenDeleteItem_thenReturnItem() throws Exception {
 
-    @Test
-    public void testDeleteItem() {
-        System.out.println(itemController.get(1L).getBody().getName());
-        ResponseEntity<Item> response = itemController.deleteById(1L);
-        Assert.assertNull(response.getBody());
-        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Item item = Item.builder()
+                .id(1L)
+                .name(NAME_HAMBURGER)
+                .build();
+
+        Mockito.when(itemService.deleteById(1L)).thenReturn(item);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(item);
+
+        mockMvc.perform(delete(URI_ITEM + "/1")
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(status().isOk());
     }
 
 }

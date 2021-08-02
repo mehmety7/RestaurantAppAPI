@@ -3,10 +3,12 @@ package com.finartz.restaurantapp.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.finartz.restaurantapp.model.*;
-import com.finartz.restaurantapp.model.enumerated.Role;
+import com.finartz.restaurantapp.model.Basket;
+import com.finartz.restaurantapp.model.BasketMeal;
+import com.finartz.restaurantapp.model.User;
 import com.finartz.restaurantapp.service.BasketService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -31,27 +33,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BasketController.class)
 public class BasketControllerTest {
 
+    private static final String URI_BASKET = "/basket";
+    private static final String USER_ALI_AKAY = "Ali Akay";
+    private static final String USER_EMAIL = "ali@gmail.com";
+    private static final String USER_PASSWORD = "ali1212";
+    private static final Double PRICE_100 = 100.0;
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private BasketService basketService;
 
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    }
+
     @Test
     public void whenGetAllBasket_thenReturnBasket() throws Exception {
 
         User user = User.builder()
-                .name("Ali Akay")
-                .email("ali@gmail.com")
-                .password("ali1212")
-                .role(Role.USER).build();
+                .name(USER_ALI_AKAY)
+                .email(USER_EMAIL)
+                .password(USER_PASSWORD)
+                .build();
 
         BasketMeal basketMeal = BasketMeal.builder().build();
 
         Basket basket = Basket.builder()
                 .basketMealList(Arrays.asList(basketMeal))
                 .user(user)
-                .totalPrice(100.99)
+                .totalPrice(PRICE_100)
                 .id(1L)
                 .build();
 
@@ -59,37 +76,37 @@ public class BasketControllerTest {
 
         Mockito.when(basketService.getAll()).thenReturn(basketList);
 
-        mockMvc.perform(get("/basket")
+        mockMvc.perform(get(URI_BASKET)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].user.name", Matchers.is("Ali Akay")));
+                .andExpect(jsonPath("$[0].user.name", Matchers.is(USER_ALI_AKAY)));
     }
 
     @Test
     public void whenGetByBasketId_thenReturnBasket() throws Exception {
 
         User user = User.builder()
-                .name("Ali Akay")
-                .email("ali@gmail.com")
-                .password("ali1212")
-                .role(Role.USER).build();
+                .name(USER_ALI_AKAY)
+                .email(USER_EMAIL)
+                .password(USER_PASSWORD)
+                .build();
 
         BasketMeal basketMeal = BasketMeal.builder().build();
 
         Basket basket = Basket.builder()
                 .basketMealList(Arrays.asList(basketMeal))
                 .user(user)
-                .totalPrice(100.99)
+                .totalPrice(PRICE_100)
                 .id(1L)
                 .build();
 
         Mockito.when(basketService.getById(1L)).thenReturn(basket);
 
-        mockMvc.perform(get("/basket/1")
+        mockMvc.perform(get(URI_BASKET + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("user.name", Matchers.is("Ali Akay")));
+                .andExpect(jsonPath("user.name", Matchers.is(USER_ALI_AKAY)));
 
     }
 
@@ -97,33 +114,29 @@ public class BasketControllerTest {
     public void whenCreateNewBasket_thenReturnCreated() throws Exception {
 
         User user = User.builder()
-                .name("Ali Akay")
-                .email("ali@gmail.com")
-                .password("ali1212")
-                .role(Role.USER).build();
+                .name(USER_ALI_AKAY)
+                .email(USER_EMAIL)
+                .password(USER_PASSWORD)
+                .build();
 
         BasketMeal basketMeal = BasketMeal.builder().build();
 
         Basket basket = Basket.builder()
                 .basketMealList(Arrays.asList(basketMeal))
                 .user(user)
-                .totalPrice(100.99)
+                .totalPrice(PRICE_100)
                 .id(1L)
                 .build();
 
 
         Mockito.when(basketService.create(basket)).thenReturn(basket);
 
-        // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(basket);
+        String requestJson = objectWriter.writeValueAsString(basket);
 
-        mockMvc.perform(post("/basket")
+        mockMvc.perform(post(URI_BASKET)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("user.name", Matchers.is("Ali Akay")));
+                .andExpect(jsonPath("user.name", Matchers.is(USER_ALI_AKAY)));
 
     }
 
@@ -131,35 +144,39 @@ public class BasketControllerTest {
     public void whenUpdateExistsBasket_thenReturnUpdated() throws Exception {
 
         User user = User.builder()
-                .name("Ali Akay")
-                .email("ali@gmail.com")
-                .password("ali1212")
-                .role(Role.USER).build();
+                .name(USER_ALI_AKAY)
+                .email(USER_EMAIL)
+                .password(USER_PASSWORD)
+                .build();
 
         BasketMeal basketMeal = BasketMeal.builder().build();
 
         Basket basket = Basket.builder()
                 .basketMealList(Arrays.asList(basketMeal))
                 .user(user)
-                .totalPrice(100.99)
+                .totalPrice(PRICE_100)
                 .id(1L)
                 .build();
 
-        user.setName("Ali Kınay");
-        basket.setUser(user);
+        Basket modifyBasket = Basket.builder().id(1l).user(user).totalPrice(PRICE_100 + 100.00).build();
 
-        Mockito.when(basketService.update(basket)).thenReturn(basket);
+        Mockito.when(basketService.create(basket)).thenReturn(basket);
+        Mockito.when(basketService.update(modifyBasket)).thenReturn(modifyBasket);
 
-        // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(basket);
+        String requestJson1 = objectWriter.writeValueAsString(basket);
+        String requestJson2 = objectWriter.writeValueAsString(modifyBasket);
 
-        mockMvc.perform(put("/basket")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        mockMvc.perform(post(URI_BASKET)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.totalPrice", Matchers.is(PRICE_100)))
+                .andExpect(jsonPath("$.id", Matchers.is(1)));
+
+        mockMvc.perform(put(URI_BASKET)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("user.name", Matchers.is("Ali Kınay")));
+                .andExpect(jsonPath("$.totalPrice", Matchers.is(PRICE_100+100.00)))
+                .andExpect(jsonPath("$.id", Matchers.is(1)));
 
     }
 
@@ -167,24 +184,24 @@ public class BasketControllerTest {
     public void whenDeleteExistsBasket_thenReturnOk() throws Exception {
 
         User user = User.builder()
-                .name("Ali Akay")
-                .email("ali@gmail.com")
-                .password("ali1212")
-                .role(Role.USER).build();
+                .name(USER_ALI_AKAY)
+                .email(USER_EMAIL)
+                .password(USER_PASSWORD)
+                .build();
 
         BasketMeal basketMeal = BasketMeal.builder().build();
 
         Basket basket = Basket.builder()
                 .basketMealList(Arrays.asList(basketMeal))
                 .user(user)
-                .totalPrice(100.99)
+                .totalPrice(PRICE_100)
                 .id(1L)
                 .build();
 
 
         Mockito.when(basketService.deleteById(1L)).thenReturn(basket);
 
-        mockMvc.perform(delete("/basket/1")
+        mockMvc.perform(delete(URI_BASKET + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

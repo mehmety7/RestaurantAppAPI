@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.City;
 import com.finartz.restaurantapp.service.CityService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -30,29 +31,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CityController.class)
 public class CityControllerTest {
 
+    private static final String URI_CITY = "/city";
+    private static final String COUNTY_ADANA = "Adana";
+    private static final String COUNTY_HATAY = "Hatay";
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private CityService cityService;
 
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    }
+
     @Test
     public void whenGetAllCity_thenReturnCity() throws Exception {
 
         City city = City.builder()
                 .id(1L)
-                .name("Adana")
+                .name(COUNTY_ADANA)
                 .build();
 
         List<City> cityList = Arrays.asList(city);
 
         Mockito.when(cityService.getAll()).thenReturn(cityList);
 
-        mockMvc.perform(get("/city")
+        mockMvc.perform(get(URI_CITY)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].name", Matchers.is("Adana")));
+                .andExpect(jsonPath("$[0].name", Matchers.is(COUNTY_ADANA)));
 
     }
 
@@ -61,15 +75,15 @@ public class CityControllerTest {
 
         City city = City.builder()
                 .id(1L)
-                .name("Adana")
+                .name(COUNTY_ADANA)
                 .build();
 
         Mockito.when(cityService.getById(1L)).thenReturn(city);
 
-        mockMvc.perform(get("/city/1")
+        mockMvc.perform(get(URI_CITY + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", Matchers.is("Adana")));
+                .andExpect(jsonPath("name", Matchers.is(COUNTY_ADANA)));
 
     }
 
@@ -78,20 +92,17 @@ public class CityControllerTest {
 
         City city = City.builder()
                 .id(1L)
-                .name("Adana")
+                .name(COUNTY_ADANA)
                 .build();
 
         Mockito.when(cityService.create(city)).thenReturn(city);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(city);
+        String requestJson = objectWriter.writeValueAsString(city);
 
-        mockMvc.perform(post("/city")
+        mockMvc.perform(post(URI_CITY)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("name", Matchers.is("Adana")));
+                .andExpect(jsonPath("name", Matchers.is(COUNTY_ADANA)));
     }
 
     @Test
@@ -99,22 +110,28 @@ public class CityControllerTest {
 
         City city = City.builder()
                 .id(1L)
-                .name("Adana")
+                .name(COUNTY_ADANA)
                 .build();
 
-        city.setName("ADANA");
+        City modifyCity = City.builder().id(1l).name(COUNTY_HATAY).build();
 
-        Mockito.when(cityService.update(city)).thenReturn(city);
+        Mockito.when(cityService.create(city)).thenReturn(city);
+        Mockito.when(cityService.update(modifyCity)).thenReturn(modifyCity);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(city);
+        String requestJson1 = objectWriter.writeValueAsString(city);
+        String requestJson2 = objectWriter.writeValueAsString(modifyCity);
 
-        mockMvc.perform(put("/city")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        mockMvc.perform(post(URI_CITY)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("name", Matchers.is(COUNTY_ADANA)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
+
+        mockMvc.perform(put(URI_CITY)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", Matchers.is("ADANA")));
+                .andExpect(jsonPath("name", Matchers.is(COUNTY_HATAY)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
     }
 
     @Test
@@ -122,18 +139,13 @@ public class CityControllerTest {
 
         City city = City.builder()
                 .id(1L)
-                .name("Adana")
+                .name(COUNTY_ADANA)
                 .build();
 
         Mockito.when(cityService.deleteById(1L)).thenReturn(city);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(city);
-
-        mockMvc.perform(delete("/city/1")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        mockMvc.perform(delete(URI_CITY + "/1")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 

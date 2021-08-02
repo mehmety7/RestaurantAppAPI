@@ -21,9 +21,9 @@ public class Comment extends BaseDTO{
 
     private String comment;
     @Column(name = "taste_point")
-    private int tastePoint;
+    private Integer tastePoint;
     @Column(name = "speed_point")
-    private int speedPoint;
+    private Integer speedPoint;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

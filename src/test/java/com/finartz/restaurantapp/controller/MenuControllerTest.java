@@ -8,6 +8,7 @@ import com.finartz.restaurantapp.model.Meal;
 import com.finartz.restaurantapp.model.Menu;
 import com.finartz.restaurantapp.service.MenuService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -32,16 +33,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(MenuController.class)
 public class MenuControllerTest {
 
+    private final static String URI_MENU = "/menu";
+    private final static String NAME_KRAL_BURGER_SISLI = "Kral Burger Şişli";
+    private final static String NAME_KRAL_BURGER_BESIKTAS = "Kral Burger Beşiktaş";
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private MenuService menuService;
 
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    }
+
     @Test
     public void whenGetAllMenu_thenReturnMenu() throws Exception {
 
-        Branch branch = Branch.builder().name("Kral Burger Şişli").build();
+        Branch branch = Branch.builder().name(NAME_KRAL_BURGER_SISLI).build();
 
         Meal meal = Meal.builder().build();
 
@@ -55,18 +69,18 @@ public class MenuControllerTest {
 
         Mockito.when(menuService.getAll()).thenReturn(menuList);
 
-        mockMvc.perform(get("/menu")
+        mockMvc.perform(get(URI_MENU)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].branch.name", Matchers.is("Kral Burger Şişli")));
+                .andExpect(jsonPath("$[0].branch.name", Matchers.is(NAME_KRAL_BURGER_SISLI)));
 
     }
 
     @Test
     public void whenGetMenuById_thenReturnMenu() throws Exception {
 
-        Branch branch = Branch.builder().name("Kral Burger Şişli").build();
+        Branch branch = Branch.builder().name(NAME_KRAL_BURGER_SISLI).build();
 
         Meal meal = Meal.builder().build();
 
@@ -78,17 +92,17 @@ public class MenuControllerTest {
 
         Mockito.when(menuService.getById(1L)).thenReturn(menu);
 
-        mockMvc.perform(get("/menu/1")
+        mockMvc.perform(get(URI_MENU + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("branch.name", Matchers.is("Kral Burger Şişli")));
+                .andExpect(jsonPath("branch.name", Matchers.is(NAME_KRAL_BURGER_SISLI)));
 
     }
 
     @Test
     public void whenCreateNewMenu_thenReturnMenu() throws Exception {
 
-        Branch branch = Branch.builder().name("Kral Burger Şişli").build();
+        Branch branch = Branch.builder().name(NAME_KRAL_BURGER_SISLI).build();
 
         Meal meal = Meal.builder().build();
 
@@ -100,21 +114,18 @@ public class MenuControllerTest {
 
         Mockito.when(menuService.create(menu)).thenReturn(menu);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(menu);
+        String requestJson = objectWriter.writeValueAsString(menu);
 
-        mockMvc.perform(post("/menu")
+        mockMvc.perform(post(URI_MENU)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("branch.name", Matchers.is("Kral Burger Şişli")));
+                .andExpect(jsonPath("branch.name", Matchers.is(NAME_KRAL_BURGER_SISLI)));
     }
 
     @Test
     public void whenUpdateMenu_thenReturnMenu() throws Exception {
 
-        Branch branch = Branch.builder().name("Kral Burger Şişli").build();
+        Branch branch = Branch.builder().name(NAME_KRAL_BURGER_SISLI).build();
 
         Meal meal = Meal.builder().build();
 
@@ -124,26 +135,37 @@ public class MenuControllerTest {
                 .mealList(Arrays.asList(meal))
                 .build();
 
-        branch.setName("Kral Burger Mecidiyeköy");
-        menu.setBranch(branch);
+        Branch modifyBranch = Branch.builder().name(NAME_KRAL_BURGER_BESIKTAS).build();
 
-        Mockito.when(menuService.update(menu)).thenReturn(menu);
+        Menu modifyMenu = Menu.builder()
+                .id(1L)
+                .branch(modifyBranch)
+                .mealList(Arrays.asList(meal))
+                .build();
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(menu);
+        Mockito.when(menuService.create(menu)).thenReturn(menu);
+        Mockito.when(menuService.update(modifyMenu)).thenReturn(modifyMenu);
 
-        mockMvc.perform(put("/menu")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        String requestJson1 = objectWriter.writeValueAsString(menu);
+        String requestJson2 = objectWriter.writeValueAsString(modifyMenu);
+
+        mockMvc.perform(post(URI_MENU)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("branch.name", Matchers.is(NAME_KRAL_BURGER_SISLI)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
+
+        mockMvc.perform(put(URI_MENU)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("branch.name", Matchers.is("Kral Burger Mecidiyeköy")));
+                .andExpect(jsonPath("branch.name", Matchers.is(NAME_KRAL_BURGER_BESIKTAS)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
     }
 
     @Test
     public void whenDeleteMenu_thenReturnMenu() throws Exception {
 
-        Branch branch = Branch.builder().name("Kral Burger Şişli").build();
+        Branch branch = Branch.builder().name(NAME_KRAL_BURGER_SISLI).build();
 
         Meal meal = Meal.builder().build();
 
@@ -155,12 +177,9 @@ public class MenuControllerTest {
 
         Mockito.when(menuService.deleteById(1L)).thenReturn(menu);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(menu);
+        String requestJson = objectWriter.writeValueAsString(menu);
 
-        mockMvc.perform(delete("/menu/1")
+        mockMvc.perform(delete(URI_MENU + "/1")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isOk());
     }

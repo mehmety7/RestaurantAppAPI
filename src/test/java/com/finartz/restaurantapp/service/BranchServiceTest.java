@@ -1,13 +1,11 @@
 package com.finartz.restaurantapp.service;
 
 
-import com.finartz.restaurantapp.model.Address;
-import com.finartz.restaurantapp.model.Branch;
-import com.finartz.restaurantapp.model.City;
-import com.finartz.restaurantapp.model.County;
+import com.finartz.restaurantapp.model.*;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.repository.BranchRepository;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class BranchServiceTest {
 
+    private static final String NAME_KB_UMRANIYE = "Kral Burger Ümraniye";
+    private static final String NAME_KB_AVCILAR = "Kral Burger Avcılar";
+
     @InjectMocks
     private BranchService branchService;
 
@@ -31,8 +32,8 @@ public class BranchServiceTest {
 
     @Test
     public void whenFetchAll_thenReturnAllBranch() {
-        Branch branch1 = Branch.builder().id(1l).name("Kral Burger Ümraniye").build();
-        Branch branch2 = Branch.builder().id(2l).name("Kral Burger Avcılar").build();
+        Branch branch1 = Branch.builder().id(1l).name(NAME_KB_UMRANIYE).build();
+        Branch branch2 = Branch.builder().id(2l).name(NAME_KB_AVCILAR).build();
         List<Branch> branchList = Arrays.asList(branch1, branch2);
 
         Mockito.when(branchRepository.findAll()).thenReturn(branchList);
@@ -44,7 +45,7 @@ public class BranchServiceTest {
 
     @Test
     public void whenFetchById_thenReturnBranch() {
-        Branch branch = Branch.builder().name("Kral Burger Ümraniye").build();
+        Branch branch = Branch.builder().name(NAME_KB_UMRANIYE).build();
 
         Mockito.when(branchRepository.getById(1L)).thenReturn(branch);
 
@@ -55,25 +56,13 @@ public class BranchServiceTest {
 
     @Test
     public void whenAddBranch_thenReturnSavedBranch() {
-        Branch branch = Branch.builder().name("Kral Burger Ümraniye").build();
+        Branch branch = Branch.builder().name(NAME_KB_UMRANIYE).build();
 
         Mockito.doReturn(branch).when(branchRepository).save(branch);
 
         Branch returnedBranch = branchService.create(branch);
 
         assertEquals(branch.getName(), returnedBranch.getName());
-    }
-
-    @Test
-    public void whenUpdateBranch_thenReturnUpdatedBranch(){
-        Branch branch = Branch.builder().name("Kral Burger Ümraniye").build();
-
-        Mockito.when(branchRepository.save(branch)).thenReturn(branch);
-
-        Branch updatedBranch = branchService.update(branch);
-
-        assertEquals(branch , updatedBranch);
-
     }
 
     @Test
@@ -88,6 +77,21 @@ public class BranchServiceTest {
         List<Branch> fetchedList = branchService.findByStatus(Status.WAITING);
 
         assertEquals(branchList, fetchedList);
+    }
+
+    @Test
+    public void whenUpdateBranch_thenReturnUpdatedBranch(){
+        Branch foundBranch = Branch.builder().id(1l).name(NAME_KB_UMRANIYE).build();
+        Branch modifyBranch = Branch.builder().id(1l).name(NAME_KB_AVCILAR).build();
+
+        Mockito.when(branchRepository.getById(1l)).thenReturn(foundBranch);
+        Mockito.when(branchRepository.save(modifyBranch)).thenReturn(modifyBranch);
+
+        Branch updatedBranch = branchService.update(modifyBranch);
+
+        Assertions.assertNotEquals(updatedBranch.getName(), NAME_KB_UMRANIYE);
+        Assertions.assertEquals(updatedBranch.getName(), NAME_KB_AVCILAR);
+
     }
 
     @Test

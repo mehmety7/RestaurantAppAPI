@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("creditcard")
+@RequestMapping("credit-card")
 public class CreditCardController {
 
     private final CreditCardService creditcardService;

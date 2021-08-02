@@ -24,10 +24,10 @@ public class CreditCard extends BaseDTO{
     private String cardNo;
     private String name;
     @Column(name = "exp_month")
-    private int expMonth;
+    private Integer expMonth;
     @Column(name = "exp_year")
-    private int expYear;
-    private int ccv;
+    private Integer expYear;
+    private Integer ccv;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

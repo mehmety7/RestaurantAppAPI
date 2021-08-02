@@ -9,6 +9,7 @@ import com.finartz.restaurantapp.model.Orders;
 import com.finartz.restaurantapp.model.User;
 import com.finartz.restaurantapp.service.OrdersService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -40,6 +41,15 @@ public class OrdersControllerTest {
 
     @MockBean
     private OrdersService ordersService;
+
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    }
 
     @Test
     public void whenGetAllOrders_thenReturnOrders() throws Exception {
@@ -124,10 +134,7 @@ public class OrdersControllerTest {
 
         Mockito.when(ordersService.create(orders)).thenReturn(orders);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(orders);
+        String requestJson = objectWriter.writeValueAsString(orders);
 
         mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
@@ -159,10 +166,7 @@ public class OrdersControllerTest {
 
         Mockito.when(ordersService.update(orders)).thenReturn(orders);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(orders);
+        String requestJson = objectWriter.writeValueAsString(orders);
 
         mockMvc.perform(put("/orders")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
@@ -192,10 +196,7 @@ public class OrdersControllerTest {
 
         Mockito.when(ordersService.deleteById(1L)).thenReturn(orders);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(orders);
+        String requestJson = objectWriter.writeValueAsString(orders);
 
         mockMvc.perform(delete("/orders/1")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))

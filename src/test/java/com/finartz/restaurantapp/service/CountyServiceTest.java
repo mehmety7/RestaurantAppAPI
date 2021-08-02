@@ -2,7 +2,9 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.County;
 import com.finartz.restaurantapp.repository.CountyRepository;
+import com.finartz.restaurantapp.service.impl.CountyServiceImpl;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,8 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class CountyServiceTest {
 
+    private static final String COUNTY_UMRANIYE = "Ümraniye";
+    private static final String COUNTY_AVCILAR = "Avcılar";
+
     @InjectMocks
-    private CountyService countyService;
+    private CountyServiceImpl countyService;
 
     @Mock
     private CountyRepository countyRepository;
@@ -26,8 +31,8 @@ public class CountyServiceTest {
 
     @Test
     public void whenFetchAll_thenReturnAllCounty() {
-        County county1 = County.builder().id(1l).name("Ümraniye").build();
-        County county2 = County.builder().id(2l).name("Avcılar").build();
+        County county1 = County.builder().id(1l).name(COUNTY_UMRANIYE).build();
+        County county2 = County.builder().id(2l).name(COUNTY_AVCILAR).build();
         List<County> countyList = Arrays.asList(county1, county2);
 
         Mockito.when(countyRepository.findAll()).thenReturn(countyList);
@@ -39,7 +44,7 @@ public class CountyServiceTest {
 
     @Test
     public void whenFetchById_thenReturnCounty() {
-        County county = County.builder().name("Ümraniye").build();
+        County county = County.builder().name(COUNTY_UMRANIYE).build();
 
         Mockito.when(countyRepository.getById(1L)).thenReturn(county);
 
@@ -50,7 +55,7 @@ public class CountyServiceTest {
 
     @Test
     public void whenAddCounty_thenReturnSavedCounty() {
-        County county = County.builder().name("Ümraniye").build();
+        County county = County.builder().name(COUNTY_UMRANIYE).build();
 
         Mockito.doReturn(county).when(countyRepository).save(county);
 
@@ -61,14 +66,16 @@ public class CountyServiceTest {
 
     @Test
     public void whenUpdateCounty_thenReturnUpdatedCounty(){
-        County county = County.builder().name("Ümraniye").build();
+        County foundCounty = County.builder().id(1l).name(COUNTY_UMRANIYE).build();
+        County modifyCounty = County.builder().id(1l).name(COUNTY_AVCILAR).build();
 
-        Mockito.when(countyRepository.getById(1L)).thenReturn(county);
-        Mockito.when(countyRepository.save(county)).thenReturn(county);
+        Mockito.when(countyRepository.getById(1l)).thenReturn(foundCounty);
+        Mockito.when(countyRepository.save(modifyCounty)).thenReturn(modifyCounty);
 
-        County updatedCounty = countyService.update(county);
+        County updatedCounty = countyService.update(modifyCounty);
 
-        assertEquals(county , updatedCounty);
+        Assertions.assertNotEquals(updatedCounty.getName(), COUNTY_UMRANIYE);
+        Assertions.assertEquals(updatedCounty.getName(), COUNTY_AVCILAR);
 
     }
 
