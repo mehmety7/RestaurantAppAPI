@@ -8,6 +8,7 @@ import com.finartz.restaurantapp.model.City;
 import com.finartz.restaurantapp.model.County;
 import com.finartz.restaurantapp.service.AddressService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -32,112 +33,120 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AddressController.class)
 public class AddressControllerTest {
 
+    private static final String URI_ADDRESS = "/address";
+    private static final String CITY_ISTANBUL = "İstanbul";
+    private static final String COUNTY_AVCILAR = "Avcılar";
+    private static final String DISTRICT_MERKEZ = "Merkez";
+    private static final String DISTRICT_UNIVERSITE = "Üniversite";
+    private static final String NAME_EV = "Ev";
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private AddressService addressService;
 
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    }
+
     @Test
     public void whenGetAllAddress_thenReturnAddress() throws Exception {
 
-        City city = City.builder().name("İstanbul").build();
+        City city = City.builder().name(CITY_ISTANBUL).build();
 
-        County county = County.builder().name("Avcılar").city(city).build();
+        County county = County.builder().name(COUNTY_AVCILAR).city(city).build();
 
-        Address address = Address.builder().county(county).city(city).name("Ev").district("Merkez Mahallesi").build();
+        Address address = Address.builder().county(county).city(city).name(NAME_EV).district(DISTRICT_MERKEZ).build();
 
         List<Address> addressList = Arrays.asList(address);
 
         Mockito.when(addressService.getAll()).thenReturn(addressList);
 
-        mockMvc.perform(get("/address")
+        mockMvc.perform(get(URI_ADDRESS)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].name", Matchers.is("Ev")));
+                .andExpect(jsonPath("$[0].name", Matchers.is(NAME_EV)));
     }
 
     @Test
     public void whenGetByAddressId_thenReturnAddress() throws Exception {
 
-        City city = City.builder().name("İstanbul").build();
+        City city = City.builder().name(CITY_ISTANBUL).build();
 
-        County county = County.builder().name("Avcılar").city(city).build();
+        County county = County.builder().name(COUNTY_AVCILAR).city(city).build();
 
-        Address address = Address.builder().county(county).city(city).name("Ev").district("Merkez Mahallesi").id(1L).build();
+        Address address = Address.builder().county(county).city(city).name(NAME_EV).district(DISTRICT_MERKEZ).id(1L).build();
 
         Mockito.when(addressService.getById(1L)).thenReturn(address);
 
-        mockMvc.perform(get("/address/1")
+        mockMvc.perform(get(URI_ADDRESS + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", Matchers.is("Ev")));
+                .andExpect(jsonPath("name", Matchers.is(NAME_EV)));
 
     }
 
     @Test
     public void whenCreateNewAddress_thenReturnCreated() throws Exception {
 
-        City city = City.builder().name("İstanbul").build();
-
-        County county = County.builder().name("Avcılar").city(city).build();
-
-        Address address = Address.builder().county(county).city(city).name("Ev").district("Merkez Mahallesi").id(1L).build();
+        Address address = Address.builder().name(NAME_EV).district(DISTRICT_MERKEZ).id(1L).build();
 
         Mockito.when(addressService.create(address)).thenReturn(address);
 
-        // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(address);
+        String requestJson = objectWriter.writeValueAsString(address);
 
-        mockMvc.perform(post("/address")
+        mockMvc.perform(post(URI_ADDRESS)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("name", Matchers.is("Ev")));
+                .andExpect(jsonPath("$.name", Matchers.is(NAME_EV)));
 
     }
 
     @Test
     public void whenUpdateExistsAddress_thenReturnUpdated() throws Exception {
 
-        City city = City.builder().name("İstanbul").build();
+        Address address = Address.builder().name(NAME_EV).district(DISTRICT_MERKEZ).id(1L).build();
 
-        County county = County.builder().name("Avcılar").city(city).build();
+        Address modifyAddress = Address.builder().district(DISTRICT_UNIVERSITE).id(1l).build();
 
-        Address address = Address.builder().county(county).city(city).name("Ev").district("Merkez Mahallesi").id(1L).build();
+        Mockito.when(addressService.create(address)).thenReturn(address);
+        Mockito.when(addressService.update(modifyAddress)).thenReturn(modifyAddress);
 
-        address.setDistrict("Üniversite Mahallesi");
+        String requestJson1 = objectWriter.writeValueAsString(address);
+        String requestJson2 = objectWriter.writeValueAsString(modifyAddress);
 
-        Mockito.when(addressService.update(address)).thenReturn(address);
+        mockMvc.perform(post(URI_ADDRESS)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", Matchers.is(1)));
 
-        // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(address);
-
-        mockMvc.perform(put("/address")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        mockMvc.perform(put(URI_ADDRESS)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("district", Matchers.is("Üniversite Mahallesi")));
+                .andExpect(jsonPath("$.id", Matchers.is(1)));
 
     }
 
     @Test
     public void whenDeleteExistsAddress_thenReturnOk() throws Exception {
 
-        City city = City.builder().name("İstanbul").build();
+        City city = City.builder().name(CITY_ISTANBUL).build();
 
-        County county = County.builder().name("Avcılar").city(city).build();
+        County county = County.builder().name(COUNTY_AVCILAR).city(city).build();
 
-        Address address = Address.builder().county(county).city(city).name("Ev").district("Merkez Mahallesi").id(1L).build();
+        Address address = Address.builder().county(county).city(city).name(NAME_EV).district(DISTRICT_MERKEZ).id(1L).build();
 
         Mockito.when(addressService.deleteById(1L)).thenReturn(address);
 
-        mockMvc.perform(delete("/address/1")
+        mockMvc.perform(delete(URI_ADDRESS + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

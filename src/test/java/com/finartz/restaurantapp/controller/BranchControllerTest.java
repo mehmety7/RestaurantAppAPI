@@ -7,6 +7,7 @@ import com.finartz.restaurantapp.model.*;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.service.BranchService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -31,18 +32,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BranchController.class)
 public class BranchControllerTest {
 
+    private static final String URI_BRANCH = "/branch";
+    private static final String NAME_KRAL_BURGER = "Kral Burger";
+    private static final String NAME_KRAL_SISLI = "Kral Burger Şişli";
+    private static final String NAME_KRAL_MECIDIYEKOY = "Kral Burger Mecidiyeköy";
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private BranchService branchService;
 
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    }
+
     @Test
     public void whenGetAllBranch_thenReturnBranch() throws Exception {
 
         Restaurant restaurant = Restaurant.builder()
                 .id(1l)
-                .name("Kral Burger")
+                .name(NAME_KRAL_BURGER)
                 .status(Status.APPROVED)
                 .build();
 
@@ -54,7 +70,7 @@ public class BranchControllerTest {
                 .address(address)
                 .restaurant(restaurant)
                 .menu(menu)
-                .name("Kral Burger Şişli")
+                .name(NAME_KRAL_SISLI)
                 .id(1L)
                 .status(Status.WAITING)
                 .build();
@@ -63,7 +79,7 @@ public class BranchControllerTest {
 
         Mockito.when(branchService.getAll()).thenReturn(branchList);
 
-        mockMvc.perform(get("/branch")
+        mockMvc.perform(get(URI_BRANCH)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
@@ -75,7 +91,7 @@ public class BranchControllerTest {
 
         Restaurant restaurant = Restaurant.builder()
                 .id(1l)
-                .name("Kral Burger")
+                .name(NAME_KRAL_BURGER)
                 .status(Status.APPROVED)
                 .build();
 
@@ -87,17 +103,17 @@ public class BranchControllerTest {
                 .address(address)
                 .restaurant(restaurant)
                 .menu(menu)
-                .name("Kral Burger Şişli")
+                .name(NAME_KRAL_SISLI)
                 .id(1L)
                 .status(Status.WAITING)
                 .build();
 
         Mockito.when(branchService.getById(1L)).thenReturn(branch);
 
-        mockMvc.perform(get("/branch/1")
+        mockMvc.perform(get(URI_BRANCH + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", Matchers.is("Kral Burger Şişli")));
+                .andExpect(jsonPath("name", Matchers.is(NAME_KRAL_SISLI)));
 
     }
 
@@ -106,7 +122,7 @@ public class BranchControllerTest {
 
         Restaurant restaurant = Restaurant.builder()
                 .id(1l)
-                .name("Kral Burger")
+                .name(NAME_KRAL_BURGER)
                 .status(Status.APPROVED)
                 .build();
 
@@ -118,7 +134,7 @@ public class BranchControllerTest {
                 .address(address)
                 .restaurant(restaurant)
                 .menu(menu)
-                .name("Kral Burger Şişli")
+                .name(NAME_KRAL_SISLI)
                 .id(1L)
                 .status(Status.WAITING)
                 .build();
@@ -126,16 +142,12 @@ public class BranchControllerTest {
 
         Mockito.when(branchService.create(branch)).thenReturn(branch);
 
-        // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(branch);
+        String requestJson = objectWriter.writeValueAsString(branch);
 
-        mockMvc.perform(post("/branch")
+        mockMvc.perform(post(URI_BRANCH)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("name", Matchers.is("Kral Burger Şişli")));
+                .andExpect(jsonPath("name", Matchers.is(NAME_KRAL_SISLI)));
 
     }
 
@@ -144,7 +156,7 @@ public class BranchControllerTest {
 
         Restaurant restaurant = Restaurant.builder()
                 .id(1l)
-                .name("Kral Burger")
+                .name(NAME_KRAL_BURGER)
                 .status(Status.APPROVED)
                 .build();
 
@@ -157,24 +169,29 @@ public class BranchControllerTest {
                 .restaurant(restaurant)
                 .menu(menu)
                 .id(1L)
-                .name("Kral Burger Şişli")
+                .name(NAME_KRAL_SISLI)
                 .status(Status.WAITING)
                 .build();
 
-        branch.setName("Kral Burger Mecidiyeköy");
+        Branch modifyBranch = Branch.builder().address(address).restaurant(restaurant).name(NAME_KRAL_MECIDIYEKOY).id(1l).build();
 
-        Mockito.when(branchService.update(branch)).thenReturn(branch);
+        Mockito.when(branchService.create(branch)).thenReturn(branch);
+        Mockito.when(branchService.update(modifyBranch)).thenReturn(modifyBranch);
 
-        // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(branch);
+        String requestJson1 = objectWriter.writeValueAsString(branch);
+        String requestJson2 = objectWriter.writeValueAsString(modifyBranch);
 
-        mockMvc.perform(put("/branch")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        mockMvc.perform(post(URI_BRANCH)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("name", Matchers.is(NAME_KRAL_SISLI)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
+
+        mockMvc.perform(put(URI_BRANCH)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", Matchers.is("Kral Burger Mecidiyeköy")));
+                .andExpect(jsonPath("name", Matchers.is(NAME_KRAL_MECIDIYEKOY)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
 
     }
 
@@ -183,7 +200,7 @@ public class BranchControllerTest {
 
         Restaurant restaurant = Restaurant.builder()
                 .id(1l)
-                .name("Kral Burger")
+                .name(NAME_KRAL_BURGER)
                 .status(Status.APPROVED)
                 .build();
 
@@ -195,7 +212,7 @@ public class BranchControllerTest {
                 .address(address)
                 .restaurant(restaurant)
                 .menu(menu)
-                .name("Kral Burger Şişli")
+                .name(NAME_KRAL_SISLI)
                 .id(1L)
                 .status(Status.WAITING)
                 .build();
@@ -203,7 +220,7 @@ public class BranchControllerTest {
 
         Mockito.when(branchService.deleteById(1L)).thenReturn(branch);
 
-        mockMvc.perform(delete("/branch/1")
+        mockMvc.perform(delete(URI_BRANCH + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -219,7 +236,7 @@ public class BranchControllerTest {
 
         Mockito.when(branchService.findByStatus(Status.WAITING)).thenReturn(branchList);
 
-        mockMvc.perform(get("/branch/waiting")
+        mockMvc.perform(get(URI_BRANCH + "/waiting")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)));

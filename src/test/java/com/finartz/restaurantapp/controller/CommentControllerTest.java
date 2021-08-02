@@ -8,6 +8,7 @@ import com.finartz.restaurantapp.model.Comment;
 import com.finartz.restaurantapp.model.User;
 import com.finartz.restaurantapp.service.CommentService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -32,11 +33,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CommentController.class)
 public class CommentControllerTest {
 
+    private static final String URI_COMMENT = "/comment";
+    private static final String COMMENT_HARIKA = "Harika";
+    private static final String COMMENT_ORTALAMA = "Ortalama";
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private CommentService commentService;
+
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+
+    }
 
     @Test
     public void whenGetAllComment_thenReturnComment() throws Exception {
@@ -47,7 +62,7 @@ public class CommentControllerTest {
 
         Comment comment = Comment.builder()
                 .id(1L)
-                .comment("Harika")
+                .comment(COMMENT_HARIKA)
                 .branch(branch)
                 .user(user)
                 .speedPoint(9)
@@ -58,11 +73,11 @@ public class CommentControllerTest {
 
         Mockito.when(commentService.getAll()).thenReturn(commentList);
 
-        mockMvc.perform(get("/comment")
+        mockMvc.perform(get(URI_COMMENT)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].comment", Matchers.is("Harika")));
+                .andExpect(jsonPath("$[0].comment", Matchers.is(COMMENT_HARIKA)));
 
     }
 
@@ -75,7 +90,7 @@ public class CommentControllerTest {
 
         Comment comment = Comment.builder()
                 .id(1L)
-                .comment("Harika")
+                .comment(COMMENT_HARIKA)
                 .branch(branch)
                 .user(user)
                 .speedPoint(9)
@@ -84,10 +99,10 @@ public class CommentControllerTest {
 
         Mockito.when(commentService.getById(1L)).thenReturn(comment);
 
-        mockMvc.perform(get("/comment/1")
+        mockMvc.perform(get(URI_COMMENT +"/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("comment", Matchers.is("Harika")));
+                .andExpect(jsonPath("comment", Matchers.is(COMMENT_HARIKA)));
 
     }
 
@@ -100,7 +115,7 @@ public class CommentControllerTest {
 
         Comment comment = Comment.builder()
                 .id(1L)
-                .comment("Harika")
+                .comment(COMMENT_HARIKA)
                 .branch(branch)
                 .user(user)
                 .speedPoint(9)
@@ -109,15 +124,12 @@ public class CommentControllerTest {
 
         Mockito.when(commentService.create(comment)).thenReturn(comment);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(comment);
+        String requestJson = objectWriter.writeValueAsString(comment);
 
-        mockMvc.perform(post("/comment")
+        mockMvc.perform(post(URI_COMMENT)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("comment", Matchers.is("Harika")));
+                .andExpect(jsonPath("comment", Matchers.is(COMMENT_HARIKA)));
     }
 
     @Test
@@ -129,26 +141,32 @@ public class CommentControllerTest {
 
         Comment comment = Comment.builder()
                 .id(1L)
-                .comment("Harika")
+                .comment(COMMENT_HARIKA)
                 .branch(branch)
                 .user(user)
                 .speedPoint(9)
                 .tastePoint(8)
                 .build();
 
-        comment.setComment("Ortalama");
+        Comment modifyComment = Comment.builder().id(1l).comment(COMMENT_ORTALAMA).build();
 
-        Mockito.when(commentService.update(comment)).thenReturn(comment);
+        Mockito.when(commentService.create(comment)).thenReturn(comment);
+        Mockito.when(commentService.update(modifyComment)).thenReturn(modifyComment);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(comment);
+        String requestJson1 = objectWriter.writeValueAsString(comment);
+        String requestJson2 = objectWriter.writeValueAsString(modifyComment);
 
-        mockMvc.perform(put("/comment")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        mockMvc.perform(post(URI_COMMENT)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("comment", Matchers.is(COMMENT_HARIKA)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
+
+        mockMvc.perform(put(URI_COMMENT)
+                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("comment", Matchers.is("Ortalama")));
+                .andExpect(jsonPath("comment", Matchers.is(COMMENT_ORTALAMA)))
+                .andExpect(jsonPath("id", Matchers.is(1)));
     }
 
     @Test
@@ -160,7 +178,7 @@ public class CommentControllerTest {
 
         Comment comment = Comment.builder()
                 .id(1L)
-                .comment("Harika")
+                .comment(COMMENT_HARIKA)
                 .branch(branch)
                 .user(user)
                 .speedPoint(9)
@@ -169,12 +187,9 @@ public class CommentControllerTest {
 
         Mockito.when(commentService.deleteById(1L)).thenReturn(comment);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(comment);
+        String requestJson = objectWriter.writeValueAsString(comment);
 
-        mockMvc.perform(delete("/comment/1")
+        mockMvc.perform(delete(URI_COMMENT + "/1")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isOk());
     }

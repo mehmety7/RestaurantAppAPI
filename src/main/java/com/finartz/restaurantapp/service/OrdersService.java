@@ -1,47 +1,19 @@
 package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.Orders;
-import com.finartz.restaurantapp.repository.OrdersRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class OrdersService {
+public interface OrdersService {
 
-    private final OrdersRepository ordersRepository;
+    public Orders create(Orders orders);
 
-    public OrdersService(OrdersRepository ordersRepository) {
-        this.ordersRepository = ordersRepository;
-    }
+    public List<Orders> getAll();
 
-    public Orders create(Orders orders){
-        return ordersRepository.save(orders);
-    }
+    public Orders getById(Long id);
 
-    public List<Orders> getAll(){
-        return ordersRepository.findAll();
-    }
+    public Orders update(Orders orders);
 
-    public Orders getById(Long id){
-        return ordersRepository.getById(id);
-    }
+    public Orders deleteById(Long id);
 
-    public Orders update(Orders orders){
-        Orders update = ordersRepository.getById(orders.getId());
-        if(update != null) {
-            ordersRepository.save(orders);
-            return update;
-        }
-        return orders;
-    }
-
-    public Orders deleteById(Long id){
-        Orders orders = ordersRepository.getById(id);
-        if (orders != null) {
-            ordersRepository.deleteById(id);
-            return orders;
-        }
-        return orders;
-    }
 }

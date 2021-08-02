@@ -9,6 +9,7 @@ import com.finartz.restaurantapp.model.User;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.service.RestaurantService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -38,6 +39,15 @@ public class RestaurantControllerTest {
 
     @MockBean
     private RestaurantService restaurantService;
+
+    private ObjectWriter objectWriter;
+
+    @Before
+    public void init() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    }
 
     @Test
     public void whenGetAllRestaurant_thenReturnRestaurant() throws Exception {
@@ -107,10 +117,7 @@ public class RestaurantControllerTest {
 
         Mockito.when(restaurantService.create(restaurant)).thenReturn(restaurant);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(restaurant);
+        String requestJson = objectWriter.writeValueAsString(restaurant);
 
         mockMvc.perform(post("/restaurant")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
@@ -137,10 +144,7 @@ public class RestaurantControllerTest {
 
         Mockito.when(restaurantService.update(restaurant)).thenReturn(restaurant);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(restaurant);
+        String requestJson = objectWriter.writeValueAsString(restaurant);
 
         mockMvc.perform(put("/restaurant")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
@@ -165,10 +169,7 @@ public class RestaurantControllerTest {
 
         Mockito.when(restaurantService.deleteById(1L)).thenReturn(restaurant);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(restaurant);
+        String requestJson = objectWriter.writeValueAsString(restaurant);
 
         mockMvc.perform(delete("/restaurant/1")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))

@@ -22,7 +22,7 @@ public class City extends BaseDTO{
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "city", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "city")
     @JsonManagedReference
     private List<County> countyList;
 

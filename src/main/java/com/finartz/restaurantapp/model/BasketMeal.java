@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "basket_meals")
+@Table(name = "basket_meal")
 public class BasketMeal extends BaseDTO{
 
     @EmbeddedId
