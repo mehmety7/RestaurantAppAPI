@@ -17,5 +17,4 @@ public class RestaurantappApplication {
 		return new BCryptPasswordEncoder();
 	}
 
-
 }
