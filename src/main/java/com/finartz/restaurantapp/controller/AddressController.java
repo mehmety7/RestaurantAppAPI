@@ -1,6 +1,8 @@
 package com.finartz.restaurantapp.controller;
 
-import com.finartz.restaurantapp.model.Address;
+import com.finartz.restaurantapp.model.dto.AddressDto;
+import com.finartz.restaurantapp.model.entity.AddressEntity;
+import com.finartz.restaurantapp.model.request.AddressRequest;
 import com.finartz.restaurantapp.service.AddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,29 +20,29 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @PostMapping
-    public ResponseEntity<Address> create(@RequestBody Address address){
-        return new ResponseEntity(addressService.create(address), HttpStatus.CREATED);
-    }
-
     @GetMapping("{id}")
-    public ResponseEntity<Address> get(@PathVariable Long id){
-        return new ResponseEntity(addressService.getById(id), HttpStatus.OK);
+    public ResponseEntity<AddressDto> getAddress(@PathVariable Long id){
+        return new ResponseEntity(addressService.getAddress(id), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Address>> getAll(){
-        return new ResponseEntity(addressService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<AddressDto>> getAddresses(){
+        return new ResponseEntity(addressService.getAddresses(), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<AddressDto> createAddress(@RequestBody AddressRequest addressRequest){
+        return new ResponseEntity(addressService.createAddress(addressRequest), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Address> update(@RequestBody Address address){
-        return new ResponseEntity(addressService.update(address), HttpStatus.OK);
+    public ResponseEntity<AddressEntity> updateAddress(@RequestBody AddressRequest addressRequest){
+        return new ResponseEntity(addressService.updateAddress(addressRequest), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Address> deleteById(@PathVariable Long id){
-        addressService.deleteById(id);
+    public ResponseEntity deleteAddress(@PathVariable Long id){
+        addressService.deleteAddress(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

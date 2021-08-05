@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.User;
+import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.UserService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,68 +26,66 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if(user == null)
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if(userEntity == null)
             throw new UsernameNotFoundException("User not found in database");
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
+        userEntity.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.toString()));
         });
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(userEntity.getEmail(), userEntity.getPassword(), authorities);
 
     }
 
     @Override
-    public User create(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    @Override
-    public List<User> getAll(){
+    public List<UserEntity> getUsers(){
         return userRepository.findAll();
     }
 
     @Override
-    public User getById(Long id){
+    public UserEntity getUser(Long id){
         return userRepository.getById(id);
     }
 
     @Override
-    public User findByEmail(String email){
+    public UserEntity getUser(String email){
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public User update(User user){
-        User foundUser = userRepository.getById(user.getId());
-
-        if(user.getEmail() != null)
-            foundUser.setEmail(user.getEmail());
-        if(user.getName() != null)
-            foundUser.setName(user.getName());
-        if(user.getPassword() != null)
-            foundUser.setPassword(user.getPassword());
-        if(user.getAddressList() != null)
-            foundUser.setAddressList(user.getAddressList());
-        if(user.getCreditCardList() != null)
-            foundUser.setCreditCardList(user.getCreditCardList());
-        if(user.getCommentList() != null)
-            foundUser.setCommentList(user.getCommentList());
-        if(user.getRestaurantList() != null)
-            foundUser.setRestaurantList(user.getRestaurantList());
-
-        return userRepository.save(foundUser);
+    public UserEntity createUser(UserEntity userEntity){
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        return userRepository.save(userEntity);
     }
 
     @Override
-    public User deleteById(Long id){
-        User user = userRepository.getById(id);
-        if (user != null) {
+    public UserEntity updateUser(UserEntity userEntity){
+        UserEntity foundUserEntity = userRepository.getById(userEntity.getId());
+
+        if(userEntity.getEmail() != null)
+            foundUserEntity.setEmail(userEntity.getEmail());
+        if(userEntity.getName() != null)
+            foundUserEntity.setName(userEntity.getName());
+        if(userEntity.getPassword() != null)
+            foundUserEntity.setPassword(userEntity.getPassword());
+        if(userEntity.getAddressEntities() != null)
+            foundUserEntity.setAddressEntities(userEntity.getAddressEntities());
+        if(userEntity.getCommentEntities() != null)
+            foundUserEntity.setCommentEntities(userEntity.getCommentEntities());
+        if(userEntity.getRestaurantEntities() != null)
+            foundUserEntity.setRestaurantEntities(userEntity.getRestaurantEntities());
+
+        return userRepository.save(foundUserEntity);
+    }
+
+    @Override
+    public UserEntity deleteUser(Long id){
+        UserEntity userEntity = userRepository.getById(id);
+        if (userEntity != null) {
             userRepository.deleteById(id);
-            return user;
+            return userEntity;
         }
-        return user;
+        return userEntity;
     }
 
 }

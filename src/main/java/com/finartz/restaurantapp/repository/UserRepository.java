@@ -1,11 +1,11 @@
 package com.finartz.restaurantapp.repository;
 
-import com.finartz.restaurantapp.model.User;
+import com.finartz.restaurantapp.model.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends BaseRepository<User> {
+public interface UserRepository extends BaseRepository<UserEntity> {
 
-    User findByEmail(String Email);
+    UserEntity findByEmail(String Email);
 
 }

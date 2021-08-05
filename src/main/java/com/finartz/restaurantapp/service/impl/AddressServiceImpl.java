@@ -1,64 +1,81 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.Address;
+import com.finartz.restaurantapp.model.converter.dto.AddressDtoConverter;
+import com.finartz.restaurantapp.model.converter.entity.AddressDtoToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entity.AddressRequestToEntityConverter;
+import com.finartz.restaurantapp.model.dto.AddressDto;
+import com.finartz.restaurantapp.model.entity.AddressEntity;
+import com.finartz.restaurantapp.model.request.AddressRequest;
 import com.finartz.restaurantapp.repository.AddressRepository;
 import com.finartz.restaurantapp.service.AddressService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
+    private final AddressDtoConverter addressDtoConverter;
+    private final AddressRequestToEntityConverter addressRequestToEntityConverter;
+    private final AddressDtoToEntityConverter addressDtoToEntityConverter;
 
-    public AddressServiceImpl(AddressRepository addressRepository) {
-        this.addressRepository = addressRepository;
+    @Override
+    public List<AddressDto> getAddresses() {
+        List<AddressEntity> addressEntities = addressRepository.findAll();
+        List<AddressDto> addresses = new ArrayList<>();
+        addressEntities.forEach(addressEntity -> {
+            addresses.add(addressDtoConverter.convert(addressEntity));
+        });
+        return addresses;
     }
 
     @Override
-    public Address create(Address address) {
-        return addressRepository.save(address);
+    public AddressDto getAddress(Long id) {
+        AddressEntity addressEntity = addressRepository.getById(id);
+        return addressDtoConverter.convert(addressEntity);
     }
 
     @Override
-    public List<Address> getAll() {
-        return addressRepository.findAll();
+    public AddressDto createAddress(AddressRequest addressRequest) {
+        AddressEntity addressEntity = addressRepository.save(addressRequestToEntityConverter.convert(addressRequest));
+        return addressDtoConverter.convert(addressEntity);
     }
 
     @Override
-    public Address getById(Long id) {
-        return addressRepository.getById(id);
-    }
+    public AddressDto updateAddress(AddressRequest addressRequest) {
+        AddressEntity addressEntity = addressRequestToEntityConverter.convert(addressRequest);
+        AddressEntity foundAddressEntity = addressRepository.getById(addressEntity.getId());
 
-    @Override
-    public Address update(Address address) {
-        Address foundAddress = addressRepository.getById(address.getId());
+        if (addressEntity.getCityEntity() != null)
+            foundAddressEntity.setCityEntity(addressEntity.getCityEntity());
+        if (addressEntity.getCountyEntity() != null)
+            foundAddressEntity.setCountyEntity(addressEntity.getCountyEntity());
+        if (addressEntity.getName() != null)
+            foundAddressEntity.setName(addressEntity.getName());
+        if (addressEntity.getDistrict() != null)
+            foundAddressEntity.setDistrict(addressEntity.getDistrict());
+        if (addressEntity.getOtherContent() != null)
+            foundAddressEntity.setOtherContent(addressEntity.getOtherContent());
+        if (addressEntity.getEnable() != null)
+            foundAddressEntity.setEnable(addressEntity.getEnable());
 
-        if (address.getCity() != null)
-            foundAddress.setCity(address.getCity());
-        if (address.getCounty() != null)
-            foundAddress.setCounty(address.getCounty());
-        if (address.getName() != null)
-            foundAddress.setName(address.getName());
-        if (address.getDistrict() != null)
-            foundAddress.setDistrict(address.getDistrict());
-        if (address.getOther_content() != null)
-            foundAddress.setOther_content(address.getOther_content());
-        if (address.getEnable() != null)
-            foundAddress.setEnable(address.getEnable());
+        addressRepository.save(addressEntity);
 
-        return addressRepository.save(foundAddress);
+        return addressDtoConverter.convert(addressEntity);
 
     }
 
     @Override
-    public Address deleteById(Long id) {
-        Address address = addressRepository.getById(id);
-        if (address != null) {
+    public AddressDto deleteAddress(Long id) {
+        AddressEntity addressEntity = addressRepository.getById(id);
+        if (addressEntity != null) {
             addressRepository.deleteById(id);
-            return address;
+            return addressDtoConverter.convert(addressEntity);
         }
-        return address;
+        return null;
     }
 }

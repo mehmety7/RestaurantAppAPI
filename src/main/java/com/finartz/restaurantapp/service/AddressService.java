@@ -1,19 +1,20 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.Address;
+import com.finartz.restaurantapp.model.dto.AddressDto;
+import com.finartz.restaurantapp.model.request.AddressRequest;
 
 import java.util.List;
 
 public interface AddressService {
 
-    public Address create(Address address);
+    List<AddressDto> getAddresses();
 
-    public List<Address> getAll();
+    AddressDto getAddress(Long id);
 
-    public Address getById(Long id);
+    AddressDto createAddress(AddressRequest addressRequest);
 
-    public Address update(Address address);
+    AddressDto updateAddress(AddressRequest addressRequest);
 
-    public Address deleteById(Long id);
+    AddressDto deleteAddress(Long id);
 
 }

@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.Branch;
+import com.finartz.restaurantapp.model.entity.AddressEntity;
+import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.repository.BranchRepository;
 import com.finartz.restaurantapp.service.BranchService;
@@ -18,56 +19,55 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public Branch create(Branch branch) {
-        return branchRepository.save(branch);
-    }
-
-    @Override
-    public List<Branch> getAll() {
+    public List<BranchEntity> getBranches() {
         return branchRepository.findAll();
     }
 
     @Override
-    public Branch getById(Long id) {
+    public BranchEntity getBranch(Long id) {
         return branchRepository.getById(id);
     }
 
     @Override
-    public List<Branch> findByStatus(Status status) {
+    public List<BranchEntity> getBranches(Status status) {
         return branchRepository.findByStatus(status);
     }
 
     @Override
-    public List<Branch> findByAddress_County_Id(Long county_id) {
-        return branchRepository.findByAddress_County_Id(county_id);
+    public List<BranchEntity> getBranches(AddressEntity addressEntity) {
+        return branchRepository.findByAddressEntity(addressEntity);
     }
 
     @Override
-    public Branch update(Branch branch) {
-        Branch foundBranch = branchRepository.getById(branch.getId());
-
-        if (branch.getName() != null)
-            foundBranch.setName(branch.getName());
-        if (branch.getAddress() != null)
-            foundBranch.setAddress(branch.getAddress());
-        if (branch.getStatus() != null)
-            foundBranch.setStatus(branch.getStatus());
-        if (branch.getMenu() != null)
-            foundBranch.setMenu(branch.getMenu());
-        if (branch.getRestaurant() != null)
-            foundBranch.setRestaurant(branch.getRestaurant());
-
-        return branchRepository.save(foundBranch);
-
+    public BranchEntity createBranch(BranchEntity branchEntity) {
+        return branchRepository.save(branchEntity);
     }
 
     @Override
-    public Branch deleteById(Long id) {
-        Branch branch = branchRepository.getById(id);
-        if (branch != null) {
+    public BranchEntity updateBranch(BranchEntity branchEntity) {
+        BranchEntity foundBranchEntity = branchRepository.getById(branchEntity.getId());
+
+        if (branchEntity.getName() != null)
+            foundBranchEntity.setName(branchEntity.getName());
+        if (branchEntity.getAddressEntity() != null)
+            foundBranchEntity.setAddressEntity(branchEntity.getAddressEntity());
+        if (branchEntity.getStatus() != null)
+            foundBranchEntity.setStatus(branchEntity.getStatus());
+        if (branchEntity.getMenuEntity() != null)
+            foundBranchEntity.setMenuEntity(branchEntity.getMenuEntity());
+        if (branchEntity.getRestaurantEntity() != null)
+            foundBranchEntity.setRestaurantEntity(branchEntity.getRestaurantEntity());
+
+        return branchRepository.save(foundBranchEntity);
+    }
+
+    @Override
+    public BranchEntity deleteBranch(Long id) {
+        BranchEntity branchEntity = branchRepository.getById(id);
+        if (branchEntity != null) {
             branchRepository.deleteById(id);
-            return branch;
+            return branchEntity;
         }
-        return branch;
+        return branchEntity;
     }
 }

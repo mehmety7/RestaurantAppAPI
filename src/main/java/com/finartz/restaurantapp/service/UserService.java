@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.User;
+import com.finartz.restaurantapp.model.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -9,18 +9,18 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
 
     @Override
-    public UserDetails loadUserByUsername(String email);
+    UserDetails loadUserByUsername(String email);
 
-    public User create(User user);
+    List<UserEntity> getUsers();
 
-    public List<User> getAll();
+    UserEntity getUser(Long id);
 
-    public User getById(Long id);
+    UserEntity getUser(String email);
 
-    public User findByEmail(String email);
+    UserEntity createUser(UserEntity userEntity);
 
-    public User update(User user);
+    UserEntity updateUser(UserEntity userEntity);
 
-    public User deleteById(Long id);
+    UserEntity deleteUser(Long id);
 
 }

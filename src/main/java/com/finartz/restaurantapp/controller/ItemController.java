@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.controller;
 
-import com.finartz.restaurantapp.model.Item;
+import com.finartz.restaurantapp.model.entity.ItemEntity;
 import com.finartz.restaurantapp.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,29 +18,29 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    @PostMapping
-    public ResponseEntity<Item> create(@RequestBody Item item){
-        return new ResponseEntity(itemService.create(item), HttpStatus.CREATED);
-    }
-
     @GetMapping("{id}")
-    public ResponseEntity<Item> get(@PathVariable Long id){
-        return new ResponseEntity(itemService.getById(id), HttpStatus.OK);
+    public ResponseEntity<ItemEntity> getItem(@PathVariable Long id){
+        return new ResponseEntity(itemService.getItem(id), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Item>> getAll(){
-        return new ResponseEntity(itemService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<ItemEntity>> getItems(){
+        return new ResponseEntity(itemService.getItems(), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<ItemEntity> createItem(@RequestBody ItemEntity itemEntity){
+        return new ResponseEntity(itemService.createItem(itemEntity), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Item> update(@RequestBody Item item){
-        return new ResponseEntity(itemService.update(item), HttpStatus.OK);
+    public ResponseEntity<ItemEntity> updateItem(@RequestBody ItemEntity itemEntity){
+        return new ResponseEntity(itemService.updateItem(itemEntity), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Item> deleteById(@PathVariable Long id){
-        itemService.deleteById(id);
+    public ResponseEntity<ItemEntity> deleteItem(@PathVariable Long id){
+        itemService.deleteItem(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

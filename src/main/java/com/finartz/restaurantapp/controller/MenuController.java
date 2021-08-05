@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.controller;
 
-import com.finartz.restaurantapp.model.Menu;
+import com.finartz.restaurantapp.model.entity.MenuEntity;
 import com.finartz.restaurantapp.service.MenuService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,29 +18,29 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-    @PostMapping
-    public ResponseEntity<Menu> create(@RequestBody Menu menu){
-        return new ResponseEntity(menuService.create(menu), HttpStatus.CREATED);
-    }
-
     @GetMapping("{id}")
-    public ResponseEntity<Menu> get(@PathVariable Long id){
-        return new ResponseEntity(menuService.getById(id), HttpStatus.OK);
+    public ResponseEntity<MenuEntity> getMenu(@PathVariable Long id){
+        return new ResponseEntity(menuService.getMenu(id), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Menu>> getAll(){
-        return new ResponseEntity(menuService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<MenuEntity>> getMenus(){
+        return new ResponseEntity(menuService.getMenus(), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<MenuEntity> createMenu(@RequestBody MenuEntity menuEntity){
+        return new ResponseEntity(menuService.createMenu(menuEntity), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Menu> update(@RequestBody Menu menu){
-        return new ResponseEntity(menuService.update(menu), HttpStatus.OK);
+    public ResponseEntity<MenuEntity> updateMenu(@RequestBody MenuEntity menuEntity){
+        return new ResponseEntity(menuService.updateMenu(menuEntity), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Menu> deleteById(@PathVariable Long id){
-        menuService.deleteById(id);
+    public ResponseEntity<MenuEntity> deleteMenu(@PathVariable Long id){
+        menuService.deleteMenu(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

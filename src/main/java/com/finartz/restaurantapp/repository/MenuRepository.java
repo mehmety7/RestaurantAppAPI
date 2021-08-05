@@ -1,8 +1,8 @@
 package com.finartz.restaurantapp.repository;
 
-import com.finartz.restaurantapp.model.Menu;
+import com.finartz.restaurantapp.model.entity.MenuEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MenuRepository extends BaseRepository<Menu>{
+public interface MenuRepository extends BaseRepository<MenuEntity>{
 }

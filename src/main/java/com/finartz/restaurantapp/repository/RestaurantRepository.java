@@ -1,14 +1,14 @@
 package com.finartz.restaurantapp.repository;
 
-import com.finartz.restaurantapp.model.Restaurant;
+import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface RestaurantRepository extends BaseRepository<Restaurant> {
+public interface RestaurantRepository extends BaseRepository<RestaurantEntity> {
 
-    List<Restaurant> findByStatus(Status status);
+    List<RestaurantEntity> findByStatus(Status status);
 
 }
