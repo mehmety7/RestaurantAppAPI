@@ -1,18 +1,18 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.City;
+import com.finartz.restaurantapp.model.entity.CityEntity;
 
 import java.util.List;
 
 public interface CityService {
 
-    public City create(City city);
+    public List<CityEntity> getCities();
 
-    public List<City> getAll();
+    public CityEntity getCity(Long id);
 
-    public City getById(Long id);
+    public CityEntity createCity(CityEntity cityEntity);
 
-    public City update(City city);
+    public CityEntity updateCity(CityEntity cityEntity);
 
-    public City deleteById(Long id);
+    public CityEntity deleteCity(Long id);
 }

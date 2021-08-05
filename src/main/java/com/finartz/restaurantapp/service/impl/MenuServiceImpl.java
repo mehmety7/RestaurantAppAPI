@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.Menu;
+import com.finartz.restaurantapp.model.entity.MenuEntity;
 import com.finartz.restaurantapp.repository.MenuRepository;
 import com.finartz.restaurantapp.service.MenuService;
 import org.springframework.stereotype.Service;
@@ -17,40 +17,40 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Menu create(Menu menu){
-        return menuRepository.save(menu);
-    }
-
-    @Override
-    public List<Menu> getAll(){
+    public List<MenuEntity> getMenus(){
         return menuRepository.findAll();
     }
 
     @Override
-    public Menu getById(Long id){
+    public MenuEntity getMenu(Long id){
         return menuRepository.getById(id);
     }
 
     @Override
-    public Menu update(Menu menu) {
-        Menu foundMenu = menuRepository.getById(menu.getId());
-
-        if (menu.getBranch() != null)
-            foundMenu.setBranch(menu.getBranch());
-        if (menu.getMealList() != null)
-            foundMenu.setMealList(menu.getMealList());
-
-        return menuRepository.save(foundMenu);
+    public MenuEntity createMenu(MenuEntity menuEntity){
+        return menuRepository.save(menuEntity);
     }
 
     @Override
-    public Menu deleteById(Long id){
-        Menu menu = menuRepository.getById(id);
-        if (menu != null) {
+    public MenuEntity updateMenu(MenuEntity menuEntity) {
+        MenuEntity foundMenuEntity = menuRepository.getById(menuEntity.getId());
+
+        if (menuEntity.getBranchEntity() != null)
+            foundMenuEntity.setBranchEntity(menuEntity.getBranchEntity());
+        if (menuEntity.getMealEntities() != null)
+            foundMenuEntity.setMealEntities(menuEntity.getMealEntities());
+
+        return menuRepository.save(foundMenuEntity);
+    }
+
+    @Override
+    public MenuEntity deleteMenu(Long id){
+        MenuEntity menuEntity = menuRepository.getById(id);
+        if (menuEntity != null) {
             menuRepository.deleteById(id);
-            return menu;
+            return menuEntity;
         }
-        return menu;
+        return menuEntity;
     }
 }
 

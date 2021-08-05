@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.Meal;
+import com.finartz.restaurantapp.model.entity.MealEntity;
 import com.finartz.restaurantapp.repository.MealRepository;
 import com.finartz.restaurantapp.service.MealService;
 import org.springframework.stereotype.Service;
@@ -17,46 +17,44 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public Meal create(Meal meal){
-        return mealRepository.save(meal);
-    }
-
-    @Override
-    public List<Meal> getAll(){
+    public List<MealEntity> getMeals(){
         return mealRepository.findAll();
     }
 
     @Override
-    public Meal getById(Long id){
+    public MealEntity getMeal(Long id){
         return mealRepository.getById(id);
     }
 
     @Override
-    public Meal update(Meal meal){
-        Meal foundMeal = mealRepository.getById(meal.getId());
-
-        if(meal.getName() != null)
-            foundMeal.setName(meal.getName());
-        if(meal.getPrice() != null)
-            foundMeal.setPrice(meal.getPrice());
-        if(meal.getMenu() != null)
-            foundMeal.setMenu(meal.getMenu());
-        if(meal.getItemList() != null)
-            foundMeal.setItemList(meal.getItemList());
-        if(meal.getBasketMealList() != null)
-            foundMeal.setBasketMealList(meal.getBasketMealList());
-
-        return mealRepository.save(foundMeal);
+    public MealEntity createMeal(MealEntity mealEntity){
+        return mealRepository.save(mealEntity);
     }
 
     @Override
-    public Meal deleteById(Long id){
-        Meal meal = mealRepository.getById(id);
-        if (meal != null) {
+    public MealEntity updateMeal(MealEntity mealEntity){
+        MealEntity foundMealEntity = mealRepository.getById(mealEntity.getId());
+
+        if(mealEntity.getName() != null)
+            foundMealEntity.setName(mealEntity.getName());
+        if(mealEntity.getPrice() != null)
+            foundMealEntity.setPrice(mealEntity.getPrice());
+        if(mealEntity.getMenuEntity() != null)
+            foundMealEntity.setMenuEntity(mealEntity.getMenuEntity());
+        if(mealEntity.getItemEntities() != null)
+            foundMealEntity.setItemEntities(mealEntity.getItemEntities());
+
+        return mealRepository.save(foundMealEntity);
+    }
+
+    @Override
+    public MealEntity deleteMeal(Long id){
+        MealEntity mealEntity = mealRepository.getById(id);
+        if (mealEntity != null) {
             mealRepository.deleteById(id);
-            return meal;
+            return mealEntity;
         }
-        return meal;
+        return mealEntity;
     }
 
 }

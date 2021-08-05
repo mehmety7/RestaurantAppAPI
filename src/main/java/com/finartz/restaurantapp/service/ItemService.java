@@ -1,18 +1,18 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.Item;
+import com.finartz.restaurantapp.model.entity.ItemEntity;
 
 import java.util.List;
 
 public interface ItemService {
 
-    public Item create(Item item);
+    public List<ItemEntity> getItems();
 
-    public List<Item> getAll();
+    public ItemEntity getItem(Long id);
 
-    public Item getById(Long id);
+    public ItemEntity createItem(ItemEntity itemEntity);
 
-    public Item update(Item item);
+    public ItemEntity updateItem(ItemEntity itemEntity);
 
-    public Item deleteById(Long id);
+    public ItemEntity deleteItem(Long id);
 }

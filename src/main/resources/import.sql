@@ -1067,8 +1067,6 @@ INSERT INTO user_role (id, role) VALUES (1, 'ADMIN');
 INSERT INTO addresses (id, branch_id, user_id, name, city_id, county_id, district, other_content, enable) VALUES (1, NULL, 2, 'Şirket', 34, 896, 'Merkez Mahallesi', '100. Sokak No 15 D1', true);
 INSERT INTO addresses (id, branch_id, user_id, name, city_id, county_id, district, other_content, enable) VALUES (2, NULL, 3, 'Ev', 34, 855, 'Ağva Mahallesi', '151. Sokak No 20 D3', true);
 
-INSERT INTO credit_card (id, nickname, name, card_no, ccv, exp_month, exp_year, user_id) values (1, 'Ayşe Garanti', 'Ayşe Gül', '2121212', 996, 11, 25, 3);
-
 INSERT INTO restaurants (id, name, status, user_id) values (1, 'Kral Burger', 'APPROVED', 2);
 INSERT INTO restaurants (id, name, status, user_id) values (2, 'Lezzet Evi', 'WAITING', 2);
 
@@ -1091,8 +1089,6 @@ INSERT INTO meal_item (meal_id, item_id) values (2,2);
 INSERT INTO meal_item (meal_id, item_id) values (3,1);
 INSERT INTO meal_item (meal_id, item_id) values (3,2);
 INSERT INTO meal_item (meal_id, item_id) values (3,3);
-
-INSERT INTO baskets (id, user_id, total_price) values (1 , 3, 0);
 
 
 

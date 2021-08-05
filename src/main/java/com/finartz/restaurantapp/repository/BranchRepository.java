@@ -1,16 +1,17 @@
 package com.finartz.restaurantapp.repository;
 
-import com.finartz.restaurantapp.model.Branch;
+import com.finartz.restaurantapp.model.entity.AddressEntity;
+import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface BranchRepository extends BaseRepository<Branch> {
+public interface BranchRepository extends BaseRepository<BranchEntity> {
 
-    List<Branch> findByStatus(Status status);
+    List<BranchEntity> findByStatus(Status status);
 
-    List<Branch> findByAddress_County_Id(Long county_id);
+    List<BranchEntity> findByAddressEntity(AddressEntity addressEntity);
 
 }

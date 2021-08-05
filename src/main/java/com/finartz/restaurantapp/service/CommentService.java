@@ -1,18 +1,18 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.Comment;
+import com.finartz.restaurantapp.model.entity.CommentEntity;
 
 import java.util.List;
 
 public interface CommentService {
 
-    public Comment create(Comment comment);
+    public List<CommentEntity> getComments();
 
-    public List<Comment> getAll();
+    public CommentEntity getComment(Long id);
 
-    public Comment getById(Long id);
+    public CommentEntity createComment(CommentEntity commentEntity);
 
-    public Comment update(Comment comment);
+    public CommentEntity updateComment(CommentEntity commentEntity);
 
-    public Comment deleteById(Long id);
+    public CommentEntity deleteComment(Long id);
 }

@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.Comment;
+import com.finartz.restaurantapp.model.entity.CommentEntity;
 import com.finartz.restaurantapp.repository.CommentRepository;
 import com.finartz.restaurantapp.service.CommentService;
 import org.springframework.stereotype.Service;
@@ -17,48 +17,48 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment create(Comment comment){
-        Comment save = commentRepository.save(comment);
+    public List<CommentEntity> getComments(){
+        List<CommentEntity> commentEntities = commentRepository.findAll();
+        return commentEntities;
+    }
+
+    @Override
+    public CommentEntity getComment(Long id){
+        CommentEntity commentEntity = commentRepository.getById(id);
+        return commentEntity;
+    }
+
+    @Override
+    public CommentEntity createComment(CommentEntity commentEntity){
+        CommentEntity save = commentRepository.save(commentEntity);
         return save;
     }
 
     @Override
-    public List<Comment> getAll(){
-        List<Comment> comments = commentRepository.findAll();
-        return comments;
-    }
+    public CommentEntity updateComment(CommentEntity commentEntity){
+        CommentEntity foundCommentEntity = commentRepository.getById(commentEntity.getId());
+        if(commentEntity.getComment() != null)
+            foundCommentEntity.setComment(commentEntity.getComment());
+        if(commentEntity.getSpeedPoint() != null)
+            foundCommentEntity.setSpeedPoint(commentEntity.getSpeedPoint());
+        if(commentEntity.getTastePoint() != null)
+            foundCommentEntity.setTastePoint(commentEntity.getTastePoint());
+        if(commentEntity.getUserEntity() != null)
+            foundCommentEntity.setUserEntity(commentEntity.getUserEntity());
+        if(commentEntity.getBranchEntity() != null)
+            foundCommentEntity.setBranchEntity(commentEntity.getBranchEntity());
 
-    @Override
-    public Comment getById(Long id){
-        Comment comment = commentRepository.getById(id);
-        return comment;
-    }
-
-    @Override
-    public Comment update(Comment comment){
-        Comment foundComment = commentRepository.getById(comment.getId());
-        if(comment.getComment() != null)
-            foundComment.setComment(comment.getComment());
-        if(comment.getSpeedPoint() != null)
-            foundComment.setSpeedPoint(comment.getSpeedPoint());
-        if(comment.getTastePoint() != null)
-            foundComment.setTastePoint(comment.getTastePoint());
-        if(comment.getUser() != null)
-            foundComment.setUser(comment.getUser());
-        if(comment.getBranch() != null)
-            foundComment.setBranch(comment.getBranch());
-
-        return commentRepository.save(foundComment);
+        return commentRepository.save(foundCommentEntity);
 
     }
 
     @Override
-    public Comment deleteById(Long id){
-        Comment comment = commentRepository.getById(id);
-        if (comment != null) {
+    public CommentEntity deleteComment(Long id){
+        CommentEntity commentEntity = commentRepository.getById(id);
+        if (commentEntity != null) {
             commentRepository.deleteById(id);
-            return comment;
+            return commentEntity;
         }
-        return comment;
+        return commentEntity;
     }
 }

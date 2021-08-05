@@ -1,9 +1,8 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.Restaurant;
+import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.repository.RestaurantRepository;
-import com.finartz.restaurantapp.service.MenuService;
 import com.finartz.restaurantapp.service.RestaurantService;
 import org.springframework.stereotype.Service;
 
@@ -19,49 +18,49 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant create(Restaurant restaurant){
-        return restaurantRepository.save(restaurant);
-    }
-
-    @Override
-    public List<Restaurant> getAll(){
+    public List<RestaurantEntity> getRestaurants(){
         return restaurantRepository.findAll();
     }
 
     @Override
-    public Restaurant getById(Long id){
-        return restaurantRepository.getById(id);
-    }
-
-    @Override
-    public List<Restaurant> findByStatus(Status status){
+    public List<RestaurantEntity> getRestaurants(Status status){
         return restaurantRepository.findByStatus(status);
     }
 
     @Override
-    public Restaurant update(Restaurant restaurant){
-        Restaurant foundRestaurant = restaurantRepository.getById(restaurant.getId());
+    public RestaurantEntity getRestaurant(Long id){
+        return restaurantRepository.getById(id);
+    }
 
-        if (restaurant.getName() != null)
-            foundRestaurant.setName(restaurant.getName());
-        if (restaurant.getStatus() != null)
-            foundRestaurant.setStatus(restaurant.getStatus());
-        if (restaurant.getUser() != null)
-            foundRestaurant.setUser(restaurant.getUser());
-        if (restaurant.getBranchList() != null)
-            foundRestaurant.setBranchList(restaurant.getBranchList());
+    @Override
+    public RestaurantEntity createRestaurant(RestaurantEntity restaurantEntity){
+        return restaurantRepository.save(restaurantEntity);
+    }
 
-        return restaurantRepository.save(foundRestaurant);
+    @Override
+    public RestaurantEntity updateRestaurant(RestaurantEntity restaurantEntity){
+        RestaurantEntity foundRestaurantEntity = restaurantRepository.getById(restaurantEntity.getId());
+
+        if (restaurantEntity.getName() != null)
+            foundRestaurantEntity.setName(restaurantEntity.getName());
+        if (restaurantEntity.getStatus() != null)
+            foundRestaurantEntity.setStatus(restaurantEntity.getStatus());
+        if (restaurantEntity.getUserEntity() != null)
+            foundRestaurantEntity.setUserEntity(restaurantEntity.getUserEntity());
+        if (restaurantEntity.getBranchEntities() != null)
+            foundRestaurantEntity.setBranchEntities(restaurantEntity.getBranchEntities());
+
+        return restaurantRepository.save(foundRestaurantEntity);
 
     }
 
     @Override
-    public Restaurant deleteById(Long id){
-        Restaurant restaurant = restaurantRepository.getById(id);
-        if (restaurant != null) {
+    public RestaurantEntity deleteRestaurant(Long id){
+        RestaurantEntity restaurantEntity = restaurantRepository.getById(id);
+        if (restaurantEntity != null) {
             restaurantRepository.deleteById(id);
-            return restaurant;
+            return restaurantEntity;
         }
-        return restaurant;
+        return restaurantEntity;
     }
 }
