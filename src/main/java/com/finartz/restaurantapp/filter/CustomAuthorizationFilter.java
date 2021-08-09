@@ -28,10 +28,11 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final String CUSTOM_LOGIN_PATH = "/login";
+    private final String CUSTOM_REFRESH_TOKEN_PATH = "/user/refresh-token";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals(CUSTOM_LOGIN_PATH)) {
+        if(request.getServletPath().equals(CUSTOM_LOGIN_PATH) || request.getServletPath().equals(CUSTOM_REFRESH_TOKEN_PATH)) {
             filterChain.doFilter(request, response);
         }else{
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

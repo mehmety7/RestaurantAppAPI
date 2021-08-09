@@ -1,66 +1,59 @@
 package com.finartz.restaurantapp.service.impl;
 
+import com.finartz.restaurantapp.model.converter.dto.RestaurantDtoConverter;
+import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entity.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
+import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import com.finartz.restaurantapp.repository.RestaurantRepository;
 import com.finartz.restaurantapp.service.RestaurantService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantDtoConverter restaurantDtoConverter;
+    private final RestaurantCreateRequestToEntityConverter restaurantCreateRequestToEntityConverter;
+    private final RestaurantUpdateRequestToEntityConverter restaurantUpdateRequestToEntityConverter;
 
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
-        this.restaurantRepository = restaurantRepository;
+    @Override
+    public List<RestaurantDto> getRestaurants(Status status){
+        List<RestaurantEntity> restaurantEntities = restaurantRepository.findByStatus(status);
+        List<RestaurantDto> restaurants = new ArrayList<>();
+        restaurantEntities.forEach(restaurantEntity -> {
+            restaurants.add(restaurantDtoConverter.convert(restaurantEntity));
+        });
+        return restaurants;
     }
 
     @Override
-    public List<RestaurantEntity> getRestaurants(){
-        return restaurantRepository.findAll();
+    public RestaurantDto getRestaurant(Long id){
+        return restaurantDtoConverter.convert(restaurantRepository.getById(id));
     }
 
     @Override
-    public List<RestaurantEntity> getRestaurants(Status status){
-        return restaurantRepository.findByStatus(status);
+    public RestaurantDto createRestaurant(RestaurantCreateRequest restaurantCreateRequest){
+        RestaurantEntity restaurantEntity = restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest);
+        return restaurantDtoConverter.convert(restaurantRepository.save(restaurantEntity));
     }
 
     @Override
-    public RestaurantEntity getRestaurant(Long id){
-        return restaurantRepository.getById(id);
-    }
+    public RestaurantDto updateRestaurant(Long id, RestaurantUpdateRequest restaurantUpdateRequest){
+        RestaurantEntity restaurantExisted = restaurantRepository.getById(id);
+        RestaurantEntity restaurantUpdated =
+                restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisted);
 
-    @Override
-    public RestaurantEntity createRestaurant(RestaurantEntity restaurantEntity){
-        return restaurantRepository.save(restaurantEntity);
-    }
-
-    @Override
-    public RestaurantEntity updateRestaurant(RestaurantEntity restaurantEntity){
-        RestaurantEntity foundRestaurantEntity = restaurantRepository.getById(restaurantEntity.getId());
-
-        if (restaurantEntity.getName() != null)
-            foundRestaurantEntity.setName(restaurantEntity.getName());
-        if (restaurantEntity.getStatus() != null)
-            foundRestaurantEntity.setStatus(restaurantEntity.getStatus());
-        if (restaurantEntity.getUserEntity() != null)
-            foundRestaurantEntity.setUserEntity(restaurantEntity.getUserEntity());
-        if (restaurantEntity.getBranchEntities() != null)
-            foundRestaurantEntity.setBranchEntities(restaurantEntity.getBranchEntities());
-
-        return restaurantRepository.save(foundRestaurantEntity);
+        return restaurantDtoConverter.convert(restaurantRepository.save(restaurantUpdated));
 
     }
 
-    @Override
-    public RestaurantEntity deleteRestaurant(Long id){
-        RestaurantEntity restaurantEntity = restaurantRepository.getById(id);
-        if (restaurantEntity != null) {
-            restaurantRepository.deleteById(id);
-            return restaurantEntity;
-        }
-        return restaurantEntity;
-    }
 }

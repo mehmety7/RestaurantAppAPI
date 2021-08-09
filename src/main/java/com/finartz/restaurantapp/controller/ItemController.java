@@ -1,6 +1,8 @@
 package com.finartz.restaurantapp.controller;
 
-import com.finartz.restaurantapp.model.entity.ItemEntity;
+import com.finartz.restaurantapp.exception.ResourceNotFoundException;
+import com.finartz.restaurantapp.model.dto.ItemDto;
+import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
 import com.finartz.restaurantapp.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,29 +21,26 @@ public class ItemController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ItemEntity> getItem(@PathVariable Long id){
-        return new ResponseEntity(itemService.getItem(id), HttpStatus.OK);
+    public ResponseEntity<ItemDto> getItem(@PathVariable Long id){
+        ItemDto item;
+        try{
+            item = itemService.getItem(id);
+        }catch (ResourceNotFoundException ex){
+            throw new ResourceNotFoundException("Not found Item with id: " + id);
+        }
+        return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemEntity>> getItems(){
-        return new ResponseEntity(itemService.getItems(), HttpStatus.OK);
+    public ResponseEntity<List<ItemDto>> getItems(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                  @RequestParam(defaultValue = "10") Integer pageSize,
+                                                  @RequestParam(defaultValue = "id") String sortBy){
+        return new ResponseEntity(itemService.getItems(pageNo, pageSize, sortBy), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ItemEntity> createItem(@RequestBody ItemEntity itemEntity){
-        return new ResponseEntity(itemService.createItem(itemEntity), HttpStatus.CREATED);
-    }
-
-    @PutMapping
-    public ResponseEntity<ItemEntity> updateItem(@RequestBody ItemEntity itemEntity){
-        return new ResponseEntity(itemService.updateItem(itemEntity), HttpStatus.OK);
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<ItemEntity> deleteItem(@PathVariable Long id){
-        itemService.deleteItem(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<ItemDto> createItem(@RequestBody ItemCreateRequest itemCreateRequest){
+        return new ResponseEntity(itemService.createItem(itemCreateRequest), HttpStatus.CREATED);
     }
 
 }

@@ -1,20 +1,16 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.entity.MenuEntity;
-
-import java.util.List;
+import com.finartz.restaurantapp.model.dto.MenuDto;
+import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
+import com.finartz.restaurantapp.model.request.update.MenuUpdateRequest;
 
 public interface MenuService {
 
-    List<MenuEntity> getMenus();
+    MenuDto getMenu(Long id);
 
-    MenuEntity getMenu(Long id);
+    MenuDto createMenu(MenuCreateRequest menuCreateRequest);
 
-    MenuEntity createMenu(MenuEntity menuEntity);
-
-    MenuEntity updateMenu(MenuEntity menuEntity);
-
-    MenuEntity deleteMenu(Long id);
+    MenuDto updateMenu(Long id, MenuUpdateRequest menuUpdateRequest);
 
 }
 

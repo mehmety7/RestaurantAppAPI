@@ -1,19 +1,12 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.entity.MealEntity;
-
-import java.util.List;
+import com.finartz.restaurantapp.model.dto.MealDto;
+import com.finartz.restaurantapp.model.request.create.MealCreateRequest;
 
 public interface MealService {
 
-    public List<MealEntity> getMeals();
+    MealDto getMeal(Long id);
 
-    public MealEntity getMeal(Long id);
-
-    public MealEntity createMeal(MealEntity mealEntity);
-
-    public MealEntity updateMeal(MealEntity mealEntity);
-
-    public MealEntity deleteMeal(Long id);
+    MealDto createMeal(MealCreateRequest mealCreateRequest);
 
 }

@@ -1,18 +1,16 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.entity.CommentEntity;
-
-import java.util.List;
+import com.finartz.restaurantapp.model.dto.CommentDto;
+import com.finartz.restaurantapp.model.request.create.CommentCreateRequest;
+import com.finartz.restaurantapp.model.request.update.CommentUpdateRequest;
 
 public interface CommentService {
 
-    public List<CommentEntity> getComments();
+    CommentDto getComment(Long id);
 
-    public CommentEntity getComment(Long id);
+    CommentDto createComment(CommentCreateRequest commentCreateRequest);
 
-    public CommentEntity createComment(CommentEntity commentEntity);
+    CommentDto updateComment(Long id, CommentUpdateRequest commentUpdateRequest);
 
-    public CommentEntity updateComment(CommentEntity commentEntity);
-
-    public CommentEntity deleteComment(Long id);
+    void deleteComment(Long id);
 }

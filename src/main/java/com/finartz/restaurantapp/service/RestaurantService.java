@@ -1,21 +1,20 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.entity.RestaurantEntity;
+import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
+import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 
 import java.util.List;
 
 public interface RestaurantService {
 
-    List<RestaurantEntity> getRestaurants();
+    List<RestaurantDto> getRestaurants(Status status);
 
-    List<RestaurantEntity> getRestaurants(Status status);
+    RestaurantDto getRestaurant(Long id);
 
-    RestaurantEntity getRestaurant(Long id);
+    RestaurantDto createRestaurant(RestaurantCreateRequest restaurantCreateRequest);
 
-    RestaurantEntity createRestaurant(RestaurantEntity restaurantEntity);
+    RestaurantDto updateRestaurant(Long id, RestaurantUpdateRequest restaurantUpdateRequest);
 
-    RestaurantEntity updateRestaurant(RestaurantEntity restaurantEntity);
-
-    RestaurantEntity deleteRestaurant(Long id);
 }

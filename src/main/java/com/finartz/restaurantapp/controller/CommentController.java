@@ -1,12 +1,12 @@
 package com.finartz.restaurantapp.controller;
 
-import com.finartz.restaurantapp.model.entity.CommentEntity;
+import com.finartz.restaurantapp.model.dto.CommentDto;
+import com.finartz.restaurantapp.model.request.create.CommentCreateRequest;
+import com.finartz.restaurantapp.model.request.update.CommentUpdateRequest;
 import com.finartz.restaurantapp.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("comment")
@@ -19,27 +19,22 @@ public class CommentController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<CommentEntity> getComment(@PathVariable Long id){
+    public ResponseEntity<CommentDto> getComment(@PathVariable Long id){
         return new ResponseEntity(commentService.getComment(id), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<CommentEntity>> getComments(){
-        return new ResponseEntity(commentService.getComments(), HttpStatus.OK);
-    }
-
     @PostMapping
-    public ResponseEntity<CommentEntity> createComment(@RequestBody CommentEntity commentEntity){
-        return new ResponseEntity(commentService.createComment(commentEntity), HttpStatus.CREATED);
+    public ResponseEntity<CommentDto> createComment(@RequestBody CommentCreateRequest commentCreateRequest){
+        return new ResponseEntity(commentService.createComment(commentCreateRequest), HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<CommentEntity> updateComment(@RequestBody CommentEntity commentEntity){
-        return new ResponseEntity(commentService.updateComment(commentEntity), HttpStatus.OK);
+    @PutMapping("{id}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long id, @RequestBody CommentUpdateRequest commentUpdateRequest){
+        return new ResponseEntity(commentService.updateComment(id, commentUpdateRequest), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<CommentEntity> deleteComment(@PathVariable Long id){
+    public ResponseEntity deleteComment(@PathVariable Long id) throws Exception {
         commentService.deleteComment(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

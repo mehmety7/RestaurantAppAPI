@@ -1,8 +1,13 @@
 package com.finartz.restaurantapp.service.impl;
 
+import com.finartz.restaurantapp.model.converter.dto.UserDtoConverter;
+import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.UserCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.entity.UserEntity;
+import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,18 +16,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserDtoConverter userDtoConverter;
+    private final UserCreateRequestToEntityConverter userCreateRequestToEntityConverter;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -38,54 +41,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserEntity> getUsers(){
-        return userRepository.findAll();
+    public UserDto getUser(Long id){
+        return userDtoConverter.convert(userRepository.getById(id));
     }
 
     @Override
-    public UserEntity getUser(Long id){
-        return userRepository.getById(id);
+    public UserDto getUser(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        return userDtoConverter.convert(userEntity);
     }
 
     @Override
-    public UserEntity getUser(String email){
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public UserEntity createUser(UserEntity userEntity){
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        return userRepository.save(userEntity);
-    }
-
-    @Override
-    public UserEntity updateUser(UserEntity userEntity){
-        UserEntity foundUserEntity = userRepository.getById(userEntity.getId());
-
-        if(userEntity.getEmail() != null)
-            foundUserEntity.setEmail(userEntity.getEmail());
-        if(userEntity.getName() != null)
-            foundUserEntity.setName(userEntity.getName());
-        if(userEntity.getPassword() != null)
-            foundUserEntity.setPassword(userEntity.getPassword());
-        if(userEntity.getAddressEntities() != null)
-            foundUserEntity.setAddressEntities(userEntity.getAddressEntities());
-        if(userEntity.getCommentEntities() != null)
-            foundUserEntity.setCommentEntities(userEntity.getCommentEntities());
-        if(userEntity.getRestaurantEntities() != null)
-            foundUserEntity.setRestaurantEntities(userEntity.getRestaurantEntities());
-
-        return userRepository.save(foundUserEntity);
-    }
-
-    @Override
-    public UserEntity deleteUser(Long id){
-        UserEntity userEntity = userRepository.getById(id);
-        if (userEntity != null) {
-            userRepository.deleteById(id);
-            return userEntity;
-        }
-        return userEntity;
+    public UserDto createUser(UserCreateRequest userCreateRequest){
+        userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
+        UserEntity userEntity = userCreateRequestToEntityConverter.convert(userCreateRequest);
+        return userDtoConverter.convert(userRepository.save(userEntity));
     }
 
 }
