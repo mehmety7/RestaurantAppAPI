@@ -1,64 +1,52 @@
 package com.finartz.restaurantapp.service.impl;
 
+import com.finartz.restaurantapp.model.converter.dto.CommentDtoConverter;
+import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.CommentCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entity.fromUpdateRequest.CommentUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.dto.CommentDto;
 import com.finartz.restaurantapp.model.entity.CommentEntity;
+import com.finartz.restaurantapp.model.request.create.CommentCreateRequest;
+import com.finartz.restaurantapp.model.request.update.CommentUpdateRequest;
 import com.finartz.restaurantapp.repository.CommentRepository;
 import com.finartz.restaurantapp.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final CommentDtoConverter commentDtoConverter;
+    private final CommentCreateRequestToEntityConverter commentCreateRequestToEntityConverter;
+    private final CommentUpdateRequestToEntityConverter commentUpdateRequestToEntityConverter;
 
-    public CommentServiceImpl(CommentRepository commentRepository) {
-        this.commentRepository = commentRepository;
-    }
-
-    @Override
-    public List<CommentEntity> getComments(){
-        List<CommentEntity> commentEntities = commentRepository.findAll();
-        return commentEntities;
-    }
 
     @Override
-    public CommentEntity getComment(Long id){
+    public CommentDto getComment(Long id){
         CommentEntity commentEntity = commentRepository.getById(id);
-        return commentEntity;
+        return commentDtoConverter.convert(commentEntity);
     }
 
     @Override
-    public CommentEntity createComment(CommentEntity commentEntity){
-        CommentEntity save = commentRepository.save(commentEntity);
-        return save;
+    public CommentDto createComment(CommentCreateRequest commentCreateRequest){
+        CommentEntity commentEntity = commentCreateRequestToEntityConverter.convert(commentCreateRequest);
+        return commentDtoConverter.convert(commentRepository.save(commentEntity));
     }
 
     @Override
-    public CommentEntity updateComment(CommentEntity commentEntity){
-        CommentEntity foundCommentEntity = commentRepository.getById(commentEntity.getId());
-        if(commentEntity.getComment() != null)
-            foundCommentEntity.setComment(commentEntity.getComment());
-        if(commentEntity.getSpeedPoint() != null)
-            foundCommentEntity.setSpeedPoint(commentEntity.getSpeedPoint());
-        if(commentEntity.getTastePoint() != null)
-            foundCommentEntity.setTastePoint(commentEntity.getTastePoint());
-        if(commentEntity.getUserEntity() != null)
-            foundCommentEntity.setUserEntity(commentEntity.getUserEntity());
-        if(commentEntity.getBranchEntity() != null)
-            foundCommentEntity.setBranchEntity(commentEntity.getBranchEntity());
+    public CommentDto updateComment(Long id, CommentUpdateRequest commentUpdateRequest){
+        CommentEntity commentExisted = commentRepository.getById(id);
 
-        return commentRepository.save(foundCommentEntity);
+        CommentEntity commentUpdated =
+                commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentExisted);
+
+        return commentDtoConverter.convert(commentRepository.save(commentUpdated));
 
     }
 
     @Override
-    public CommentEntity deleteComment(Long id){
-        CommentEntity commentEntity = commentRepository.getById(id);
-        if (commentEntity != null) {
-            commentRepository.deleteById(id);
-            return commentEntity;
-        }
-        return commentEntity;
+    public void deleteComment(Long id) {
+        commentRepository.deleteById(id);
     }
 }

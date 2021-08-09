@@ -1,24 +1,22 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.entity.AddressEntity;
-import com.finartz.restaurantapp.model.entity.BranchEntity;
+import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
+import com.finartz.restaurantapp.model.request.update.BranchUpdateRequest;
 
 import java.util.List;
 
 public interface BranchService {
 
-    List<BranchEntity> getBranches();
+    BranchDto getBranch(Long id);
 
-    BranchEntity getBranch(Long id);
+    List<BranchDto> getBranches(Status status);
 
-    List<BranchEntity> getBranches(Status status);
+    List<BranchDto> getBranches(Long countyId);
 
-    List<BranchEntity> getBranches(AddressEntity addressEntity);
+    BranchDto createBranch(BranchCreateRequest branchCreateRequest);
 
-    BranchEntity createBranch(BranchEntity branchEntity);
+    BranchDto updateBranch(Long id, BranchUpdateRequest branchUpdateRequest);
 
-    BranchEntity updateBranch(BranchEntity branchEntity);
-
-    BranchEntity deleteBranch(Long id);
 }

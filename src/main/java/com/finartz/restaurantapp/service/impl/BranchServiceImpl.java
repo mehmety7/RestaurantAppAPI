@@ -1,73 +1,67 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.entity.AddressEntity;
+import com.finartz.restaurantapp.model.converter.dto.BranchDtoConverter;
+import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.BranchCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entity.fromUpdateRequest.BranchUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
+import com.finartz.restaurantapp.model.request.update.BranchUpdateRequest;
 import com.finartz.restaurantapp.repository.BranchRepository;
 import com.finartz.restaurantapp.service.BranchService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BranchServiceImpl implements BranchService {
 
     private final BranchRepository branchRepository;
 
-    public BranchServiceImpl(BranchRepository branchRepository) {
-        this.branchRepository = branchRepository;
+    private final BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
+    private final BranchUpdateRequestToEntityConverter branchUpdateRequestToEntityConverter;
+    private final BranchDtoConverter branchDtoConverter;
+
+    @Override
+    public BranchDto getBranch(Long id) {
+        return branchDtoConverter.convert(branchRepository.getById(id));
     }
 
     @Override
-    public List<BranchEntity> getBranches() {
-        return branchRepository.findAll();
+    public List<BranchDto> getBranches(Status status) {
+        List<BranchDto> branches = new ArrayList<>();
+        branchRepository.getBranchEntitiesByStatus(status).forEach(branchEntity -> {
+            branches.add(branchDtoConverter.convert(branchEntity));
+        });
+        return branches;
     }
 
     @Override
-    public BranchEntity getBranch(Long id) {
-        return branchRepository.getById(id);
+    public List<BranchDto> getBranches(Long countyId) {
+        List<BranchDto> branches = new ArrayList<>();
+        branchRepository.getBranchEntitiesByAddressEntity_CountyEntity_Id(countyId).forEach(branchEntity -> {
+            branches.add(branchDtoConverter.convert(branchEntity));
+        });
+        return branches;
     }
 
     @Override
-    public List<BranchEntity> getBranches(Status status) {
-        return branchRepository.findByStatus(status);
+    public BranchDto createBranch(BranchCreateRequest branchCreateRequest) {
+        BranchEntity branchEntity = branchCreateRequestToEntityConverter.convert(branchCreateRequest);
+        return branchDtoConverter.convert(branchRepository.save(branchEntity));
     }
 
     @Override
-    public List<BranchEntity> getBranches(AddressEntity addressEntity) {
-        return branchRepository.findByAddressEntity(addressEntity);
-    }
+    public BranchDto updateBranch(Long id, BranchUpdateRequest branchUpdateRequest) {
+        BranchEntity branchExisted = branchRepository.getById(id);
 
-    @Override
-    public BranchEntity createBranch(BranchEntity branchEntity) {
-        return branchRepository.save(branchEntity);
-    }
+        BranchEntity branchUpdated =
+                branchUpdateRequestToEntityConverter.convert(branchUpdateRequest, branchExisted);
 
-    @Override
-    public BranchEntity updateBranch(BranchEntity branchEntity) {
-        BranchEntity foundBranchEntity = branchRepository.getById(branchEntity.getId());
-
-        if (branchEntity.getName() != null)
-            foundBranchEntity.setName(branchEntity.getName());
-        if (branchEntity.getAddressEntity() != null)
-            foundBranchEntity.setAddressEntity(branchEntity.getAddressEntity());
-        if (branchEntity.getStatus() != null)
-            foundBranchEntity.setStatus(branchEntity.getStatus());
-        if (branchEntity.getMenuEntity() != null)
-            foundBranchEntity.setMenuEntity(branchEntity.getMenuEntity());
-        if (branchEntity.getRestaurantEntity() != null)
-            foundBranchEntity.setRestaurantEntity(branchEntity.getRestaurantEntity());
-
-        return branchRepository.save(foundBranchEntity);
-    }
-
-    @Override
-    public BranchEntity deleteBranch(Long id) {
-        BranchEntity branchEntity = branchRepository.getById(id);
-        if (branchEntity != null) {
-            branchRepository.deleteById(id);
-            return branchEntity;
-        }
-        return branchEntity;
+        return branchDtoConverter.convert(branchRepository.save(branchUpdated));
     }
 }

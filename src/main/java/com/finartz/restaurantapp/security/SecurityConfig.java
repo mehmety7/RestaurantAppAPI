@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.security;
 
+import com.finartz.restaurantapp.exception.GlobalSecurityExceptionHandler;
 import com.finartz.restaurantapp.filter.CustomAuthenticationFilter;
 import com.finartz.restaurantapp.filter.CustomAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -39,10 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable(); // cross-side request forgery
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().antMatchers("/login").permitAll();
-        http.authorizeRequests().antMatchers("/restaurant/waiting").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers("/login/**", "/user/refresh-token/**").permitAll();
+        http.authorizeRequests().antMatchers("/restaurant/waiting/**").hasAnyAuthority("ADMIN");
+        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
-        http.authorizeRequests().anyRequest().permitAll();   // It throws SpringSecurity out of picture.
+        //http.authorizeRequests().anyRequest().permitAll();   // It throws SpringSecurity out of picture.
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
 
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -53,5 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new GlobalSecurityExceptionHandler();
     }
 }

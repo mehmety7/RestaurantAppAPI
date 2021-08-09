@@ -1,26 +1,19 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.entity.UserEntity;
+import com.finartz.restaurantapp.model.dto.UserDto;
+import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
     @Override
     UserDetails loadUserByUsername(String email);
 
-    List<UserEntity> getUsers();
+    UserDto getUser(Long id);
 
-    UserEntity getUser(Long id);
+    UserDto getUser(String email);
 
-    UserEntity getUser(String email);
-
-    UserEntity createUser(UserEntity userEntity);
-
-    UserEntity updateUser(UserEntity userEntity);
-
-    UserEntity deleteUser(Long id);
+    UserDto createUser(UserCreateRequest userCreateRequest);
 
 }
