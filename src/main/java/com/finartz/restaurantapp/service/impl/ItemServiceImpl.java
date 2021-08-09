@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
+import com.finartz.restaurantapp.exception.ResourceNotFoundException;
 import com.finartz.restaurantapp.model.converter.dto.ItemDtoConverter;
 import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.ItemCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.ItemDto;
@@ -40,7 +41,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItem(Long id){
-        return itemDtoConverter.convert(itemRepository.getById(id));
+        return itemDtoConverter.convert(itemRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Not found Item with id: " + id)
+        ));
     }
 
     @Override
