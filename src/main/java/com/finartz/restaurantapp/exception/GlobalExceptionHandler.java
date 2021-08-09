@@ -3,7 +3,6 @@ package com.finartz.restaurantapp.exception;
 import com.finartz.restaurantapp.model.error.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -14,7 +13,7 @@ import java.util.Date;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {ResourceNotFoundException.class})
-    public ResponseEntity<ErrorMessage> handleResourceNotFoundException(MethodArgumentNotValidException ex, WebRequest webRequest){
+    public ResponseEntity<ErrorMessage> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest webRequest){
         ErrorMessage errorMessage = new ErrorMessage(
             HttpStatus.NOT_FOUND.value(),
             new Date(),
