@@ -1,8 +1,8 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.converter.dto.RestaurantDtoConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.RestaurantDtoConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
@@ -43,7 +43,6 @@ public class RestaurantServiceTest {
 
     @Mock
     private RestaurantUpdateRequestToEntityConverter restaurantUpdateRequestToEntityConverter;
-
 
     @Test
     public void whenFetchById_thenReturnRestaurant() {
@@ -92,10 +91,10 @@ public class RestaurantServiceTest {
 
     @Test
     public void whenUpdateRestaurant_thenReturnUpdatedRestaurant(){
-        RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).name(NAME_KRAL_BURGER).build();
-        RestaurantEntity restaurantEntityUpdated = RestaurantEntity.builder().id(1l).name(NAME_LEZZET_EVI).build();
-        RestaurantDto restaurant = RestaurantDto.builder().id(1l).name(NAME_KRAL_BURGER).build();
-        RestaurantDto restaurantUpdated = RestaurantDto.builder().id(1l).name(NAME_LEZZET_EVI).build();
+        RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).status(Status.WAITING).build();
+        RestaurantEntity restaurantEntityUpdated = RestaurantEntity.builder().id(1l).status(Status.CANCELED).build();
+        RestaurantDto restaurant = RestaurantDto.builder().id(1l).status(Status.WAITING).build();
+        RestaurantDto restaurantUpdated = RestaurantDto.builder().id(1l).status(Status.CANCELED).build();
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().build();
 
         Mockito.when(restaurantRepository.getById(1l)).thenReturn(restaurantEntity);
@@ -105,10 +104,9 @@ public class RestaurantServiceTest {
 
         RestaurantDto resultRestaurant = restaurantService.updateRestaurant(1L, restaurantUpdateRequest);
 
-        Assertions.assertNotEquals(resultRestaurant.getName(), NAME_KRAL_BURGER);
-        Assertions.assertEquals(restaurant.getName(), NAME_KRAL_BURGER);
+        Assertions.assertNotEquals(restaurant.getStatus(), Status.CANCELED);
+        Assertions.assertEquals(resultRestaurant.getStatus(), Status.CANCELED);
 
     }
-
 
 }

@@ -1,9 +1,9 @@
 package com.finartz.restaurantapp.service;
 
 
-import com.finartz.restaurantapp.model.converter.dto.BranchDtoConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.BranchCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromUpdateRequest.BranchUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.BranchUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
@@ -107,13 +107,12 @@ public class BranchServiceTest {
         assertEquals(branchEntity.getName(), resultBranch.getName());
     }
 
-
     @Test
     public void whenUpdateBranch_thenReturnUpdatedBranch(){
-        BranchEntity branchEntity = BranchEntity.builder().id(1l).name(NAME_KB_UMRANIYE).build();
-        BranchEntity branchEntityUpdated = BranchEntity.builder().id(1l).name(NAME_KB_AVCILAR).build();
-        BranchDto branch = BranchDto.builder().name(NAME_KB_UMRANIYE).build();
-        BranchDto branchUpdated = BranchDto.builder().name(NAME_KB_AVCILAR).build();
+        BranchEntity branchEntity = BranchEntity.builder().id(1l).status(Status.WAITING).build();
+        BranchEntity branchEntityUpdated = BranchEntity.builder().id(1l).status(Status.APPROVED).build();
+        BranchDto branch = BranchDto.builder().status(Status.WAITING).build();
+        BranchDto branchUpdated = BranchDto.builder().status(Status.APPROVED).build();
         BranchUpdateRequest branchUpdateRequest = BranchUpdateRequest.builder().build();
 
         Mockito.when(branchRepository.getById(1l)).thenReturn(branchEntity);
@@ -123,8 +122,8 @@ public class BranchServiceTest {
 
         BranchDto resultBranch = branchService.updateBranch(1L, branchUpdateRequest);
 
-        Assertions.assertNotEquals(branch.getName(), NAME_KB_AVCILAR);
-        Assertions.assertEquals(resultBranch.getName(), NAME_KB_AVCILAR);
+        Assertions.assertNotEquals(branch.getStatus(), Status.APPROVED);
+        Assertions.assertEquals(resultBranch.getStatus(), Status.APPROVED);
 
     }
 

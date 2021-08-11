@@ -1,8 +1,8 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.converter.dto.CommentDtoConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.CommentCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromUpdateRequest.CommentUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.CommentDtoConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.CommentCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.CommentUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.CommentDto;
 import com.finartz.restaurantapp.model.entity.CommentEntity;
 import com.finartz.restaurantapp.model.request.create.CommentCreateRequest;

@@ -94,6 +94,23 @@ public class BranchControllerTest {
     }
 
     @Test
+    public void whenGetWaitingBranches_thenReturnWaitingBranches() throws Exception {
+
+
+        BranchDto branch = BranchDto.builder().status(Status.WAITING).build();
+
+        List<BranchDto> branches = Arrays.asList(branch);
+
+        Mockito.when(branchService.getBranches(Status.WAITING)).thenReturn(branches);
+
+        mockMvc.perform(get(URI_BRANCH + "/waiting")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.hasSize(1)));
+
+    }
+
+    @Test
     public void whenUpdateExistsBranch_thenReturnUpdated() throws Exception {
 
         BranchDto branch = BranchDto.builder()
@@ -131,23 +148,6 @@ public class BranchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", Matchers.is(Status.APPROVED.toString())))
                 .andExpect(jsonPath("id", Matchers.is(1)));
-
-    }
-
-    @Test
-    public void whenGetWaitingBranches_thenReturnWaitingBranches() throws Exception {
-
-
-        BranchDto branch = BranchDto.builder().status(Status.WAITING).build();
-
-        List<BranchDto> branches = Arrays.asList(branch);
-
-        Mockito.when(branchService.getBranches(Status.WAITING)).thenReturn(branches);
-
-        mockMvc.perform(get(URI_BRANCH + "/waiting")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(1)));
 
     }
 

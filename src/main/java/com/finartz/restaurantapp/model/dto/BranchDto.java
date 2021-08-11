@@ -20,4 +20,7 @@ public class BranchDto {
 
     private RestaurantDto restaurant;
 
+
+//    private MenuDto menu;
+//    private AddressDto address;
 }

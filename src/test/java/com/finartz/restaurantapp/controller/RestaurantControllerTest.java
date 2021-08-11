@@ -92,6 +92,25 @@ public class RestaurantControllerTest {
     }
 
     @Test
+    public void whenGetRestaurantIsWaiting_thenReturnRestaurant() throws Exception {
+
+        RestaurantDto restaurant = RestaurantDto.builder()
+                .id(1L)
+                .status(Status.WAITING)
+                .build();
+
+        List<RestaurantDto> restaurantList = Arrays.asList(restaurant);
+
+        Mockito.when(restaurantService.getRestaurants(Status.WAITING)).thenReturn(restaurantList);
+
+        mockMvc.perform(get(URI_RESTAURANT + "/waiting")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.hasSize(1)));
+
+    }
+
+    @Test
     public void whenUpdateRestaurant_thenReturnRestaurant() throws Exception {
 
         RestaurantDto restaurant = RestaurantDto.builder()
@@ -120,25 +139,6 @@ public class RestaurantControllerTest {
         mockMvc.perform(put(URI_RESTAURANT + "/1")
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    public void whenGetRestaurantIsWaiting_thenReturnRestaurant() throws Exception {
-
-        RestaurantDto restaurant = RestaurantDto.builder()
-                .id(1L)
-                .status(Status.WAITING)
-                .build();
-
-        List<RestaurantDto> restaurantList = Arrays.asList(restaurant);
-
-        Mockito.when(restaurantService.getRestaurants(Status.WAITING)).thenReturn(restaurantList);
-
-        mockMvc.perform(get(URI_RESTAURANT + "/waiting")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(1)));
-
     }
 
 

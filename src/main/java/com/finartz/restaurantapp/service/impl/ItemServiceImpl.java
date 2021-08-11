@@ -1,8 +1,8 @@
 package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.ResourceNotFoundException;
-import com.finartz.restaurantapp.model.converter.dto.ItemDtoConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.ItemCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.ItemDtoConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.ItemCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.ItemDto;
 import com.finartz.restaurantapp.model.entity.ItemEntity;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;

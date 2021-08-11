@@ -23,10 +23,10 @@ public class AddressDto {
 
     private String otherContent;
 
-    private Boolean enable;
-
     private UserDto user;
 
     private BranchDto branch;
+
+//    private Boolean enable;
 
 }

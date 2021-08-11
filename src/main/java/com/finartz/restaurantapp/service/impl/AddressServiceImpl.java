@@ -1,7 +1,7 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.converter.dto.AddressDtoConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.AddressCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.AddressDtoConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.AddressCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.entity.AddressEntity;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;

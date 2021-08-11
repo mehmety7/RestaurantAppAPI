@@ -1,7 +1,7 @@
 package com.finartz.restaurantapp.service;
 
-import com.finartz.restaurantapp.model.converter.dto.MealDtoConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.MealCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.MealDtoConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MealCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.entity.MealEntity;
 import com.finartz.restaurantapp.model.request.create.MealCreateRequest;

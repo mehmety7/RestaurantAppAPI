@@ -2,7 +2,6 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.MenuDto;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
-import com.finartz.restaurantapp.model.request.update.MenuUpdateRequest;
 import com.finartz.restaurantapp.service.MenuService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +25,6 @@ public class MenuController {
     @PostMapping
     public ResponseEntity<MenuDto> createMenu(@RequestBody MenuCreateRequest menuCreateRequest){
         return new ResponseEntity(menuService.createMenu(menuCreateRequest), HttpStatus.CREATED);
-    }
-
-    @PutMapping("{id}")
-    public ResponseEntity<MenuDto> updateMenu(@PathVariable Long id, @RequestBody MenuUpdateRequest menuUpdateRequest){
-        return new ResponseEntity(menuService.updateMenu(id, menuUpdateRequest), HttpStatus.OK);
     }
 
 }
