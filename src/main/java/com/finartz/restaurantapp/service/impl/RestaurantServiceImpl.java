@@ -1,8 +1,8 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.converter.dto.RestaurantDtoConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.RestaurantDtoConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
@@ -24,6 +24,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantDtoConverter restaurantDtoConverter;
     private final RestaurantCreateRequestToEntityConverter restaurantCreateRequestToEntityConverter;
     private final RestaurantUpdateRequestToEntityConverter restaurantUpdateRequestToEntityConverter;
+
 
     @Override
     public List<RestaurantDto> getRestaurants(Status status){

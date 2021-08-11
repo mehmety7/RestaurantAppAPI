@@ -57,7 +57,7 @@ public class UserControllerTest {
                 .id(1L)
                 .name(NAME_ALI_AKAY)
                 .email(EMAIL_ALI)
-                .password(PASSWORD_ALI1212)
+//                .password(PASSWORD_ALI1212)
                 .build();
 
         Mockito.when(userService.getUser(1L)).thenReturn(user);
@@ -76,7 +76,7 @@ public class UserControllerTest {
                 .id(1L)
                 .name(NAME_ALI_AKAY)
                 .email(EMAIL_ALI)
-                .password(PASSWORD_ALI1212)
+//                .password(PASSWORD_ALI1212)
                 .build();
 
         UserCreateRequest userCreateRequest = UserCreateRequest.builder().build();

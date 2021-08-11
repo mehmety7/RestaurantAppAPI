@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.converter.dto.CityDtoConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.CityDtoConverter;
 import com.finartz.restaurantapp.model.dto.CityDto;
 import com.finartz.restaurantapp.model.entity.CityEntity;
 import com.finartz.restaurantapp.repository.CityRepository;

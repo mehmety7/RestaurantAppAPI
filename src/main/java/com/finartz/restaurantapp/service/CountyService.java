@@ -6,4 +6,6 @@ public interface CountyService {
 
     CountyDto getCounty(Long id);
 
+    CountyDto getCounty(String name, Long city_id);
+
 }

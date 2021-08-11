@@ -1,8 +1,8 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.model.converter.dto.BranchDtoConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromCreateRequest.BranchCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.converter.entity.fromUpdateRequest.BranchUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.BranchUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
@@ -22,9 +22,9 @@ public class BranchServiceImpl implements BranchService {
 
     private final BranchRepository branchRepository;
 
-    private final BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
-    private final BranchUpdateRequestToEntityConverter branchUpdateRequestToEntityConverter;
     private final BranchDtoConverter branchDtoConverter;
+    private final BranchUpdateRequestToEntityConverter branchUpdateRequestToEntityConverter;
+    private final BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
 
     @Override
     public BranchDto getBranch(Long id) {
@@ -64,4 +64,5 @@ public class BranchServiceImpl implements BranchService {
 
         return branchDtoConverter.convert(branchRepository.save(branchUpdated));
     }
+
 }

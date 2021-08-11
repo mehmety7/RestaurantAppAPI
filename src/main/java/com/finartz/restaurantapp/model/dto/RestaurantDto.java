@@ -20,4 +20,7 @@ public class RestaurantDto {
 
     private UserDto user;
 
+
+//    private List<BranchDto> branches;
+
 }

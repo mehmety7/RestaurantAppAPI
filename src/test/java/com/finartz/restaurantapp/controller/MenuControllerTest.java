@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.MenuDto;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
-import com.finartz.restaurantapp.model.request.update.MenuUpdateRequest;
 import com.finartz.restaurantapp.service.MenuService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -78,32 +77,6 @@ public class MenuControllerTest {
         mockMvc.perform(post(URI_MENU)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id", Matchers.is(1)));
-    }
-
-    @Test
-    public void whenUpdateMenu_thenReturnMenu() throws Exception {
-
-        MenuDto menu = MenuDto.builder().id(1L).build();
-
-        MenuDto menuUpdated = MenuDto.builder().id(1L).build();
-
-        MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().build();
-        MenuUpdateRequest menuUpdateRequest = MenuUpdateRequest.builder().build();
-
-        Mockito.when(menuService.createMenu(menuCreateRequest)).thenReturn(menu);
-        Mockito.when(menuService.updateMenu(1L, menuUpdateRequest)).thenReturn(menuUpdated);
-
-        String requestJson1 = objectWriter.writeValueAsString(menu);
-        String requestJson2 = objectWriter.writeValueAsString(menuUpdated);
-
-        mockMvc.perform(post(URI_MENU)
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(put(URI_MENU + "/1")
-                .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("id", Matchers.is(1)));
     }
 

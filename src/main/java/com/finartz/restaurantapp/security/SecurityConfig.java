@@ -41,11 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable(); // cross-side request forgery
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().antMatchers("/login/**", "/user/refresh-token/**").permitAll();
-        http.authorizeRequests().antMatchers("/restaurant/waiting/**").hasAnyAuthority("ADMIN");
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+//        http.authorizeRequests().antMatchers("/login/**", "/user/refresh-token/**").permitAll();
+//        http.authorizeRequests().antMatchers("/restaurant/waiting/**").hasAnyAuthority("ADMIN");
+//        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
-        //http.authorizeRequests().anyRequest().permitAll();   // It throws SpringSecurity out of picture.
+        http.authorizeRequests().anyRequest().permitAll();   // It throws SpringSecurity out of picture.
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
 
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
