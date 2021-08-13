@@ -16,11 +16,11 @@ public class BranchDto {
 
     private String name;
 
+    private MenuDto menu;
+
     private Status status;
 
-    private RestaurantDto restaurant;
+    //    private RestaurantDto restaurant;
 
-
-//    private MenuDto menu;
-//    private AddressDto address;
+    //    private AddressDto address;
 }

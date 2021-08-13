@@ -31,8 +31,8 @@ public class BranchController {
         return new ResponseEntity(branchService.getBranches(status), HttpStatus.OK);
     }
 
-    @GetMapping("by-county")
-    public ResponseEntity<List<BranchEntity>> getBranches(Long countyId){
+    @GetMapping("county")
+    public ResponseEntity<List<BranchEntity>> getBranches(@RequestParam Long countyId){
         return new ResponseEntity(branchService.getBranches(countyId), HttpStatus.OK);
     }
 

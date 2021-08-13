@@ -19,8 +19,8 @@ public class MealDto {
 
     private Double price;
 
-    private MenuDto menu;
-
     private List<ItemDto> items;
+
+    //    private MenuDto menu;
 
 }

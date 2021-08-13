@@ -3,10 +3,8 @@ package com.finartz.restaurantapp.model.converter.entityconverter.fromDto;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.dto.ItemDto;
 import com.finartz.restaurantapp.model.dto.MealDto;
-import com.finartz.restaurantapp.model.dto.MenuDto;
 import com.finartz.restaurantapp.model.entity.ItemEntity;
 import com.finartz.restaurantapp.model.entity.MealEntity;
-import com.finartz.restaurantapp.model.entity.MenuEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MealDtoToEntityConverter implements GenericConverter<MealDto, MealEntity> {
 
-    private final GenericConverter<MenuDto, MenuEntity> menuEntityConverter;
+//    private final GenericConverter<MenuDto, MenuEntity> menuEntityConverter;
     private final GenericConverter<ItemDto, ItemEntity> itemEntityConverter;
 
     @Override
@@ -31,7 +29,7 @@ public class MealDtoToEntityConverter implements GenericConverter<MealDto, MealE
         mealEntity.setId(meal.getId());
         mealEntity.setName(meal.getName());
         mealEntity.setPrice(meal.getPrice());
-        mealEntity.setMenuEntity(convert(meal.getMenu()));
+//        mealEntity.setMenuEntity(convert(meal.getMenu()));
 
         List<ItemEntity> itemEntities = new ArrayList<>();
         meal.getItems().forEach(item -> {
@@ -42,9 +40,9 @@ public class MealDtoToEntityConverter implements GenericConverter<MealDto, MealE
         return mealEntity;
     }
 
-    private MenuEntity convert(final MenuDto menu){
-        return menuEntityConverter.convert(menu);
-    }
+//    private MenuEntity convert(final MenuDto menu){
+//        return menuEntityConverter.convert(menu);
+//    }
 
     private ItemEntity convert(final ItemDto item){
         return itemEntityConverter.convert(item);
