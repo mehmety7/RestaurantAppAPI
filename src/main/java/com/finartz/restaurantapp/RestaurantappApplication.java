@@ -12,9 +12,9 @@ public class RestaurantappApplication {
 		SpringApplication.run(RestaurantappApplication.class, args);
 	}
 
-	@Bean
-	public static BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	    @Bean
+	    public static BCryptPasswordEncoder passwordEncoder() {
+	        return new BCryptPasswordEncoder();
+	    }
 
 }

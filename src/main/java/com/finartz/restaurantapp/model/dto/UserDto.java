@@ -22,7 +22,6 @@ public class UserDto {
 
     private List<Role> roles;
 
-
 //    private String password;
 //    private List<AddressDto> addresses;
 //    private List<RestaurantDto> restaurants;

@@ -28,7 +28,7 @@ public class MealEntity extends BaseEntity {
     @JoinColumn(name = "menu_id", referencedColumnName = "id", nullable = false)
     private MenuEntity menuEntity;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "meal_item"
             , joinColumns = @JoinColumn(name = "meal_id", referencedColumnName = "id", nullable = false)
             , inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false))

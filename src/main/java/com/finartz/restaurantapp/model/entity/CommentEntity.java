@@ -25,11 +25,11 @@ public class CommentEntity extends BaseEntity {
     @Column(name = "speed_point")
     private Integer speedPoint;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity userEntity;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "branch_id", referencedColumnName = "id", nullable = false)
     private BranchEntity branchEntity;
 }

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,8 +15,8 @@ public class MenuDto {
 
     private Long id;
 
-    private BranchDto branch;
+    private List<MealDto> meals;
 
-//    private List<MealDto> meals;
+    //    private BranchDto branch;
 
 }

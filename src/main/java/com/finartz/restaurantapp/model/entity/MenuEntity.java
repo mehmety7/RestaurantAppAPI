@@ -24,7 +24,7 @@ public class MenuEntity extends BaseEntity {
     @JoinColumn(name = "branch_id", referencedColumnName = "id", nullable = false)
     private BranchEntity branchEntity;
 
-    @OneToMany(mappedBy = "menuEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "menuEntity")
     private List<MealEntity> mealEntities;
 
 }
