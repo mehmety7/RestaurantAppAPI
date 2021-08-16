@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class CityDto {
 
     private String name;
 
-    @JsonIgnore
+    @JsonInclude(value = JsonInclude.Include.NON_NULL) // Null ise donme
     private List<CountyDto> counties;
 
 }
