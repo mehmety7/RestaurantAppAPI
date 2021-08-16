@@ -1,21 +1,16 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
 import com.finartz.restaurantapp.model.converter.GenericConverter;
-import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.entity.ItemEntity;
-import com.finartz.restaurantapp.model.entity.MealEntity;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class ItemCreateRequestToEntityConverter implements GenericConverter<ItemCreateRequest, ItemEntity> {
 
-    private final GenericConverter<MealDto, MealEntity> mealEntityConverter;
+//    private final GenericConverter<MealDto, MealEntity> mealEntityConverter;
 
     @Override
     public ItemEntity convert(final ItemCreateRequest itemCreateRequest){
@@ -28,17 +23,17 @@ public class ItemCreateRequestToEntityConverter implements GenericConverter<Item
         itemEntity.setName(itemCreateRequest.getName());
         itemEntity.setUnitType(itemCreateRequest.getUnitType());
 
-        List<MealEntity> mealEntities = new ArrayList<>();
-        itemCreateRequest.getMeals().forEach(meal -> {
-            mealEntities.add(convert(meal));
-        });
-        itemEntity.setMealEntities(mealEntities);
+//        List<MealEntity> mealEntities = new ArrayList<>();
+//        itemCreateRequest.getMeals().forEach(meal -> {
+//            mealEntities.add(convert(meal));
+//        });
+//        itemEntity.setMealEntities(mealEntities);
 
         return itemEntity;
     }
 
-    private MealEntity convert(final MealDto meal){
-        return mealEntityConverter.convert(meal);
-    }
+//    private MealEntity convert(final MealDto meal){
+//        return mealEntityConverter.convert(meal);
+//    }
 
 }

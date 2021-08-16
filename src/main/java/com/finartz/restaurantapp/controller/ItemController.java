@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> createItem(@RequestBody ItemCreateRequest itemCreateRequest){
+    public ResponseEntity<ItemDto> createItem(@Valid @RequestBody ItemCreateRequest itemCreateRequest){
         return new ResponseEntity(itemService.createItem(itemCreateRequest), HttpStatus.CREATED);
     }
 

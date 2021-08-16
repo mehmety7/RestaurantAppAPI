@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("meal")
 public class MealController {
@@ -23,7 +25,7 @@ public class MealController {
     }
 
     @PostMapping
-    public ResponseEntity<MealDto> createMeal(@RequestBody MealCreateRequest mealCreateRequest){
+    public ResponseEntity<MealDto> createMeal(@Valid @RequestBody MealCreateRequest mealCreateRequest){
         return new ResponseEntity(mealService.createMeal(mealCreateRequest), HttpStatus.CREATED);
     }
 

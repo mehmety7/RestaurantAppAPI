@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class RestaurantController {
     }
 
     @GetMapping("waiting")
-    public ResponseEntity<List<RestaurantDto>> getRestaurants(Status status){
+    public ResponseEntity<List<RestaurantDto>> getRestaurants(){
         return new ResponseEntity(restaurantService.getRestaurants(Status.WAITING), HttpStatus.OK);
     }
 
@@ -32,7 +33,7 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResponseEntity<RestaurantDto> createRestaurant(@RequestBody RestaurantCreateRequest restaurantCreateRequest){
+    public ResponseEntity<RestaurantDto> createRestaurant(@Valid @RequestBody RestaurantCreateRequest restaurantCreateRequest){
         return new ResponseEntity(restaurantService.createRestaurant(restaurantCreateRequest), HttpStatus.CREATED);
     }
 

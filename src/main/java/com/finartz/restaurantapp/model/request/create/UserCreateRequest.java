@@ -7,16 +7,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserCreateRequest {
 
+    @NotNull(message = "User email may not be null")
     private String email;
 
+    @NotNull(message = "User password may not be null")
     private String password;
 
+    @NotNull(message = "User name may not be null")
     private String name;
 
     private Role role = Role.USER;

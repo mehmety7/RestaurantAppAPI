@@ -1,12 +1,12 @@
 package com.finartz.restaurantapp.model.request.create;
 
-import com.finartz.restaurantapp.model.dto.MealDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
+
 
 @Data
 @Builder
@@ -14,10 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 public class ItemCreateRequest {
 
+    @NotNull(message = "Item name may not be null")
     private String name;
 
+    @NotNull(message = "Item unit type may not be null")
     private String unitType;
 
-    private List<MealDto> meals;
+//  private List<MealDto> meals;
 
 }

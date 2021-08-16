@@ -1067,13 +1067,13 @@ INSERT INTO user_role (id, role) VALUES (1, 'ADMIN');
 INSERT INTO restaurants (id, name, status, user_id) values (1, 'Kral Burger', 'APPROVED', 2);
 INSERT INTO restaurants (id, name, status, user_id) values (2, 'Lezzet Evi', 'WAITING', 2);
 
-INSERT INTO branches (id, name, status, restaurant_id) values (1, 'Kral Burger Şile', 'APPROVED', 1);
-INSERT INTO branches (id, name, status, restaurant_id) values (2, 'Kral Burger Tuzla', 'WAITING', 1);
+INSERT INTO branches (id, name, restaurant_id) values (1, 'Kral Burger Şile', 1);
+INSERT INTO branches (id, name, restaurant_id) values (2, 'Kral Burger Tuzla', 1);
 
 INSERT INTO addresses (id, branch_id, user_id, name, city_id, county_id, district, other_content, enable) VALUES (1, NULL, 2, 'Şirket', 34, 896, 'Merkez Mahallesi', '100. Sokak No 15 D1', true);
 INSERT INTO addresses (id, branch_id, user_id, name, city_id, county_id, district, other_content, enable) VALUES (2, NULL, 3, 'Ev', 34, 855, 'Ağva Mahallesi', '151. Sokak No 20 D3', true);
 INSERT INTO addresses (id, branch_id, user_id, name, city_id, county_id, district, other_content, enable) VALUES (3, 1, NULL, 'Kral Burger Şile', 34, 855, 'Ağva Mahallesi', '100. Sokak No 1', true);
-INSERT INTO addresses (id, branch_id, user_id, name, city_id, county_id, district, other_content, enable) VALUES (4, 1, NULL, 'Kral Burger Tuzla', 34, 896, 'Merkez Mahallesi', '500. Sokak No 10', true);
+INSERT INTO addresses (id, branch_id, user_id, name, city_id, county_id, district, other_content, enable) VALUES (4, 2, NULL, 'Kral Burger Tuzla', 34, 896, 'Merkez Mahallesi', '500. Sokak No 10', true);
 
 INSERT INTO items (id, name, unit_type) values ( 1, 'Hamburger', 'piece' );
 INSERT INTO items (id, name, unit_type) values ( 2, 'Cheeseburger', 'piece' );

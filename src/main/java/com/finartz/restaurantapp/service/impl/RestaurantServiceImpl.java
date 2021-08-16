@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.RestaurantDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
@@ -38,7 +39,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantDto getRestaurant(Long id){
-        return restaurantDtoConverter.convert(restaurantRepository.getById(id));
+        return restaurantDtoConverter.convert(restaurantRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Not found Restaurant with id:" + id)
+        ));
     }
 
     @Override

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("comment")
 public class CommentController {
@@ -24,7 +26,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> createComment(@RequestBody CommentCreateRequest commentCreateRequest){
+    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentCreateRequest commentCreateRequest){
         return new ResponseEntity(commentService.createComment(commentCreateRequest), HttpStatus.CREATED);
     }
 
