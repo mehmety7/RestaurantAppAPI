@@ -29,9 +29,11 @@ public class CityDtoConverter implements GenericConverter<CityEntity, CityDto> {
         cityDto.setName(cityEntity.getName());
 
         List<CountyDto> counties = new ArrayList<>();
-        cityEntity.getCountyEntities().forEach(countyEntity -> {
-            counties.add(convert(countyEntity));
-        });
+        if(cityEntity.getCountyEntities() != null) {
+            cityEntity.getCountyEntities().forEach(countyEntity -> {
+                counties.add(convert(countyEntity));
+            });
+        }
         cityDto.setCounties(counties);
 
         return cityDto;

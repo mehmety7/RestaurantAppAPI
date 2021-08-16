@@ -30,7 +30,7 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
         addressEntity.setName(addressCreateRequest.getName());
         addressEntity.setDistrict(addressCreateRequest.getDistrict());
         addressEntity.setOtherContent(addressCreateRequest.getOtherContent());
-        addressCreateRequest.getCity().setCounties(null);
+        //addressCreateRequest.getCity().setCounties(null);
         addressEntity.setCityEntity(convert(addressCreateRequest.getCity()));
         addressEntity.setCountyEntity(convert(addressCreateRequest.getCounty()));
         addressEntity.setUserEntity(convert(addressCreateRequest.getUser()));
