@@ -26,7 +26,7 @@ public class MenuController {
 
     @GetMapping("branch")
     public ResponseEntity<MenuDto> getBranchMenu(@RequestParam Long branch_id){
-        return new ResponseEntity(menuService.getMenu(branch_id), HttpStatus.OK);
+        return new ResponseEntity(menuService.getBranchMenu(branch_id), HttpStatus.OK);
     }
 
     @PostMapping
