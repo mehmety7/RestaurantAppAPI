@@ -1,6 +1,5 @@
 package com.finartz.restaurantapp.model.dto;
 
-import com.finartz.restaurantapp.model.enumerated.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +17,7 @@ public class BranchDto {
 
     private MenuDto menu;
 
-    private Status status;
-
-    //    private RestaurantDto restaurant;
+    private RestaurantDto restaurant;
 
     //    private AddressDto address;
 }

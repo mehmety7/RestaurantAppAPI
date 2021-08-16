@@ -59,7 +59,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void whenFetchById_thenReturnItem() {
+    public void whenFetchById_thenReturnItem() throws Exception {
         ItemEntity itemEntity = ItemEntity.builder().name(NAME_HAMBURGER).build();
         ItemDto item = ItemDto.builder().name(NAME_HAMBURGER).build();
 

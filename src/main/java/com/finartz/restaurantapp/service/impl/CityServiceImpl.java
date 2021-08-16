@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.CityDtoConverter;
 import com.finartz.restaurantapp.model.dto.CityDto;
 import com.finartz.restaurantapp.model.entity.CityEntity;
@@ -21,8 +22,9 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public CityDto getCity(Long id){
-        CityEntity cityEntity = cityRepository.getById(id);
-        return cityDtoConverter.convert(cityEntity);
+        return cityDtoConverter.convert(cityRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Not found City with id:" + id)
+        ));
     }
 
     @Override

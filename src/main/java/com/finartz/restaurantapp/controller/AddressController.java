@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("address")
 public class AddressController {
@@ -22,8 +24,18 @@ public class AddressController {
         return new ResponseEntity(addressService.getAddress(id), HttpStatus.OK);
     }
 
+    @GetMapping("user")
+    public ResponseEntity<AddressDto> getUserAddress(@RequestParam Long user_id){
+        return new ResponseEntity(addressService.getAddress(user_id), HttpStatus.OK);
+    }
+
+    @GetMapping("branch")
+    public ResponseEntity<AddressDto> getBranchAddress(@RequestParam Long branch_id) {
+        return new ResponseEntity(addressService.getAddress(branch_id), HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<AddressDto> createAddress(@RequestBody AddressCreateRequest addressCreateRequest){
+    public ResponseEntity<AddressDto> createAddress(@Valid @RequestBody AddressCreateRequest addressCreateRequest){
         return new ResponseEntity(addressService.createAddress(addressCreateRequest), HttpStatus.CREATED);
     }
 

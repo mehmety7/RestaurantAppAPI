@@ -3,8 +3,10 @@ package com.finartz.restaurantapp.model.converter.dtoconverter;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
+import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.entity.MenuEntity;
+import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +16,7 @@ public class BranchDtoConverter implements GenericConverter<BranchEntity, Branch
 
     private final GenericConverter<MenuEntity, MenuDto> menuDtoConverter;
 //    private final GenericConverter<AddressEntity, AddressDto> addressDtoConverter;
-//    private final GenericConverter<RestaurantEntity, RestaurantDto> restaurantDtoConverter;
+    private final GenericConverter<RestaurantEntity, RestaurantDto> restaurantDtoConverter;
 
 
     @Override
@@ -27,9 +29,8 @@ public class BranchDtoConverter implements GenericConverter<BranchEntity, Branch
 
         branchDto.setId(branchEntity.getId());
         branchDto.setName(branchEntity.getName());
-        branchDto.setStatus(branchEntity.getStatus());
         branchDto.setMenu(convert(branchEntity.getMenuEntity()));
-//        branchDto.setRestaurant(convert(branchEntity.getRestaurantEntity()));
+        branchDto.setRestaurant(convert(branchEntity.getRestaurantEntity()));
 //        branchDto.setAddress(convert(branchEntity.getAddressEntity()));
 
         return branchDto;
@@ -39,9 +40,9 @@ public class BranchDtoConverter implements GenericConverter<BranchEntity, Branch
         return menuDtoConverter.convert(menuEntity);
     }
 
-//    private RestaurantDto convert(final RestaurantEntity restaurantEntity){
-//        return restaurantDtoConverter.convert(restaurantEntity);
-//    }
+    private RestaurantDto convert(final RestaurantEntity restaurantEntity){
+        return restaurantDtoConverter.convert(restaurantEntity);
+    }
 //    private AddressDto convert(final AddressEntity addressEntity){
 //        return addressDtoConverter.convert(addressEntity);
 //    }

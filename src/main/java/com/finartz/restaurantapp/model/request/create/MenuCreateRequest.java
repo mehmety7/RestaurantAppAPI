@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -15,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MenuCreateRequest {
 
+    @NotNull(message = "Menu branch may not be null")
     private BranchDto branch;
 
     private List<MealDto> meals;

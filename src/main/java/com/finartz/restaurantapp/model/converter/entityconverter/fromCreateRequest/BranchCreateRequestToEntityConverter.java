@@ -28,12 +28,8 @@ public class BranchCreateRequestToEntityConverter implements GenericConverter<Br
 
         BranchEntity branchEntity = new BranchEntity();
 
-        if(branchCreateRequest.getName() == null)
-            branchEntity.setName(createBranchName(branchCreateRequest.getAddress(),branchCreateRequest.getRestaurant()));
-        else
-            branchEntity.setName(branchCreateRequest.getName());
 
-        branchEntity.setStatus(branchCreateRequest.getStatus());
+        branchEntity.setName(branchCreateRequest.getName());
         branchEntity.setMenuEntity(convert(branchCreateRequest.getMenu()));
         branchEntity.setRestaurantEntity(convert(branchCreateRequest.getRestaurant()));
         branchEntity.setAddressEntity(convert(branchCreateRequest.getAddress()));
@@ -53,13 +49,6 @@ public class BranchCreateRequestToEntityConverter implements GenericConverter<Br
 
     private MenuEntity convert(final MenuDto menu){
         return menuEntityConverter.convert(menu);
-    }
-
-    private String createBranchName(AddressDto address, RestaurantDto restaurant){
-        String name = "";
-        if(address != null && restaurant != null)
-            name = restaurant.getName() + address.getCounty().getName();
-        return name;
     }
 
 }

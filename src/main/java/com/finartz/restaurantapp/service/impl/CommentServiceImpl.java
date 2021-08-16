@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service.impl;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.CommentDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.CommentCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.CommentUpdateRequestToEntityConverter;
@@ -21,11 +22,11 @@ public class CommentServiceImpl implements CommentService {
     private final CommentCreateRequestToEntityConverter commentCreateRequestToEntityConverter;
     private final CommentUpdateRequestToEntityConverter commentUpdateRequestToEntityConverter;
 
-
     @Override
     public CommentDto getComment(Long id){
-        CommentEntity commentEntity = commentRepository.getById(id);
-        return commentDtoConverter.convert(commentEntity);
+        return commentDtoConverter.convert(commentRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Not found Comment with id: " + id)
+        ));
     }
 
     @Override
@@ -37,10 +38,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto updateComment(Long id, CommentUpdateRequest commentUpdateRequest){
         CommentEntity commentExisted = commentRepository.getById(id);
-
-        CommentEntity commentUpdated =
-                commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentExisted);
-
+        CommentEntity commentUpdated = commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentExisted);
         return commentDtoConverter.convert(commentRepository.save(commentUpdated));
 
     }

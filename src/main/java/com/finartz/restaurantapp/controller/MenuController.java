@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("menu")
 public class MenuController {
@@ -22,8 +24,13 @@ public class MenuController {
         return new ResponseEntity(menuService.getMenu(id), HttpStatus.OK);
     }
 
+    @GetMapping("branch")
+    public ResponseEntity<MenuDto> getBranchMenu(@RequestParam Long branch_id){
+        return new ResponseEntity(menuService.getMenu(branch_id), HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<MenuDto> createMenu(@RequestBody MenuCreateRequest menuCreateRequest){
+    public ResponseEntity<MenuDto> createMenu(@Valid @RequestBody MenuCreateRequest menuCreateRequest){
         return new ResponseEntity(menuService.createMenu(menuCreateRequest), HttpStatus.CREATED);
     }
 

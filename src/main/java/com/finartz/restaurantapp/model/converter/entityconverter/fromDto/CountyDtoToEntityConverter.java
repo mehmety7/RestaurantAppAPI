@@ -1,9 +1,7 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromDto;
 
 import com.finartz.restaurantapp.model.converter.GenericConverter;
-import com.finartz.restaurantapp.model.dto.CityDto;
 import com.finartz.restaurantapp.model.dto.CountyDto;
-import com.finartz.restaurantapp.model.entity.CityEntity;
 import com.finartz.restaurantapp.model.entity.CountyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CountyDtoToEntityConverter implements GenericConverter<CountyDto, CountyEntity> {
 
-    private final GenericConverter<CityDto, CityEntity> cityEntityConverter;
+//    private final GenericConverter<CityDto, CityEntity> cityEntityConverter;
 
     @Override
     public CountyEntity convert(final CountyDto county){
@@ -24,13 +22,13 @@ public class CountyDtoToEntityConverter implements GenericConverter<CountyDto, C
 
         countyEntity.setId(county.getId());
         countyEntity.setName(county.getName());
-        countyEntity.setCityEntity(convert(county.getCity()));
+//        countyEntity.setCityEntity(convert(county.getCity()));
 
         return countyEntity;
     }
 
-    private CityEntity convert(final CityDto city){
-        return cityEntityConverter.convert(city);
-    }
+//    private CityEntity convert(final CityDto city){
+//        return cityEntityConverter.convert(city);
+//    }
 
 }
