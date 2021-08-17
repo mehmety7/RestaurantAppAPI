@@ -1,9 +1,5 @@
 package com.finartz.restaurantapp.model.request.create;
 
-import com.finartz.restaurantapp.model.dto.BranchDto;
-import com.finartz.restaurantapp.model.dto.CityDto;
-import com.finartz.restaurantapp.model.dto.CountyDto;
-import com.finartz.restaurantapp.model.dto.UserDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,10 +13,10 @@ public class AddressCreateRequest {
     private String name;
 
     @NotNull(message = "Address city may not be null")
-    private CityDto city;
+    private Long cityId;
 
     @NotNull(message = "Address county may not be null")
-    private CountyDto county;
+    private Long countyId;
 
     @NotNull(message = "Address district may not be null")
     private String district;
@@ -28,9 +24,9 @@ public class AddressCreateRequest {
     @NotNull(message = "Address otherContent may not be null")
     private String otherContent;
 
-    private UserDto user;
+    private Long userId;
 
-    private BranchDto branch;
+    private Long branchId;
 
 }
 

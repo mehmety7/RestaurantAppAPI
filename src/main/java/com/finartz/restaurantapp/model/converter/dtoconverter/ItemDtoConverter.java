@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ItemDtoConverter implements GenericConverter<ItemEntity, ItemDto> {
 
-//    private final GenericConverter<MealEntity, MealDto> mealDtoConverter;
-
     @Override
     public ItemDto convert(final ItemEntity itemEntity){
         if(itemEntity == null){
@@ -24,17 +22,7 @@ public class ItemDtoConverter implements GenericConverter<ItemEntity, ItemDto> {
         itemDto.setName(itemEntity.getName());
         itemDto.setUnitType(itemEntity.getUnitType());
 
-//        List<MealDto> meals = new ArrayList<>();
-//        itemEntity.getMealEntities().forEach(mealEntity -> {
-//            meals.add(convert(mealEntity));
-//        });
-//        itemDto.setMeals(meals);
-
         return itemDto;
     }
-
-//    private MealDto convert(final MealEntity mealEntity){
-//        return mealDtoConverter.convert(mealEntity);
-//    }
 
 }

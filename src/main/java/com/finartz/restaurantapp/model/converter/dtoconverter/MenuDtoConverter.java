@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MenuDtoConverter implements GenericConverter<MenuEntity, MenuDto> {
 
-//    private final GenericConverter<BranchEntity, BranchDto> branchDtoConverter;
     private final GenericConverter<MealEntity, MealDto> mealDtoConverter;
 
     @Override
@@ -27,7 +26,6 @@ public class MenuDtoConverter implements GenericConverter<MenuEntity, MenuDto> {
         MenuDto menuDto = new MenuDto();
 
         menuDto.setId(menuEntity.getId());
-//        menuDto.setBranch(convert(menuEntity.getBranchEntity()));
 
         List<MealDto> meals = new ArrayList<>();
         menuEntity.getMealEntities().forEach(mealEntity -> {
@@ -37,10 +35,6 @@ public class MenuDtoConverter implements GenericConverter<MenuEntity, MenuDto> {
 
         return menuDto;
     }
-
-//    private BranchDto convert(final BranchEntity branchEntity){
-//        return  branchDtoConverter.convert(branchEntity);
-//    }
 
     private MealDto convert(final MealEntity mealEntity){
         return mealDtoConverter.convert(mealEntity);

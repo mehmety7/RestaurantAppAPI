@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.model.request.create;
 
-import com.finartz.restaurantapp.model.dto.AddressDto;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.finartz.restaurantapp.model.enumerated.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +26,7 @@ public class UserCreateRequest {
 
     private Role role = Role.USER;
 
-    private AddressDto address;
+    @JsonAlias(value = "address")
+    private AddressCreateRequest addressCreateRequest;
 
 }

@@ -26,12 +26,12 @@ public class AddressController {
 
     @GetMapping("user")
     public ResponseEntity<AddressDto> getUserAddress(@RequestParam Long user_id){
-        return new ResponseEntity(addressService.getAddress(user_id), HttpStatus.OK);
+        return new ResponseEntity(addressService.getUserAddress(user_id), HttpStatus.OK);
     }
 
     @GetMapping("branch")
     public ResponseEntity<AddressDto> getBranchAddress(@RequestParam Long branch_id) {
-        return new ResponseEntity(addressService.getAddress(branch_id), HttpStatus.OK);
+        return new ResponseEntity(addressService.getBranchAddress(branch_id), HttpStatus.OK);
     }
 
     @PostMapping

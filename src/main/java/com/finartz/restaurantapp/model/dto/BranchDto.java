@@ -15,9 +15,8 @@ public class BranchDto {
 
     private String name;
 
-    private MenuDto menu;
+    private Long menuId;
 
-    private RestaurantDto restaurant;
+    private Long restaurantId;
 
-    //    private AddressDto address;
 }

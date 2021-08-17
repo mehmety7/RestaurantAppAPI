@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MealDtoConverter implements GenericConverter<MealEntity, MealDto> {
 
-//    private final GenericConverter<MenuEntity, MenuDto> menuDtoConverter;
     private final GenericConverter<ItemEntity, ItemDto> itemDtoConverter;
 
     @Override
@@ -29,7 +28,6 @@ public class MealDtoConverter implements GenericConverter<MealEntity, MealDto> {
         mealDto.setId(mealEntity.getId());
         mealDto.setName(mealEntity.getName());
         mealDto.setPrice(mealEntity.getPrice());
-//        mealDto.setMenu(convert(mealEntity.getMenuEntity()));
 
         List<ItemDto> items = new ArrayList<>();
         mealEntity.getItemEntities().forEach(itemEntity -> {
@@ -39,10 +37,6 @@ public class MealDtoConverter implements GenericConverter<MealEntity, MealDto> {
 
         return mealDto;
     }
-
-//    private MenuDto convert(final MenuEntity menuEntity){
-//        return menuDtoConverter.convert(menuEntity);
-//    }
 
     private ItemDto convert(final ItemEntity itemEntity){
         return itemDtoConverter.convert(itemEntity);

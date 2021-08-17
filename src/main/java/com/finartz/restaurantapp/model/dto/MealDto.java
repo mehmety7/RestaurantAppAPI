@@ -21,6 +21,4 @@ public class MealDto {
 
     private List<ItemDto> items;
 
-    //    private MenuDto menu;
-
 }

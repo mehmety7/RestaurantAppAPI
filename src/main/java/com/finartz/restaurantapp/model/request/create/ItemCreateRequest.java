@@ -20,6 +20,4 @@ public class ItemCreateRequest {
     @NotNull(message = "Item unit type may not be null")
     private String unitType;
 
-//  private List<MealDto> meals;
-
 }

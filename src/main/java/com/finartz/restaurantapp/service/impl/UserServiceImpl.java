@@ -5,11 +5,13 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finartz.restaurantapp.exception.InvalidRequestException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.UserDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.UserCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.enumerated.Role;
+import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.UserService;
@@ -21,10 +23,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,6 +45,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserDtoConverter userDtoConverter;
     private final UserCreateRequestToEntityConverter userCreateRequestToEntityConverter;
+    private final AddressServiceImpl addressService;
+    private final Validator validator;
 
     private final Integer  ACCESS_TOKEN_MINUTE = 10;
 
@@ -71,10 +79,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserDto createUser(UserCreateRequest userCreateRequest){
         userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
-        UserEntity userEntity = userCreateRequestToEntityConverter.convert(userCreateRequest);
-        return userDtoConverter.convert(userRepository.save(userEntity));
+        UserEntity userEntity = userRepository.save(userCreateRequestToEntityConverter.convert(userCreateRequest));
+        userCreateRequest.getAddressCreateRequest().setUserId(userEntity.getId());
+
+        Set<ConstraintViolation<AddressCreateRequest>> violations = validator.validate(userCreateRequest.getAddressCreateRequest());
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<AddressCreateRequest> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+            throw new InvalidRequestException(sb.toString());
+        }
+
+        addressService.createAddress(userCreateRequest.getAddressCreateRequest());
+        return userDtoConverter.convert(userEntity);
     }
 
     @Override

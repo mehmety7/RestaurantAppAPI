@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CountyDtoConverter implements GenericConverter<CountyEntity, CountyDto> {
 
-//    private final GenericConverter<CityEntity, CityDto> cityDtoConverter;
-
     @Override
     public CountyDto convert(final CountyEntity countyEntity){
         if(countyEntity == null){
@@ -22,13 +20,9 @@ public class CountyDtoConverter implements GenericConverter<CountyEntity, County
 
         countyDto.setId(countyEntity.getId());
         countyDto.setName(countyEntity.getName());
-//        countyDto.setCity(convert(countyEntity.getCityEntity()));
+        countyDto.setCityId(countyEntity.getCityEntity().getId());
 
         return countyDto;
     }
-
-//    private CityDto convert(final CityEntity cityEntity){
-//        return cityDtoConverter.convert(cityEntity);
-//    }
 
 }

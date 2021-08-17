@@ -1,9 +1,9 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
 import com.finartz.restaurantapp.model.converter.GenericConverter;
-import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.entity.AddressEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
+import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class UserCreateRequestToEntityConverter implements GenericConverter<UserCreateRequest, UserEntity> {
 
-    private final GenericConverter<AddressDto, AddressEntity> addressEntityConverter;
+    private final GenericConverter<AddressCreateRequest,AddressEntity> addressCreateRequestAddressEntityGenericConverter;
 
     @Override
     public UserEntity convert(final UserCreateRequest userCreateRequest){
@@ -28,13 +28,13 @@ public class UserCreateRequestToEntityConverter implements GenericConverter<User
         userEntity.setEmail(userCreateRequest.getEmail());
         userEntity.setPassword(userCreateRequest.getPassword());
         userEntity.setRoles(Arrays.asList(userCreateRequest.getRole()));
-        userEntity.setAddressEntities(Arrays.asList(convert(userCreateRequest.getAddress())));
+        userEntity.setAddressEntities(Arrays.asList(convert(userCreateRequest.getAddressCreateRequest())));
 
         return userEntity;
     }
 
-    private AddressEntity convert(final AddressDto address){
-        return addressEntityConverter.convert(address);
+    private AddressEntity convert(final AddressCreateRequest addressCreateRequest) {
+        return addressCreateRequestAddressEntityGenericConverter.convert(addressCreateRequest);
     }
 
 }

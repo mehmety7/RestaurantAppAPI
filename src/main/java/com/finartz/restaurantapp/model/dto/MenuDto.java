@@ -17,6 +17,4 @@ public class MenuDto {
 
     private List<MealDto> meals;
 
-    //    private BranchDto branch;
-
 }

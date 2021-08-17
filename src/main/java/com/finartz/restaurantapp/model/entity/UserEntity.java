@@ -29,12 +29,6 @@ public class UserEntity extends BaseEntity {
     private String password;
     private String name;
 
-    // EnumType.ORDINAL --> STRING saves as a VARCHAR, HOWEVER ORDINAL saves as a INT with INDEX of role string.
-    // In ORDINAL type has a mapping issue when add a new role in the middle or rearrange the enum's order.
-
-//    @Enumerated(EnumType.STRING)
-//    private Role role;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "id"))
     @Enumerated(EnumType.STRING)
@@ -52,5 +46,10 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "userEntity")
     @JsonIgnore
     private List<CommentEntity> commentEntities;
+
+//  EnumType.ORDINAL --> STRING saves as a VARCHAR, HOWEVER ORDINAL saves as a INT with INDEX of role string.
+//  In ORDINAL type has a mapping issue when add a new role in the middle or rearrange the enum's order.
+//  @Enumerated(EnumType.STRING)
+//  private Role role;
 
 }

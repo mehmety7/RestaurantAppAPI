@@ -19,8 +19,8 @@ public class CommentDto {
 
     private Integer speedPoint;
 
-    private UserDto user;
+    private Long userId;
 
-    private BranchDto branch;
+    private Long branchId;
 
 }

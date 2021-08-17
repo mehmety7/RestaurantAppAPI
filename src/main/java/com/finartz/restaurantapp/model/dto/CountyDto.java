@@ -15,6 +15,6 @@ public class CountyDto {
 
     private String name;
 
-//    private CityDto city;
+    private Long cityId;
 
 }

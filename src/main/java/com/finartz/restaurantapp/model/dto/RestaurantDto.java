@@ -18,8 +18,6 @@ public class RestaurantDto {
 
     private Status status;
 
-    private UserDto user;
-
-//    private List<BranchDto> branches;
+    private Long userId;
 
 }
