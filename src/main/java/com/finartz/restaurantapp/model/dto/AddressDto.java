@@ -15,17 +15,21 @@ public class AddressDto {
 
     private String name;
 
-    private CityDto city;
+    private Long cityId;
 
-    private CountyDto county;
+    private String cityName;
+
+    private Long countyId;
+
+    private String countyName;
 
     private String district;
 
     private String otherContent;
 
-    private UserDto user;
+    private Long userId;
 
-    private BranchDto branch;
+    private Long branchId;
 
 //    private Boolean enable;
 

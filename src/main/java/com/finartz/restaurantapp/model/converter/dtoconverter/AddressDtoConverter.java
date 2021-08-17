@@ -1,19 +1,14 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
 import com.finartz.restaurantapp.model.converter.GenericConverter;
-import com.finartz.restaurantapp.model.dto.*;
-import com.finartz.restaurantapp.model.entity.*;
+import com.finartz.restaurantapp.model.dto.AddressDto;
+import com.finartz.restaurantapp.model.entity.AddressEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class AddressDtoConverter implements GenericConverter<AddressEntity, AddressDto> {
-
-    private final GenericConverter<CityEntity, CityDto> cityDtoConverter;
-    private final GenericConverter<CountyEntity, CountyDto> countyDtoConverter;
-    private final GenericConverter<UserEntity, UserDto> userDtoConverter;
-    private final GenericConverter<BranchEntity, BranchDto> branchDtoConverter;
 
     @Override
     public AddressDto convert(final AddressEntity addressEntity){
@@ -25,32 +20,28 @@ public class AddressDtoConverter implements GenericConverter<AddressEntity, Addr
 
         address.setId(addressEntity.getId());
         address.setName(addressEntity.getName());
-        address.setCity(convert(addressEntity.getCityEntity()));
-        address.setCounty(convert(addressEntity.getCountyEntity()));
+        address.setCityId(addressEntity.getCityEntity().getId());
+        address.setCityName(addressEntity.getCityEntity().getName());
+        address.setCountyId(addressEntity.getCountyEntity().getId());
+        address.setCountyName(addressEntity.getCountyEntity().getName());
         address.setDistrict(addressEntity.getDistrict());
         address.setOtherContent(addressEntity.getOtherContent());
+        if(addressEntity.getUserEntity() != null){
+                address.setUserId(addressEntity.getUserEntity().getId());
+            address.setBranchId(null);
+        }else if(addressEntity.getBranchEntity() != null){
+                address.setBranchId(addressEntity.getBranchEntity().getId());
+            address.setUserId(null);
+        }else{
+                address.setBranchId(null);
+            address.setUserId(null);
+        }
+
+
 //        address.setEnable(addressEntity.getEnable());
-        address.setUser(convert(addressEntity.getUserEntity()));
-        address.setBranch(convert(addressEntity.getBranchEntity()));
 
         return address;
 
-    }
-
-    private CityDto convert(final CityEntity cityEntity){
-        return cityDtoConverter.convert(cityEntity);
-    }
-
-    private CountyDto convert(final CountyEntity countyEntity){
-        return countyDtoConverter.convert(countyEntity);
-    }
-
-    private UserDto convert(final UserEntity userEntity){
-        return userDtoConverter.convert(userEntity);
-    }
-
-    private BranchDto convert(final BranchEntity branchEntity){
-        return branchDtoConverter.convert(branchEntity);
     }
 
 }

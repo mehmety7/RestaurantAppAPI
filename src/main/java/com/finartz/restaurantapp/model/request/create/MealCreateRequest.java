@@ -1,7 +1,5 @@
 package com.finartz.restaurantapp.model.request.create;
 
-import com.finartz.restaurantapp.model.dto.ItemDto;
-import com.finartz.restaurantapp.model.dto.MenuDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,9 +21,9 @@ public class MealCreateRequest {
     private Double price;
 
     @NotNull(message = "Meal menu may not be null")
-    private MenuDto menu;
+    private Long menuId;
 
     @NotNull(message = "Meal items may not be null")
-    private List<ItemDto> items;
+    private List<Long> itemIds;
 
 }

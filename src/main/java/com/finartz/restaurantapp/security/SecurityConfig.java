@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/login/**", "/user/refresh-token/**").permitAll();
         http.authorizeRequests().antMatchers("/restaurant/waiting/**").hasAnyAuthority(Role.ADMIN.toString());
-        http.authorizeRequests().antMatchers(HttpMethod.PUT , "/restaurant").hasAnyAuthority(Role.ADMIN.toString());
+        http.authorizeRequests().antMatchers(HttpMethod.PUT , "/restaurant/{id}").hasAnyAuthority(Role.ADMIN.toString());
         http.authorizeRequests().antMatchers(HttpMethod.POST , "/restaurant").hasAnyAuthority(Role. SELLER.toString());
         http.authorizeRequests().antMatchers(HttpMethod.POST , "/comment").hasAnyAuthority(Role. USER.toString());
         http.authorizeRequests().antMatchers("/h2/**").permitAll();

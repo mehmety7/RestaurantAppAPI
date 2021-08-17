@@ -9,6 +9,7 @@ import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.repository.AddressRepository;
 import com.finartz.restaurantapp.service.AddressService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
@@ -30,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDto> getUserAddress(Long user_id) {
+    public List<AddressDto> getUserAddresses(Long user_id) {
         List<AddressEntity> addressEntities = addressRepository.getAddressEntitiesByUserEntityId(user_id);
         List<AddressDto> addresses = new ArrayList<>();
         addressEntities.forEach(addressEntity -> {
@@ -40,13 +42,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDto> getBranchAddress(Long branch_id) {
-        List<AddressEntity> addressEntities = addressRepository.getAddressEntitiesByBranchEntityId(branch_id);
-        List<AddressDto> addresses = new ArrayList<>();
-        addressEntities.forEach(addressEntity -> {
-            addresses.add(addressDtoConverter.convert(addressEntity));
-        });
-        return addresses;
+    public AddressDto getBranchAddress(Long branch_id) {
+        AddressEntity addressEntity = addressRepository.getAddressEntityByBranchEntityId(branch_id);
+        return addressDtoConverter.convert(addressEntity);
     }
 
     @Override

@@ -18,7 +18,7 @@ public class CityDto {
 
     private String name;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL) // Null ise donme
+    @JsonInclude(value = JsonInclude.Include.NON_NULL) // If it is null then don't show as JSON value
     private List<CountyDto> counties;
 
 }

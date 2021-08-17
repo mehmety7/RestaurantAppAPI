@@ -18,8 +18,10 @@ public class RestaurantDto {
 
     private Status status;
 
-    private UserDto user;
+    private Long userId;
 
-//    private List<BranchDto> branches;
+    private String userName;
+
+//  private List<BranchDto> branches;
 
 }

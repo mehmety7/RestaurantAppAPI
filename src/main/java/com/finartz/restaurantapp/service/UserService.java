@@ -4,6 +4,7 @@ import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ public interface UserService extends UserDetailsService {
 
     UserDto getUser(String email);
 
+    @Transactional
     UserDto createUser(UserCreateRequest userCreateRequest);
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;

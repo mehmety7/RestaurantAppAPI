@@ -35,6 +35,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {InvalidStatusException.class})
+    public ResponseEntity<ErrorMessage> handleInvalidStatusException(InvalidStatusException ex, WebRequest webRequest){
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.UNAUTHORIZED.value(),
+                new Date(),
+                ex.getMessage(),
+                webRequest.getDescription(false)
+        );
+
+        return new ResponseEntity(errorMessage, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> globalExceptionHandler(Exception ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(

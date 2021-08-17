@@ -23,11 +23,11 @@ public class AddressEntity extends BaseEntity {
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
     private CityEntity cityEntity;
 
     @OneToOne
-    @JoinColumn(name = "county_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "county_id", referencedColumnName = "id")
     private CountyEntity countyEntity;
 
     private String district;
@@ -40,7 +40,7 @@ public class AddressEntity extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     private BranchEntity branchEntity;
 

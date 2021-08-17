@@ -22,13 +22,13 @@ public class BranchEntity extends BaseEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     private RestaurantEntity restaurantEntity;
 
-    @OneToOne(mappedBy = "branchEntity", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "branchEntity", orphanRemoval = true)
     private MenuEntity menuEntity;
 
-    @OneToOne(mappedBy = "branchEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "branchEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private AddressEntity addressEntity;
 
 }

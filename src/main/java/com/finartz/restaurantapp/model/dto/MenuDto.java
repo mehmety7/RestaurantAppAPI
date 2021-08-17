@@ -17,6 +17,8 @@ public class MenuDto {
 
     private List<MealDto> meals;
 
-    //    private BranchDto branch;
+    private Long branchId;
+
+    private String branchName;
 
 }

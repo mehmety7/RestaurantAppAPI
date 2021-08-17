@@ -1,7 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
 import com.finartz.restaurantapp.model.converter.GenericConverter;
-import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RestaurantCreateRequestToEntityConverter implements GenericConverter<RestaurantCreateRequest, RestaurantEntity> {
-
-    private final GenericConverter<UserDto, UserEntity> userEntityConverter;
 
     @Override
     public RestaurantEntity convert(final RestaurantCreateRequest restaurantCreateRequest){
@@ -24,13 +21,12 @@ public class RestaurantCreateRequestToEntityConverter implements GenericConverte
 
         restaurantEntity.setName(restaurantCreateRequest.getName());
         restaurantEntity.setStatus(restaurantCreateRequest.getStatus());
-        restaurantEntity.setUserEntity(convert(restaurantCreateRequest.getUser()));
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(restaurantCreateRequest.getUserId());
+        restaurantEntity.setUserEntity(userEntity);
 
         return restaurantEntity;
-    }
-
-    private UserEntity convert(final UserDto user){
-        return userEntityConverter.convert(user);
     }
 
 }

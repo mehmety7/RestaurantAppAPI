@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public interface BranchService {
 
     List<BranchDto> getBranches(Long countyId);
 
+    @Transactional
     BranchDto createBranch(BranchCreateRequest branchCreateRequest);
 
 }

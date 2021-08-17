@@ -9,6 +9,6 @@ import java.util.List;
 public interface AddressRepository extends BaseRepository<AddressEntity>{
 
     List<AddressEntity> getAddressEntitiesByUserEntityId(Long user_id);
-    List<AddressEntity> getAddressEntitiesByBranchEntityId(Long branch_id);
+    AddressEntity getAddressEntityByBranchEntityId(Long branch_id);
 
 }

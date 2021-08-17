@@ -6,6 +6,7 @@ import com.finartz.restaurantapp.model.dto.CountyDto;
 import com.finartz.restaurantapp.model.entity.CityEntity;
 import com.finartz.restaurantapp.model.entity.CountyEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CityDtoConverter implements GenericConverter<CityEntity, CityDto> {
 
     private final GenericConverter<CountyEntity, CountyDto> countyDtoConverter;
@@ -26,12 +28,17 @@ public class CityDtoConverter implements GenericConverter<CityEntity, CityDto> {
         CityDto cityDto = new CityDto();
 
         cityDto.setId(cityEntity.getId());
-        cityDto.setName(cityEntity.getName());
+
+        if(cityDto.getName() != null){
+            cityDto.setName(cityEntity.getName());
+        }
 
         List<CountyDto> counties = new ArrayList<>();
-        cityEntity.getCountyEntities().forEach(countyEntity -> {
-            counties.add(convert(countyEntity));
-        });
+        if(cityEntity.getCountyEntities() != null){
+            cityEntity.getCountyEntities().forEach(countyEntity -> {
+                counties.add(convert(countyEntity));
+            });
+        }
         cityDto.setCounties(counties);
 
         return cityDto;

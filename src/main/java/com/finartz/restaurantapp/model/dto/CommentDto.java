@@ -19,8 +19,12 @@ public class CommentDto {
 
     private Integer speedPoint;
 
-    private UserDto user;
+    private Long userId;
 
-    private BranchDto branch;
+    private String userName;
+
+    private Long branchId;
+
+    private String branchName;
 
 }

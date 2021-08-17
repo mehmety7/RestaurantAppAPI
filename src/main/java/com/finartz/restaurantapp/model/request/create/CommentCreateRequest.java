@@ -1,7 +1,5 @@
 package com.finartz.restaurantapp.model.request.create;
 
-import com.finartz.restaurantapp.model.dto.BranchDto;
-import com.finartz.restaurantapp.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CommentCreateRequest {
 
-    @NotNull(message = "Comment comment may not be null")
-    private String comment;
+    private String comment = "";
 
     @NotNull(message = "Comment taste point may not be null")
     private Integer tastePoint;
@@ -25,9 +22,9 @@ public class CommentCreateRequest {
     private Integer speedPoint;
 
     @NotNull(message = "Comment user may not be null")
-    private UserDto user;
+    private Long userId;
 
     @NotNull(message = "Comment branch may not be null")
-    private BranchDto branch;
+    private Long branchId;
 
 }
