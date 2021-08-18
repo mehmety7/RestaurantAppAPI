@@ -21,6 +21,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -81,11 +83,17 @@ public class MealControllerTest {
                 .price(PRICE_15_99)
                 .build();
 
-        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().build();
+        MealCreateRequest mealCreateRequest = MealCreateRequest
+                .builder()
+                .name(NAME_KRAL_MENU)
+                .price(PRICE_15_99)
+                .menuId(1L)
+                .itemIds(new ArrayList<Long>())
+                .build();
 
         Mockito.when(mealService.createMeal(mealCreateRequest)).thenReturn(meal);
 
-        String requestJson = objectWriter.writeValueAsString(meal);
+        String requestJson = objectWriter.writeValueAsString(mealCreateRequest);
 
         mockMvc.perform(post(URI_MEAL)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))

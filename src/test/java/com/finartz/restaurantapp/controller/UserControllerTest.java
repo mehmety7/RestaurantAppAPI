@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.UserDto;
+import com.finartz.restaurantapp.model.enumerated.Role;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import com.finartz.restaurantapp.service.UserService;
 import org.hamcrest.Matchers;
@@ -79,15 +80,27 @@ public class UserControllerTest {
 //                .password(PASSWORD_ALI1212)
                 .build();
 
-        UserCreateRequest userCreateRequest = UserCreateRequest.builder().build();
+        UserCreateRequest userCreateRequest = UserCreateRequest
+                .builder()
+                .name(NAME_ALI_AKAY)
+                .email(EMAIL_ALI)
+                .password(PASSWORD_ALI1212)
+                .role(Role.USER)
+                .build();
 
         Mockito.when(userService.createUser(userCreateRequest)).thenReturn(user);
 
-        String requestJson = objectWriter.writeValueAsString(user);
+        String requestJson = objectWriter.writeValueAsString(userCreateRequest);
 
         mockMvc.perform(post(URI_USER)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void whenAccessTokenExpired_thenReturnNewTokensWithRefreshToken() throws Exception{
+
+
     }
 
 }

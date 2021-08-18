@@ -20,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RestaurantServiceTest {
 
     private static final String NAME_KRAL_BURGER = "Kral Burger";
-    private static final String NAME_LEZZET_EVI = "Lezzet Evi";
 
     @InjectMocks
     private RestaurantServiceImpl restaurantService;
@@ -50,7 +50,7 @@ public class RestaurantServiceTest {
         RestaurantDto restaurant = RestaurantDto.builder().name(NAME_KRAL_BURGER).build();
 
         Mockito.when(restaurantDtoConverter.convert(restaurantEntity)).thenReturn(restaurant);
-        Mockito.when(restaurantRepository.getById(1L)).thenReturn(restaurantEntity);
+        Mockito.when(restaurantRepository.findById(1L)).thenReturn(Optional.ofNullable(restaurantEntity));
 
         RestaurantDto resultRestaurant = restaurantService.getRestaurant(1L);
 
@@ -107,6 +107,18 @@ public class RestaurantServiceTest {
         Assertions.assertNotEquals(restaurant.getStatus(), Status.CANCELED);
         Assertions.assertEquals(resultRestaurant.getStatus(), Status.CANCELED);
 
+    }
+
+    @Test
+    public void whenIsRestaurantStatusApproved_thenReturnTrue(){
+        RestaurantEntity restaurantEntity = RestaurantEntity.builder()
+                .id(1l).status(Status.APPROVED).build();
+
+        Mockito.when(restaurantRepository.getById(1l)).thenReturn(restaurantEntity);
+
+        Boolean result = restaurantService.isRestaurantApproved(1l);
+
+        Assertions.assertEquals(result, true);
     }
 
 }

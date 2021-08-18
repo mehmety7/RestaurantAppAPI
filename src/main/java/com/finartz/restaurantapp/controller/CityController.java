@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.CityDto;
 import com.finartz.restaurantapp.service.CityService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("city")
+@RequiredArgsConstructor
 public class CityController {
 
     private final CityService cityService;
-
-    public CityController(CityService cityService) {
-        this.cityService = cityService;
-    }
 
     @GetMapping("{id}")
     public ResponseEntity<CityDto> getCity(@PathVariable Long id){

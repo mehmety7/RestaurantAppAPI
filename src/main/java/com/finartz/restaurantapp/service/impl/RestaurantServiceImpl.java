@@ -60,4 +60,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     }
 
+    @Override
+    public Boolean isRestaurantApproved(Long restaurant_id){
+        RestaurantEntity restaurantEntity = restaurantRepository.getById(restaurant_id);
+        if(restaurantEntity.getStatus().equals(Status.APPROVED))
+            return true;
+        else
+            return false;
+    }
+
 }

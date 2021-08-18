@@ -12,6 +12,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,11 +39,25 @@ public class CountyServiceTest {
         CountyDto county = CountyDto.builder().name(COUNTY_UMRANIYE).build();
 
         Mockito.when(countyDtoConverter.convert(countyEntity)).thenReturn(county);
-        Mockito.when(countyRepository.getById(1L)).thenReturn(countyEntity);
+        Mockito.when(countyRepository.findById(1L)).thenReturn(Optional.ofNullable(countyEntity));
 
         CountyDto resultCounty = countyService.getCounty(1L);
 
         assertEquals(county, resultCounty);
     }
+
+    @Test
+    public void whenFetchByCityId_thenReturnCounties() {
+        CountyEntity countyEntity = CountyEntity.builder().name(COUNTY_UMRANIYE).build();
+        CountyDto county = CountyDto.builder().name(COUNTY_UMRANIYE).build();
+
+        Mockito.when(countyDtoConverter.convert(countyEntity)).thenReturn(county);
+        Mockito.when(countyRepository.getCountyEntitiesByCityEntity_Id(1L)).thenReturn(Arrays.asList(countyEntity));
+
+        List<CountyDto> resultCounties = countyService.getCounties(1L);
+
+        assertEquals(Arrays.asList(county), resultCounties);
+    }
+
 
 }

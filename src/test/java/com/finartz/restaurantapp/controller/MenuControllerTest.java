@@ -65,14 +65,28 @@ public class MenuControllerTest {
     }
 
     @Test
+    public void whenGetMenuByBranchId_thenReturnBrancheMenu() throws Exception {
+
+        MenuDto menu = MenuDto.builder().id(1L).build();
+
+        Mockito.when(menuService.getBranchMenu(1L)).thenReturn(menu);
+
+        mockMvc.perform(get(URI_MENU + "/branch?branch_id=1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id", Matchers.is(1)));
+
+    }
+
+    @Test
     public void whenCreateNewMenu_thenReturnMenu() throws Exception {
 
         MenuDto menu = MenuDto.builder().id(1L).build();
-        MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().build();
+        MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(1L).build();
 
         Mockito.when(menuService.createMenu(menuCreateRequest)).thenReturn(menu);
 
-        String requestJson = objectWriter.writeValueAsString(menu);
+        String requestJson = objectWriter.writeValueAsString(menuCreateRequest);
 
         mockMvc.perform(post(URI_MENU)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))

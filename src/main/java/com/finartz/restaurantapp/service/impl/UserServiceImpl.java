@@ -23,7 +23,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
@@ -79,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public UserDto createUser(UserCreateRequest userCreateRequest){
         userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
         UserEntity userEntity = userRepository.save(userCreateRequestToEntityConverter.convert(userCreateRequest));

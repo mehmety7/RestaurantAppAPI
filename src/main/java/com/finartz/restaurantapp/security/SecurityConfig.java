@@ -52,9 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable(); // cross-side request forgery
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.headers().frameOptions().sameOrigin();
 
-//      http.headers().frameOptions().disable();
+        http.headers().frameOptions().sameOrigin(); // it solved to access denied issue on attempt to access h2 db
+
+//      http.headers().frameOptions().disable(); // it also solved access issue to h2 but this is less securely than above
 
     }
 

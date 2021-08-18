@@ -17,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,7 +48,7 @@ public class CommentServiceTest {
         CommentDto comment = CommentDto.builder().comment(COMMENT_HARIKA).build();
 
         Mockito.when(commentDtoConverter.convert(commentEntity)).thenReturn(comment);
-        Mockito.when(commentRepository.getById(1L)).thenReturn(commentEntity);
+        Mockito.when(commentRepository.findById(1L)).thenReturn(Optional.ofNullable(commentEntity));
 
         CommentDto resultComment = commentService.getComment(1L);
 

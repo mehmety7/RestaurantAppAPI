@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,7 +41,7 @@ public class MealServiceTest {
         MealEntity mealEntity = MealEntity.builder().name(NAME_FIRSAT).build();
         MealDto meal = MealDto.builder().name(NAME_FIRSAT).build();
 
-        Mockito.when(mealRepository.getById(1L)).thenReturn(mealEntity);
+        Mockito.when(mealRepository.findById(1L)).thenReturn(Optional.of(mealEntity));
         Mockito.when(mealDtoConverter.convert(mealEntity)).thenReturn(meal);
 
         MealDto resultMeal = mealService.getMeal(1L);

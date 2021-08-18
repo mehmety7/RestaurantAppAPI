@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -64,7 +65,7 @@ public class ItemServiceTest {
         ItemDto item = ItemDto.builder().name(NAME_HAMBURGER).build();
 
         Mockito.when(itemDtoConverter.convert(itemEntity)).thenReturn(item);
-        Mockito.when(itemRepository.getById(1L)).thenReturn(itemEntity);
+        Mockito.when(itemRepository.findById(1L)).thenReturn(Optional.ofNullable(itemEntity));
 
         ItemDto resultItem = itemService.getItem(1L);
 

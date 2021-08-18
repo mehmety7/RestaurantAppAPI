@@ -48,9 +48,11 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public AddressDto createAddress(AddressCreateRequest addressCreateRequest) {
-        AddressEntity existingActiveAddress = addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId());
-        existingActiveAddress.setEnable(false);
-        addressRepository.save(existingActiveAddress);
+        if(addressCreateRequest.getUserId() != null){
+            AddressEntity existingActiveAddress = addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId());
+            existingActiveAddress.setEnable(false);
+            addressRepository.save(existingActiveAddress);
+        }
 
         AddressEntity addressEntity = addressRepository.save(addressCreateRequestToEntityConverter.convert(addressCreateRequest));
         return addressDtoConverter.convert(addressEntity);

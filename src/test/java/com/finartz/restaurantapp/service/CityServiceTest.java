@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -55,7 +56,7 @@ public class CityServiceTest {
         CityDto city = CityDto.builder().name(CITY_ISTANBUL).build();
 
         Mockito.when(cityDtoConverter.convert(cityEntity)).thenReturn(city);
-        Mockito.when(cityRepository.getById(1L)).thenReturn(cityEntity);
+        Mockito.when(cityRepository.findById(1L)).thenReturn(Optional.ofNullable(cityEntity));
 
         CityDto resultCity = cityService.getCity(1L);
 

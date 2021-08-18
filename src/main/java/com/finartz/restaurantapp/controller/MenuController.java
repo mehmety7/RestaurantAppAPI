@@ -3,6 +3,7 @@ package com.finartz.restaurantapp.controller;
 import com.finartz.restaurantapp.model.dto.MenuDto;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
 import com.finartz.restaurantapp.service.MenuService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +12,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("menu")
+@RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
-
-    public MenuController(MenuService menuService) {
-        this.menuService = menuService;
-    }
 
     @GetMapping("{id}")
     public ResponseEntity<MenuDto> getMenu(@PathVariable Long id){

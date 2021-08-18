@@ -3,6 +3,7 @@ package com.finartz.restaurantapp.controller;
 import com.finartz.restaurantapp.model.dto.ItemDto;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
 import com.finartz.restaurantapp.service.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("item")
+@RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
-
-    public ItemController(ItemService itemService) {
-        this.itemService = itemService;
-    }
 
     @GetMapping("{id}")
     public ResponseEntity<ItemDto> getItem(@PathVariable Long id){

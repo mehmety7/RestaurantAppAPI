@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(CommentController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class CommentControllerTest {
 
     private static final String URI_COMMENT = "/comment";
@@ -81,13 +84,22 @@ public class CommentControllerTest {
                 .comment(COMMENT_HARIKA)
                 .speedPoint(9)
                 .tastePoint(8)
+                .branchId(1L)
+                .userId(1L)
                 .build();
 
-        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder().build();
+        CommentCreateRequest commentCreateRequest = CommentCreateRequest
+                .builder()
+                .comment(COMMENT_HARIKA)
+                .speedPoint(9)
+                .tastePoint(8)
+                .userId(1L)
+                .branchId(1L)
+                .build();
 
         Mockito.when(commentService.createComment(commentCreateRequest)).thenReturn(comment);
 
-        String requestJson = objectWriter.writeValueAsString(comment);
+        String requestJson = objectWriter.writeValueAsString(commentCreateRequest);
 
         mockMvc.perform(post(URI_COMMENT)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
@@ -102,6 +114,17 @@ public class CommentControllerTest {
                 .comment(COMMENT_HARIKA)
                 .speedPoint(9)
                 .tastePoint(8)
+                .branchId(1L)
+                .userId(1L)
+                .build();
+
+        CommentCreateRequest commentCreateRequest = CommentCreateRequest
+                .builder()
+                .comment(COMMENT_HARIKA)
+                .speedPoint(9)
+                .tastePoint(8)
+                .userId(1L)
+                .branchId(1L)
                 .build();
 
         CommentDto commentUpdate = CommentDto.builder().
@@ -109,14 +132,16 @@ public class CommentControllerTest {
                 .comment(COMMENT_ORTALAMA)
                 .build();
 
-        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder().comment(COMMENT_HARIKA).build();
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder().comment(COMMENT_ORTALAMA).build();
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest
+                .builder()
+                .comment(COMMENT_ORTALAMA)
+                .build();
 
         Mockito.when(commentService.createComment(commentCreateRequest)).thenReturn(comment);
         Mockito.when(commentService.updateComment(1L, commentUpdateRequest)).thenReturn(commentUpdate);
 
-        String requestJson1 = objectWriter.writeValueAsString(comment);
-        String requestJson2 = objectWriter.writeValueAsString(commentUpdate);
+        String requestJson1 = objectWriter.writeValueAsString(commentCreateRequest);
+        String requestJson2 = objectWriter.writeValueAsString(commentUpdateRequest);
 
         mockMvc.perform(post(URI_COMMENT)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
@@ -129,14 +154,14 @@ public class CommentControllerTest {
                 .andExpect(jsonPath("id", Matchers.is(1)));
     }
 
-//    @Test
-//    public void whenDeleteComment_thenReturnComment() throws Exception {
-//
-//        mockMvc.perform(delete(URI_COMMENT + String.valueOf(anyLong()))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    public void whenDeleteComment_thenReturnComment() throws Exception {
+
+        mockMvc.perform(delete(URI_COMMENT + "/" + anyLong())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
 
 }

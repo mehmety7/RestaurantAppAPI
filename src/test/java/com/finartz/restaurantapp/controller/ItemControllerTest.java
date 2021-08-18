@@ -81,14 +81,14 @@ public class ItemControllerTest {
     public void whenCreateNewItem_thenReturnItem() throws Exception {
 
         ItemDto item = ItemDto.builder().id(1l).name(NAME_HAMBURGER).build();
-        ItemCreateRequest itemCreateRequest = ItemCreateRequest.builder().build();
+        ItemCreateRequest itemCreateRequest = ItemCreateRequest.builder().name(NAME_HAMBURGER).unitType(anyString()).build();
 
         Mockito.when(itemService.createItem(itemCreateRequest)).thenReturn(item);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(item);
+        String requestJson = ow.writeValueAsString(itemCreateRequest);
 
         mockMvc.perform(post(URI_ITEM)
                 .contentType(MediaType.APPLICATION_JSON)

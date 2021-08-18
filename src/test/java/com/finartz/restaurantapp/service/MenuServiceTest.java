@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,7 +38,7 @@ public class MenuServiceTest {
         MenuEntity menuEntity = MenuEntity.builder().id(1L).build();
         MenuDto menu = MenuDto.builder().id(1L).build();
 
-        Mockito.when(menuRepository.getById(1L)).thenReturn(menuEntity);
+        Mockito.when(menuRepository.findById(1L)).thenReturn(Optional.ofNullable(menuEntity));
         Mockito.when(menuDtoConverter.convert(menuEntity)).thenReturn(menu);
 
         MenuDto resultMenu = menuService.getMenu(1L);

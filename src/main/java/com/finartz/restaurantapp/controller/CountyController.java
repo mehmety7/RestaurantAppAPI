@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.CountyDto;
 import com.finartz.restaurantapp.service.CountyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("county")
+@RequiredArgsConstructor
 public class CountyController {
 
     private final CountyService countyService;
-
-    public CountyController(CountyService countyService) {
-        this.countyService = countyService;
-    }
 
     @GetMapping("{id}")
     public ResponseEntity<CountyDto> getCounty(@PathVariable Long id){

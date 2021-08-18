@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -33,9 +34,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(RestaurantController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class RestaurantControllerTest {
 
     private final String URI_RESTAURANT = "/restaurant";
+    private final String NAME_KRAL_BURGER = "Kral Burger";
 
     @Autowired
     private MockMvc mockMvc;
@@ -77,14 +80,20 @@ public class RestaurantControllerTest {
 
         RestaurantDto restaurant = RestaurantDto.builder()
                 .id(1L)
+                .name(NAME_KRAL_BURGER)
+                .userId(1L)
                 .status(Status.WAITING)
                 .build();
 
-        RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest.builder().build();
+        RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest
+                .builder()
+                .name(NAME_KRAL_BURGER)
+                .userId(1L)
+                .build();
 
         Mockito.when(restaurantService.createRestaurant(restaurantCreateRequest)).thenReturn(restaurant);
 
-        String requestJson = objectWriter.writeValueAsString(restaurant);
+        String requestJson = objectWriter.writeValueAsString(restaurantCreateRequest);
 
         mockMvc.perform(post(URI_RESTAURANT)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
@@ -115,22 +124,34 @@ public class RestaurantControllerTest {
 
         RestaurantDto restaurant = RestaurantDto.builder()
                 .id(1L)
+                .name(NAME_KRAL_BURGER)
+                .userId(1L)
                 .status(Status.WAITING)
                 .build();
 
         RestaurantDto restaurantUpdate = RestaurantDto.builder()
                 .id(1L)
+                .name(NAME_KRAL_BURGER)
+                .userId(1L)
                 .status(Status.APPROVED)
                 .build();
 
-        RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest.builder().build();
-        RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().build();
+        RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest
+                .builder()
+                .name(NAME_KRAL_BURGER)
+                .userId(1L)
+                .build();
+
+        RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest
+                .builder()
+                .status(Status.APPROVED)
+                .build();
 
         Mockito.when(restaurantService.createRestaurant(restaurantCreateRequest)).thenReturn(restaurant);
         Mockito.when(restaurantService.updateRestaurant(1L, restaurantUpdateRequest)).thenReturn(restaurantUpdate);
 
-        String requestJson1 = objectWriter.writeValueAsString(restaurant);
-        String requestJson2 = objectWriter.writeValueAsString(restaurantUpdate);
+        String requestJson1 = objectWriter.writeValueAsString(restaurantCreateRequest);
+        String requestJson2 = objectWriter.writeValueAsString(restaurantUpdateRequest);
 
         mockMvc.perform(post(URI_RESTAURANT)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson1))

@@ -16,6 +16,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,6 +54,23 @@ public class CountyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", Matchers.is(COUNTY_KADIKOY)));
+
+    }
+
+    @Test
+    public void whenGetCountyByCityId_thenReturnCounties() throws Exception {
+
+        CountyDto county = CountyDto.builder()
+                .cityId(1L)
+                .name(COUNTY_KADIKOY)
+                .build();
+
+        Mockito.when(countyService.getCounties(1L)).thenReturn(Arrays.asList(county));
+
+        mockMvc.perform(get(URI_COUNTY + "?city_id=1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", Matchers.is(COUNTY_KADIKOY)));
 
     }
 
