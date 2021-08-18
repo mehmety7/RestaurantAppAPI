@@ -25,10 +25,10 @@ public class BranchEntity extends BaseEntity {
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
     private RestaurantEntity restaurantEntity;
 
-    @OneToOne(mappedBy = "branchEntity", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "branchEntity")
     private MenuEntity menuEntity;
 
-    @OneToOne(mappedBy = "branchEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "branchEntity", fetch = FetchType.LAZY)
     private AddressEntity addressEntity;
 
 }

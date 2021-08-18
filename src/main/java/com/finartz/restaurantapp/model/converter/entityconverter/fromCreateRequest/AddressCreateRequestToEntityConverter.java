@@ -43,6 +43,7 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
             addressEntity.setUserEntity(null);
         }
 
+        addressEntity.setEnable(true);
 
         return addressEntity;
 

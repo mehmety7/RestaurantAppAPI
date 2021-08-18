@@ -11,8 +11,10 @@ public interface AddressService {
 
     List<AddressDto> getUserAddress(Long user_id);
 
-    List<AddressDto> getBranchAddress(Long branch_id);
+    AddressDto getBranchAddress(Long branch_id);
 
     AddressDto createAddress(AddressCreateRequest addressCreateRequest);
+
+    void setActiveAddress(Long id);
 
 }

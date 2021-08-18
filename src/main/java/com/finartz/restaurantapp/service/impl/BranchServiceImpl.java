@@ -1,10 +1,13 @@
 package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
+import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.repository.BranchRepository;
 import com.finartz.restaurantapp.service.BranchService;
@@ -22,6 +25,8 @@ public class BranchServiceImpl implements BranchService {
 
     private final BranchDtoConverter branchDtoConverter;
     private final BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
+    private final RestaurantServiceImpl restaurantService;
+    private final AddressServiceImpl addressService;
 
     @Override
     public BranchDto getBranch(Long id) {
@@ -41,8 +46,22 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public BranchDto createBranch(BranchCreateRequest branchCreateRequest) {
-        BranchEntity branchEntity = branchCreateRequestToEntityConverter.convert(branchCreateRequest);
-        return branchDtoConverter.convert(branchRepository.save(branchEntity));
+        if (!isRestaurantApproved(branchCreateRequest.getRestaurantId()))
+            throw new InvalidStatusException("The status of restaurant must be APPROVED by admin to create branch");
+
+
+        BranchEntity branchEntity = branchRepository.save(branchCreateRequestToEntityConverter.convert(branchCreateRequest));
+        branchCreateRequest.getAddressCreateRequest().setBranchId(branchEntity.getId());
+        addressService.createAddress(branchCreateRequest.getAddressCreateRequest());
+        return branchDtoConverter.convert(branchEntity);
+    }
+
+    private Boolean isRestaurantApproved(Long restaurant_id){
+        RestaurantDto restaurantDto = restaurantService.getRestaurant(restaurant_id);
+        if(restaurantDto.getStatus().equals(Status.APPROVED))
+            return true;
+        else
+            return false;
     }
 
 }

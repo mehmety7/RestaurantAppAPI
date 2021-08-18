@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finartz.restaurantapp.exception.InvalidRequestException;
+import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.UserDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.UserCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.UserDto;
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
             for (ConstraintViolation<AddressCreateRequest> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-            throw new InvalidRequestException(sb.toString());
+            throw new MissingArgumentsException(sb.toString());
         }
 
         addressService.createAddress(userCreateRequest.getAddressCreateRequest());

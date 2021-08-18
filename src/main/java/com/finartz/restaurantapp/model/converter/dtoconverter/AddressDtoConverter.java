@@ -37,7 +37,7 @@ public class AddressDtoConverter implements GenericConverter<AddressEntity, Addr
         else
             address.setBranchId(null);
 
-//      address.setEnable(addressEntity.getEnable());
+        address.setEnable(addressEntity.getEnable());
 
         return address;
 

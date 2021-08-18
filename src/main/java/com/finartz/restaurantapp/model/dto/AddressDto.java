@@ -31,6 +31,6 @@ public class AddressDto {
 
     private Long branchId;
 
-//    private Boolean enable;
+    private Boolean enable;
 
 }

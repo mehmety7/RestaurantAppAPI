@@ -10,6 +10,7 @@ import com.finartz.restaurantapp.repository.AddressRepository;
 import com.finartz.restaurantapp.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressDto> getUserAddress(Long user_id) {
-        List<AddressEntity> addressEntities = addressRepository.getAddressEntitiesByUserEntityId(user_id);
+        List<AddressEntity> addressEntities = addressRepository.getAddressEntitiesByUserEntity_Id(user_id);
         List<AddressDto> addresses = new ArrayList<>();
         addressEntities.forEach(addressEntity -> {
             addresses.add(addressDtoConverter.convert(addressEntity));
@@ -40,19 +41,35 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDto> getBranchAddress(Long branch_id) {
-        List<AddressEntity> addressEntities = addressRepository.getAddressEntitiesByBranchEntityId(branch_id);
-        List<AddressDto> addresses = new ArrayList<>();
-        addressEntities.forEach(addressEntity -> {
-            addresses.add(addressDtoConverter.convert(addressEntity));
-        });
-        return addresses;
+    public AddressDto getBranchAddress(Long branch_id) {
+        return addressDtoConverter.convert(addressRepository.getAddressEntityByBranchEntity_Id(branch_id));
     }
 
     @Override
+    @Transactional
     public AddressDto createAddress(AddressCreateRequest addressCreateRequest) {
-        AddressEntity addressEntity = addressCreateRequestToEntityConverter.convert(addressCreateRequest);
-        return addressDtoConverter.convert(addressRepository.save(addressEntity));
+        AddressEntity existingActiveAddress = addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId());
+        existingActiveAddress.setEnable(false);
+        addressRepository.save(existingActiveAddress);
+
+        AddressEntity addressEntity = addressRepository.save(addressCreateRequestToEntityConverter.convert(addressCreateRequest));
+        return addressDtoConverter.convert(addressEntity);
+    }
+
+    @Override
+    @Transactional
+    public void setActiveAddress(Long id) {
+        AddressEntity newActiveAddress = addressRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Not found Address with id: " + id)
+        );
+
+        AddressEntity existingActiveAddress = addressRepository.getActiveAddressByUserId(newActiveAddress.getUserEntity().getId());
+        existingActiveAddress.setEnable(false);
+        addressRepository.save(existingActiveAddress);
+
+        newActiveAddress.setEnable(true);
+
+        addressRepository.save(newActiveAddress);
     }
 
 }

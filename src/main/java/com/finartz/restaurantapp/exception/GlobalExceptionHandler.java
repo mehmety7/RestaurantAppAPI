@@ -35,8 +35,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = {InvalidRequestException.class})
-    public ResponseEntity<ErrorMessage> handleInvalidRequestException(InvalidRequestException ex, WebRequest webRequest){
+    @ExceptionHandler(value = {InvalidStatusException.class})
+    public ResponseEntity<ErrorMessage> handleInvalidStatusException(InvalidStatusException ex, WebRequest webRequest){
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.UNAUTHORIZED.value(),
+                new Date(),
+                ex.getMessage(),
+                webRequest.getDescription(false)
+        );
+
+        return new ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = {MissingArgumentsException.class})
+    public ResponseEntity<ErrorMessage> handleMissingArgumentsException(MissingArgumentsException ex, WebRequest webRequest){
         ErrorMessage errorMessage = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 new Date(),

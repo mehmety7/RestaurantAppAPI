@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("address")
@@ -25,7 +26,7 @@ public class AddressController {
     }
 
     @GetMapping("user")
-    public ResponseEntity<AddressDto> getUserAddress(@RequestParam Long user_id){
+    public ResponseEntity<List<AddressDto>> getUserAddress(@RequestParam Long user_id){
         return new ResponseEntity(addressService.getUserAddress(user_id), HttpStatus.OK);
     }
 
@@ -37,6 +38,12 @@ public class AddressController {
     @PostMapping
     public ResponseEntity<AddressDto> createAddress(@Valid @RequestBody AddressCreateRequest addressCreateRequest){
         return new ResponseEntity(addressService.createAddress(addressCreateRequest), HttpStatus.CREATED);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity setActiveAddress(@PathVariable Long id){
+        addressService.setActiveAddress(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }
