@@ -6,13 +6,15 @@ import com.finartz.restaurantapp.model.entity.CommentEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class CommentDtoConverter implements GenericConverter<CommentEntity, CommentDto> {
 
     @Override
     public CommentDto convert(final CommentEntity commentEntity){
-        if(commentEntity == null){
+        if(Objects.isNull(commentEntity)){
             return null;
         }
 
@@ -22,8 +24,12 @@ public class CommentDtoConverter implements GenericConverter<CommentEntity, Comm
         commentDto.setComment(commentEntity.getComment());
         commentDto.setSpeedPoint(commentEntity.getSpeedPoint());
         commentDto.setTastePoint(commentEntity.getTastePoint());
-        commentDto.setUserId(commentEntity.getUserEntity().getId());
-        commentDto.setBranchId(commentEntity.getBranchEntity().getId());
+        if(Objects.nonNull(commentEntity.getUserEntity())) {
+            commentDto.setUserId(commentEntity.getUserEntity().getId());
+        }
+        if(Objects.nonNull(commentEntity.getBranchEntity())) {
+            commentDto.setBranchId(commentEntity.getBranchEntity().getId());
+        }
 
         return commentDto;
     }

@@ -9,6 +9,8 @@ import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class BranchCreateRequestToEntityConverter implements GenericConverter<BranchCreateRequest, BranchEntity> {
@@ -17,7 +19,7 @@ public class BranchCreateRequestToEntityConverter implements GenericConverter<Br
 
     @Override
     public BranchEntity convert(final BranchCreateRequest branchCreateRequest){
-        if(branchCreateRequest == null){
+        if(Objects.isNull(branchCreateRequest)){
             return null;
         }
 
@@ -29,7 +31,11 @@ public class BranchCreateRequestToEntityConverter implements GenericConverter<Br
         restaurantEntity.setId(branchCreateRequest.getRestaurantId());
         branchEntity.setRestaurantEntity(restaurantEntity);
 
-        branchEntity.setAddressEntity(null);
+        if(Objects.nonNull(branchCreateRequest.getAddressCreateRequest())){
+            branchEntity.setAddressEntity(convert(branchCreateRequest.getAddressCreateRequest()));
+        }else{
+            branchEntity.setAddressEntity(null);
+        }
 
         return branchEntity;
     }

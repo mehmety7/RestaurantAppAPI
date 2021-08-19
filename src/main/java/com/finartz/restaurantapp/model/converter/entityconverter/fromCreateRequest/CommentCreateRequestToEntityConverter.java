@@ -8,13 +8,15 @@ import com.finartz.restaurantapp.model.request.create.CommentCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class CommentCreateRequestToEntityConverter implements GenericConverter<CommentCreateRequest, CommentEntity> {
 
     @Override
     public CommentEntity convert(final CommentCreateRequest commentCreateRequest){
-        if(commentCreateRequest == null){
+        if(Objects.isNull(commentCreateRequest)){
             return null;
         }
 

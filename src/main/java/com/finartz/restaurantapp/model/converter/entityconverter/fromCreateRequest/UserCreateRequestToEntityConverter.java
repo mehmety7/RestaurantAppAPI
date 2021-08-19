@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class UserCreateRequestToEntityConverter implements GenericConverter<User
 
     @Override
     public UserEntity convert(final UserCreateRequest userCreateRequest){
-        if(userCreateRequest == null){
+        if(Objects.isNull(userCreateRequest)){
             return null;
         }
 
@@ -28,7 +29,9 @@ public class UserCreateRequestToEntityConverter implements GenericConverter<User
         userEntity.setEmail(userCreateRequest.getEmail());
         userEntity.setPassword(userCreateRequest.getPassword());
         userEntity.setRoles(Arrays.asList(userCreateRequest.getRole()));
-        userEntity.setAddressEntities(Arrays.asList(convert(userCreateRequest.getAddressCreateRequest())));
+        if(Objects.nonNull(userCreateRequest.getAddressCreateRequest())){
+            userEntity.setAddressEntities(Arrays.asList(convert(userCreateRequest.getAddressCreateRequest())));
+        }
 
         return userEntity;
     }

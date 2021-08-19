@@ -46,7 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 //      http.authorizeRequests().anyRequest().permitAll();   // It throws SpringSecurity out of picture.
 
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -56,6 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().sameOrigin(); // it solved to access denied issue on attempt to access h2 db
 
 //      http.headers().frameOptions().disable(); // it also solved access issue to h2 but this is less securely than above
+
+//      http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
     }
 

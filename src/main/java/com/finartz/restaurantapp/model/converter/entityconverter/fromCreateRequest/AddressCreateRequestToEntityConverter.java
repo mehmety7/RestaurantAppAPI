@@ -6,13 +6,15 @@ import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class AddressCreateRequestToEntityConverter implements GenericConverter<AddressCreateRequest, AddressEntity> {
 
     @Override
     public AddressEntity convert(final AddressCreateRequest addressCreateRequest) {
-        if(addressCreateRequest == null){
+        if(Objects.isNull(addressCreateRequest)){
             return null;
         }
 
@@ -21,6 +23,7 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
         addressEntity.setName(addressCreateRequest.getName());
         addressEntity.setDistrict(addressCreateRequest.getDistrict());
         addressEntity.setOtherContent(addressCreateRequest.getOtherContent());
+        addressEntity.setEnable(true);
 
         CityEntity cityEntity = new CityEntity();
         cityEntity.setId(addressCreateRequest.getCityId());
@@ -30,11 +33,11 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
         countyEntity.setId(addressCreateRequest.getCountyId());
         addressEntity.setCountyEntity(countyEntity);
 
-        if(addressCreateRequest.getUserId() != null) {
+        if(Objects.nonNull(addressCreateRequest.getUserId())) {
             UserEntity userEntity = new UserEntity();
             userEntity.setId(addressCreateRequest.getUserId());
             addressEntity.setUserEntity(userEntity);
-        } else if (addressCreateRequest.getBranchId() != null){
+        } else if ((Objects.nonNull(addressCreateRequest.getBranchId()))){
             BranchEntity branchEntity = new BranchEntity();
             branchEntity.setId(addressCreateRequest.getBranchId());
             addressEntity.setBranchEntity(branchEntity);
@@ -42,8 +45,6 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
             addressEntity.setBranchEntity(null);
             addressEntity.setUserEntity(null);
         }
-
-        addressEntity.setEnable(true);
 
         return addressEntity;
 

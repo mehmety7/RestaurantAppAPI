@@ -6,13 +6,15 @@ import com.finartz.restaurantapp.model.entity.ItemEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class ItemDtoConverter implements GenericConverter<ItemEntity, ItemDto> {
 
     @Override
     public ItemDto convert(final ItemEntity itemEntity){
-        if(itemEntity == null){
+        if(Objects.isNull(itemEntity)){
             return null;
         }
 

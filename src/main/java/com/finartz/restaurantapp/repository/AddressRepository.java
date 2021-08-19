@@ -11,6 +11,7 @@ import java.util.List;
 public interface AddressRepository extends BaseRepository<AddressEntity>{
 
     List<AddressEntity> getAddressEntitiesByUserEntity_Id(Long user_id);
+
     AddressEntity getAddressEntityByBranchEntity_Id(Long branch_id);
 
     @Query(value = "SELECT * FROM ADDRESSES a WHERE a.enable = true AND a.user_id = :user_id", nativeQuery = true)

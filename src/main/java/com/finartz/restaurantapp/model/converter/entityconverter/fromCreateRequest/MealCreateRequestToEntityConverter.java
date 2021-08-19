@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class MealCreateRequestToEntityConverter implements GenericConverter<Meal
 
     @Override
     public MealEntity convert(final MealCreateRequest mealCreateRequest){
-        if(mealCreateRequest == null){
+        if(Objects.isNull(mealCreateRequest)){
             return null;
         }
 
@@ -31,7 +32,7 @@ public class MealCreateRequestToEntityConverter implements GenericConverter<Meal
         mealEntity.setMenuEntity(menuEntity);
 
         List<ItemEntity> itemEntities = new ArrayList<>();
-        if(mealCreateRequest.getItemIds() != null) {
+        if(Objects.nonNull(mealCreateRequest.getItemIds())) {
             itemEntities = setItemEntityId(mealCreateRequest.getItemIds());
         }
         mealEntity.setItemEntities(itemEntities);

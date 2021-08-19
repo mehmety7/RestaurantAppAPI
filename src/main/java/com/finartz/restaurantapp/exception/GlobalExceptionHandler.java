@@ -38,13 +38,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {InvalidStatusException.class})
     public ResponseEntity<ErrorMessage> handleInvalidStatusException(InvalidStatusException ex, WebRequest webRequest){
         ErrorMessage errorMessage = new ErrorMessage(
-                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.FORBIDDEN.value(),
                 new Date(),
                 ex.getMessage(),
                 webRequest.getDescription(false)
         );
 
-        return new ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity(errorMessage, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = {MissingArgumentsException.class})

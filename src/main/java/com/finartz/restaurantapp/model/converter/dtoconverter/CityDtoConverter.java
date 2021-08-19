@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class CityDtoConverter implements GenericConverter<CityEntity, CityDto> {
 
     @Override
     public CityDto convert(final CityEntity cityEntity){
-        if(cityEntity == null){
+        if(Objects.isNull(cityEntity)){
             return null;
         }
 

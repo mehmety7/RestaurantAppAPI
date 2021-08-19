@@ -1,10 +1,12 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
 import com.finartz.restaurantapp.model.converter.GenericConverter;
-import com.finartz.restaurantapp.model.dto.*;
-import com.finartz.restaurantapp.model.entity.*;
+import com.finartz.restaurantapp.model.dto.AddressDto;
+import com.finartz.restaurantapp.model.entity.AddressEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -20,19 +22,29 @@ public class AddressDtoConverter implements GenericConverter<AddressEntity, Addr
 
         address.setId(addressEntity.getId());
         address.setName(addressEntity.getName());
-        address.setCityId(addressEntity.getCityEntity().getId());
-        address.setCityName(addressEntity.getCityEntity().getName());
-        address.setCountyId(addressEntity.getCountyEntity().getId());
-        address.setCountyName(addressEntity.getCountyEntity().getName());
+
+        if(Objects.nonNull(addressEntity.getCityEntity())){
+            address.setCityId(addressEntity.getCityEntity().getId());
+        }
+        if(Objects.nonNull(addressEntity.getCityEntity())) {
+            address.setCityName(addressEntity.getCityEntity().getName());
+        }
+        if(Objects.nonNull(addressEntity.getCountyEntity())) {
+            address.setCountyId(addressEntity.getCountyEntity().getId());
+        }
+        if(Objects.nonNull(addressEntity.getCountyEntity())) {
+            address.setCountyName(addressEntity.getCountyEntity().getName());
+        }
+
         address.setDistrict(addressEntity.getDistrict());
         address.setOtherContent(addressEntity.getOtherContent());
 
-        if(addressEntity.getUserEntity() != null)
+        if(Objects.nonNull(addressEntity.getUserEntity()))
             address.setUserId(addressEntity.getUserEntity().getId());
         else
             address.setUserId(null);
 
-        if(addressEntity.getBranchEntity() != null)
+        if(Objects.nonNull(addressEntity.getBranchEntity()))
             address.setBranchId(addressEntity.getBranchEntity().getId());
         else
             address.setBranchId(null);

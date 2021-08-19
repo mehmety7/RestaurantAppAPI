@@ -6,13 +6,15 @@ import com.finartz.restaurantapp.model.entity.CountyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class CountyDtoConverter implements GenericConverter<CountyEntity, CountyDto> {
 
     @Override
     public CountyDto convert(final CountyEntity countyEntity){
-        if(countyEntity == null){
+        if(Objects.isNull(countyEntity)){
             return null;
         }
 
@@ -20,7 +22,9 @@ public class CountyDtoConverter implements GenericConverter<CountyEntity, County
 
         countyDto.setId(countyEntity.getId());
         countyDto.setName(countyEntity.getName());
-        countyDto.setCityId(countyEntity.getCityEntity().getId());
+        if(Objects.nonNull(countyEntity.getCityEntity())) {
+            countyDto.setCityId(countyEntity.getCityEntity().getId());
+        }
 
         return countyDto;
     }

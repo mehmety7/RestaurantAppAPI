@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -30,9 +31,11 @@ public class MealDtoConverter implements GenericConverter<MealEntity, MealDto> {
         mealDto.setPrice(mealEntity.getPrice());
 
         List<ItemDto> items = new ArrayList<>();
-        mealEntity.getItemEntities().forEach(itemEntity -> {
-            items.add(convert(itemEntity));
-        });
+        if(Objects.nonNull(mealEntity.getItemEntities())){
+            mealEntity.getItemEntities().forEach(itemEntity -> {
+                items.add(convert(itemEntity));
+            });
+        }
         mealDto.setItems(items);
 
         return mealDto;

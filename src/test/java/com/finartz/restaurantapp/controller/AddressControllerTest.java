@@ -46,8 +46,6 @@ public class AddressControllerTest {
     @MockBean
     private UserDetailsService userDetailsService;
 
-    private ObjectWriter objectWriter;
-
     @Test
     public void whenGetByAddressId_thenReturnAddress() throws Exception {
 
@@ -114,7 +112,7 @@ public class AddressControllerTest {
         // to-do : https://stackoverflow.com/questions/20504399/testing-springs-requestbody-using-spring-mockmvc
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+        ObjectWriter objectWriter = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = objectWriter.writeValueAsString(addressCreateRequest);
 
         mockMvc.perform(post(URI_ADDRESS)

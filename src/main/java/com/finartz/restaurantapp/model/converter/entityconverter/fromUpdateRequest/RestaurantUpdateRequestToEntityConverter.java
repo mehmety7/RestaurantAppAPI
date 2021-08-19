@@ -5,16 +5,18 @@ import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class RestaurantUpdateRequestToEntityConverter {
 
     public RestaurantEntity convert(final RestaurantUpdateRequest restaurantUpdateRequest ,
                                     final RestaurantEntity restaurantExisted){
-        if (restaurantUpdateRequest == null)
+        if (Objects.isNull(restaurantUpdateRequest))
             return null;
 
-        if(restaurantUpdateRequest.getStatus() != null)
+        if(Objects.nonNull(restaurantUpdateRequest.getStatus()))
             restaurantExisted.setStatus(restaurantUpdateRequest.getStatus());
 
         return restaurantExisted;

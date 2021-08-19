@@ -6,6 +6,8 @@ import com.finartz.restaurantapp.model.entity.BranchEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class BranchDtoConverter implements GenericConverter<BranchEntity, BranchDto> {
@@ -20,11 +22,15 @@ public class BranchDtoConverter implements GenericConverter<BranchEntity, Branch
 
         branchDto.setId(branchEntity.getId());
         branchDto.setName(branchEntity.getName());
-        if (branchEntity.getMenuEntity() != null)
+        if (Objects.nonNull(branchEntity.getMenuEntity())) {
             branchDto.setMenuId(branchEntity.getMenuEntity().getId());
-        else
+        }
+        else {
             branchDto.setMenuId(null);
-        branchDto.setRestaurantId(branchEntity.getRestaurantEntity().getId());
+        }
+        if(Objects.nonNull(branchEntity.getRestaurantEntity())) {
+            branchDto.setRestaurantId(branchEntity.getRestaurantEntity().getId());
+        }
 
         return branchDto;
     }

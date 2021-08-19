@@ -7,13 +7,15 @@ import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class RestaurantCreateRequestToEntityConverter implements GenericConverter<RestaurantCreateRequest, RestaurantEntity> {
 
     @Override
     public RestaurantEntity convert(final RestaurantCreateRequest restaurantCreateRequest){
-        if(restaurantCreateRequest == null){
+        if(Objects.isNull(restaurantCreateRequest)){
             return null;
         }
 
