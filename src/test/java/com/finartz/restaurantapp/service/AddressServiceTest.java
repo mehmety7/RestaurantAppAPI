@@ -61,7 +61,7 @@ public class AddressServiceTest {
         Mockito.when(addressDtoConverter.convert(addressEntity)).thenReturn(address);
         Mockito.when(addressRepository.getAddressEntitiesByUserEntity_Id(1L)).thenReturn(Arrays.asList(addressEntity));
 
-        List<AddressDto> result = addressService.getUserAddress(1L);
+        List<AddressDto> result = addressService.getUserAddresses(1L);
 
         assertEquals(result.get(0).getId(), address.getId());
     }

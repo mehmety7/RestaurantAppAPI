@@ -8,7 +8,9 @@ import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -29,9 +31,14 @@ public class UserCreateRequestToEntityConverter implements GenericConverter<User
         userEntity.setEmail(userCreateRequest.getEmail());
         userEntity.setPassword(userCreateRequest.getPassword());
         userEntity.setRoles(Arrays.asList(userCreateRequest.getRole()));
-        if(Objects.nonNull(userCreateRequest.getAddressCreateRequest())){
+
+        if(Objects.nonNull(userCreateRequest.getAddressCreateRequest())) {
             userEntity.setAddressEntities(Arrays.asList(convert(userCreateRequest.getAddressCreateRequest())));
+        }else{
+            List<AddressEntity> addressEntities = new ArrayList<>();
+            userEntity.setAddressEntities(addressEntities);
         }
+
 
         return userEntity;
     }

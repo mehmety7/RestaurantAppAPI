@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -50,8 +51,10 @@ public class BranchServiceImpl implements BranchService {
             throw new InvalidStatusException("The status of restaurant must be APPROVED by admin to create branch");
 
         BranchEntity branchEntity = branchRepository.save(branchCreateRequestToEntityConverter.convert(branchCreateRequest));
-        branchCreateRequest.getAddressCreateRequest().setBranchId(branchEntity.getId());
-        addressService.createAddress(branchCreateRequest.getAddressCreateRequest());
+        if (Objects.nonNull(branchCreateRequest.getAddressCreateRequest())){
+            branchCreateRequest.getAddressCreateRequest().setBranchId(branchEntity.getId());
+            addressService.createAddress(branchCreateRequest.getAddressCreateRequest());
+        }
         return branchDtoConverter.convert(branchEntity);
     }
 }

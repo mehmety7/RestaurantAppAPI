@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDto> getUserAddress(Long user_id) {
+    public List<AddressDto> getUserAddresses(Long user_id) {
         List<AddressEntity> addressEntities = addressRepository.getAddressEntitiesByUserEntity_Id(user_id);
         List<AddressDto> addresses = new ArrayList<>();
         addressEntities.forEach(addressEntity -> {
@@ -48,10 +49,12 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public AddressDto createAddress(AddressCreateRequest addressCreateRequest) {
-        if(addressCreateRequest.getUserId() != null){
+        if(Objects.nonNull(addressCreateRequest.getUserId())){
             AddressEntity existingActiveAddress = addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId());
-            existingActiveAddress.setEnable(false);
-            addressRepository.save(existingActiveAddress);
+            if(Objects.nonNull(existingActiveAddress)){
+                existingActiveAddress.setEnable(false);
+                addressRepository.save(existingActiveAddress);
+            }
         }
 
         AddressEntity addressEntity = addressRepository.save(addressCreateRequestToEntityConverter.convert(addressCreateRequest));

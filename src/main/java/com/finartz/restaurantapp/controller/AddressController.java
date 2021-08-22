@@ -24,8 +24,8 @@ public class AddressController {
     }
 
     @GetMapping("user")
-    public ResponseEntity<List<AddressDto>> getUserAddress(@RequestParam Long user_id){
-        return new ResponseEntity(addressService.getUserAddress(user_id), HttpStatus.OK);
+    public ResponseEntity<List<AddressDto>> getUserAddresses(@RequestParam Long user_id){
+        return new ResponseEntity(addressService.getUserAddresses(user_id), HttpStatus.OK);
     }
 
     @GetMapping("branch")

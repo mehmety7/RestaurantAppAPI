@@ -12,6 +12,7 @@ import com.finartz.restaurantapp.repository.CommentRepository;
 import com.finartz.restaurantapp.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public CommentDto updateComment(Long id, CommentUpdateRequest commentUpdateRequest){
         CommentEntity commentExisted = commentRepository.getById(id);
         CommentEntity commentUpdated = commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentExisted);

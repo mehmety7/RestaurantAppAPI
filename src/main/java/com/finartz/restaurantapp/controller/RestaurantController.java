@@ -21,8 +21,8 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping("waiting")
-    public ResponseEntity<List<RestaurantDto>> getRestaurants(){
-        return new ResponseEntity(restaurantService.getRestaurants(Status.WAITING), HttpStatus.OK);
+    public ResponseEntity<List<RestaurantDto>> getRestaurants(@RequestParam(defaultValue = "WAITING") Status status){
+        return new ResponseEntity(restaurantService.getRestaurants(status), HttpStatus.OK);
     }
 
     @GetMapping("{id}")

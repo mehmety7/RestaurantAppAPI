@@ -8,12 +8,14 @@ import com.finartz.restaurantapp.repository.CityRepository;
 import com.finartz.restaurantapp.service.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;

@@ -10,6 +10,7 @@ import com.finartz.restaurantapp.repository.MealRepository;
 import com.finartz.restaurantapp.service.MealService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class MealServiceImpl implements MealService {
     private final MealCreateRequestToEntityConverter mealCreateRequestToEntityConverter;
 
     @Override
+    @Transactional
     public MealDto getMeal(Long id){
         return mealDtoConverter.convert(mealRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Not found Meal with id:" + id)

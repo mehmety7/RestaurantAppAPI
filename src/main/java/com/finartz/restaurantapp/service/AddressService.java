@@ -9,7 +9,7 @@ public interface AddressService {
 
     AddressDto getAddress(Long id);
 
-    List<AddressDto> getUserAddress(Long user_id);
+    List<AddressDto> getUserAddresses(Long user_id);
 
     AddressDto getBranchAddress(Long branch_id);
 

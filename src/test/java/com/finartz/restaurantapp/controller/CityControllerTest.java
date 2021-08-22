@@ -61,7 +61,7 @@ public class CityControllerTest {
     }
 
     @Test
-    public void whenGetCityById_thenReturnCity() throws Exception {
+    public void whenGetCityById_thenReturnCities() throws Exception {
 
         CityDto city = CityDto.builder()
                 .id(1L)

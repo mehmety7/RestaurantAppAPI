@@ -82,19 +82,23 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserCreateRequest userCreateRequest){
         userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
         UserEntity userEntity = userRepository.save(userCreateRequestToEntityConverter.convert(userCreateRequest));
-        userCreateRequest.getAddressCreateRequest().setUserId(userEntity.getId());
 
-        Set<ConstraintViolation<AddressCreateRequest>> violations = validator.validate(userCreateRequest.getAddressCreateRequest());
+        if(Objects.nonNull(userCreateRequest.getAddressCreateRequest())){
+            userCreateRequest.getAddressCreateRequest().setUserId(userEntity.getId());
 
-        if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<AddressCreateRequest> constraintViolation : violations) {
-                sb.append(constraintViolation.getMessage());
+            Set<ConstraintViolation<AddressCreateRequest>> violations = validator.validate(userCreateRequest.getAddressCreateRequest());
+
+            if (!violations.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                for (ConstraintViolation<AddressCreateRequest> constraintViolation : violations) {
+                    sb.append(constraintViolation.getMessage());
+                }
+                throw new MissingArgumentsException(sb.toString());
             }
-            throw new MissingArgumentsException(sb.toString());
+
+            addressService.createAddress(userCreateRequest.getAddressCreateRequest());
         }
 
-        addressService.createAddress(userCreateRequest.getAddressCreateRequest());
         return userDtoConverter.convert(userEntity);
     }
 

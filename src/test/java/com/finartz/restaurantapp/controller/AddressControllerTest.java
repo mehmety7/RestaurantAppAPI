@@ -65,7 +65,7 @@ public class AddressControllerTest {
 
         AddressDto address = AddressDto.builder().name(NAME_EV).district(DISTRICT_MERKEZ).id(1L).build();
 
-        Mockito.when(addressService.getUserAddress(1L)).thenReturn(Arrays.asList(address));
+        Mockito.when(addressService.getUserAddresses(1L)).thenReturn(Arrays.asList(address));
 
         mockMvc.perform(get(URI_ADDRESS + "/user?user_id=1")
                 .contentType(MediaType.APPLICATION_JSON))

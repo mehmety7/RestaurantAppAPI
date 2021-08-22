@@ -34,7 +34,7 @@ public class CommentController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteComment(@PathVariable Long id) throws Exception {
+    public ResponseEntity deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

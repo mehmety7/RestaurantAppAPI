@@ -42,6 +42,8 @@ INSERT INTO meal_item (meal_id, item_id) values (3,1);
 INSERT INTO meal_item (meal_id, item_id) values (3,2);
 INSERT INTO meal_item (meal_id, item_id) values (3,3);
 
+INSERT INTO comments (id, user_id, branch_id, comment, taste_point, speed_point) values (1,3,1,'Harika',10,10);
+
 
 
 

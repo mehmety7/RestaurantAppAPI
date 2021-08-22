@@ -13,6 +13,7 @@ import com.finartz.restaurantapp.repository.RestaurantRepository;
 import com.finartz.restaurantapp.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    @Transactional
     public RestaurantDto updateRestaurant(Long id, RestaurantUpdateRequest restaurantUpdateRequest){
         RestaurantEntity restaurantExisted = restaurantRepository.getById(id);
         RestaurantEntity restaurantUpdated =
