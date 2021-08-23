@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.InvalidCreatingException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MenuDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MenuCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.MenuDto;
@@ -11,6 +12,8 @@ import com.finartz.restaurantapp.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +40,15 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuDto createMenu(MenuCreateRequest menuCreateRequest){
         // Check the person is seller of the restaurant who attempt to create menu
-        MenuEntity menuEntity = menuCreateRequestToEntityConverter.convert(menuCreateRequest);
-        return menuDtoConverter.convert(menuRepository.save(menuEntity));
+
+        MenuEntity isExistMenuCheck = menuRepository.getMenuEntityByBranchEntity_Id(menuCreateRequest.getBranchId());
+
+        if(Objects.isNull(isExistMenuCheck)){
+            MenuEntity menuEntity = menuCreateRequestToEntityConverter.convert(menuCreateRequest);
+            return menuDtoConverter.convert(menuRepository.save(menuEntity));
+        }else{
+            throw new InvalidCreatingException("Branch ' " + menuCreateRequest.getBranchId() + " ' has already a menu");
+        }
     }
 
 

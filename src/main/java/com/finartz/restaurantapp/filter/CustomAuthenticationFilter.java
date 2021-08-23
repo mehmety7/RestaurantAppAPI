@@ -2,8 +2,6 @@ package com.finartz.restaurantapp.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,14 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final Integer ACCESS_TOKEN_MINUTE = 10;
-    private final Integer REFRESH_TOKEN_MINUTE = 30;
+    private final Integer ACCESS_TOKEN_MINUTE = 60; // an hour
+    private final Integer REFRESH_TOKEN_MINUTE = 60 * 24 * 15; // half-month
 
     private final AuthenticationManager authenticationManager;
 
@@ -60,16 +56,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .sign(algorithm);
 
         // Tokens in headers
-//      response.setHeader("access-token", accessToken);
-//      response.setHeader("refresh-token", refreshToken);
+        response.setHeader("access-token", accessToken);
+        response.setHeader("refresh-token", refreshToken);
 
-        // Tokens in body
-        Map<String,String> tokens = new HashMap<>();
-        tokens.put("access-token", accessToken);
-        tokens.put("refresh-token", refreshToken);
-
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+//        // Tokens in body
+//        Map<String,String> tokens = new HashMap<>();
+//        tokens.put("access-token", accessToken);
+//        tokens.put("refresh-token", refreshToken);
+//
+//        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+//        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
     }
 }

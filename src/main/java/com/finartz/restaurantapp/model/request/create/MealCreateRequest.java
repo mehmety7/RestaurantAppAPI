@@ -20,8 +20,9 @@ public class MealCreateRequest {
     @NotNull(message = "Meal price may not be null")
     private Double price;
 
-    @NotNull(message = "Meal menu may not be null")
     private Long menuId;
+
+    private Long branchId;
 
     @NotNull(message = "Meal items may not be null")
     private List<Long> itemIds;

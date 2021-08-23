@@ -59,6 +59,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {InvalidCreatingException.class})
+    public ResponseEntity<ErrorMessage> handleInvalidCreatingException(InvalidCreatingException ex, WebRequest webRequest){
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.NOT_ACCEPTABLE.value(),
+                new Date(),
+                ex.getMessage(),
+                webRequest.getDescription(false)
+        );
+
+        return new ResponseEntity(errorMessage, HttpStatus.NOT_ACCEPTABLE);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> globalExceptionHandler(Exception ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(

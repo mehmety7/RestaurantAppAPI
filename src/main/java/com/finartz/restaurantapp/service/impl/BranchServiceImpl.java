@@ -7,6 +7,7 @@ import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateReque
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
+import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
 import com.finartz.restaurantapp.repository.BranchRepository;
 import com.finartz.restaurantapp.service.BranchService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class BranchServiceImpl implements BranchService {
     private final BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
     private final RestaurantServiceImpl restaurantService;
     private final AddressServiceImpl addressService;
+    private final MenuServiceImpl menuService;
 
     @Override
     public BranchDto getBranch(Long id) {
@@ -55,6 +57,10 @@ public class BranchServiceImpl implements BranchService {
             branchCreateRequest.getAddressCreateRequest().setBranchId(branchEntity.getId());
             addressService.createAddress(branchCreateRequest.getAddressCreateRequest());
         }
+
+        MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(branchEntity.getId()).build();
+        menuService.createMenu(menuCreateRequest);
+
         return branchDtoConverter.convert(branchEntity);
     }
 }
