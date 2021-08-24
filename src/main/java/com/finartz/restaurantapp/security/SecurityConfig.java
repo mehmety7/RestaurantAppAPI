@@ -37,13 +37,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
         customAuthenticationFilter.setFilterProcessesUrl("/login"); // login url can change with this line
 
-        http.authorizeRequests().antMatchers("/login/**", "/user/refresh-token/**").permitAll();
+        http.authorizeRequests().antMatchers("/login/**", "/user/refresh-token/**", "/h2/**").permitAll();
+
         http.authorizeRequests().antMatchers("/restaurant/waiting/**").hasAnyAuthority(Role.ADMIN.toString());
         http.authorizeRequests().antMatchers(HttpMethod.PUT , "/restaurant/{id}").hasAnyAuthority(Role.ADMIN.toString());
         http.authorizeRequests().antMatchers(HttpMethod.POST , "/restaurant").hasAnyAuthority(Role. SELLER.toString());
         http.authorizeRequests().antMatchers(HttpMethod.POST , "/comment").hasAnyAuthority(Role. USER.toString());
-        http.authorizeRequests().antMatchers("/h2/**").permitAll();
 
+//        http.authorizeRequests().anyRequest().authenticated(); // Obligation of authentication of all endpoints
 //      http.authorizeRequests().anyRequest().permitAll();   // It throws SpringSecurity out of picture.
 
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));

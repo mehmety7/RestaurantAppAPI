@@ -15,6 +15,8 @@ public class MenuDto {
 
     private Long id;
 
+    private Long branchId;
+
     private List<MealDto> meals;
 
 }

@@ -1,16 +1,22 @@
 package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MealDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MealCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.dto.MealDto;
+import com.finartz.restaurantapp.model.dto.MenuDto;
+import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.MealEntity;
 import com.finartz.restaurantapp.model.request.create.MealCreateRequest;
 import com.finartz.restaurantapp.repository.MealRepository;
-import com.finartz.restaurantapp.service.MealService;
+import com.finartz.restaurantapp.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +25,12 @@ public class MealServiceImpl implements MealService {
     private final MealRepository mealRepository;
     private final MealDtoConverter mealDtoConverter;
     private final MealCreateRequestToEntityConverter mealCreateRequestToEntityConverter;
+
+    private final RestaurantService restaurantService;
+    private final BranchService branchService;
+    private final MenuService menuService;
+    private final TokenService tokenService;
+
 
     @Override
     @Transactional
@@ -30,8 +42,21 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public MealDto createMeal(MealCreateRequest mealCreateRequest){
-        MealEntity mealEntity = mealCreateRequestToEntityConverter.convert(mealCreateRequest);
-        return mealDtoConverter.convert(mealRepository.save(mealEntity));
+        if(Objects.isNull(mealCreateRequest.getMenuId()) && Objects.isNull(mealCreateRequest.getBranchId())){
+            throw new MissingArgumentsException("Either branch id or menu id may not be null for meal creating operation");
+        }else if(Objects.nonNull(mealCreateRequest.getMenuId())){
+            MenuDto menu = menuService.getMenu(mealCreateRequest.getMenuId());
+            mealCreateRequest.setBranchId(menu.getBranchId());
+        }
+        BranchDto branch = branchService.getBranch(mealCreateRequest.getBranchId());
+        RestaurantDto restaurant = restaurantService.getRestaurant(branch.getRestaurantId());
+
+        if (tokenService.isRequestOwnerAuthoritative(restaurant.getUserId())){
+            MealEntity mealEntity = mealCreateRequestToEntityConverter.convert(mealCreateRequest);
+            return mealDtoConverter.convert(mealRepository.save(mealEntity));
+        }else{
+            return null;
+        }
     }
 
 }

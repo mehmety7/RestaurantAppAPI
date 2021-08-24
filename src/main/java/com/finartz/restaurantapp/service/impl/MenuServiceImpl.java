@@ -24,7 +24,6 @@ public class MenuServiceImpl implements MenuService {
     private final MenuDtoConverter menuDtoConverter;
     private final MenuCreateRequestToEntityConverter menuCreateRequestToEntityConverter;
 
-
     @Override
     public MenuDto getMenu(Long id){
         return menuDtoConverter.convert(menuRepository.findById(id).orElseThrow(
@@ -33,24 +32,33 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    public MenuDto getMenuByBranchId(Long branchId){
+        MenuEntity menuEntity = menuRepository.getMenuEntityByBranchEntity_Id(branchId);
+        if(Objects.nonNull(menuEntity.getId())){
+            return menuDtoConverter.convert(menuEntity);
+        }else{
+            throw new EntityNotFoundException("Not found Menu with branch id:" + branchId);
+        }
+    }
+
+    @Override
     public MenuDto getBranchMenu(Long branch_id) {
         return menuDtoConverter.convert(menuRepository.getMenuEntityByBranchEntity_Id(branch_id));
     }
 
+    //unnecessary method (ask it)
     @Override
     public MenuDto createMenu(MenuCreateRequest menuCreateRequest){
         // Check the person is seller of the restaurant who attempt to create menu
+        MenuEntity existingMenu = menuRepository.getMenuEntityByBranchEntity_Id(menuCreateRequest.getBranchId());
 
-        MenuEntity isExistMenuCheck = menuRepository.getMenuEntityByBranchEntity_Id(menuCreateRequest.getBranchId());
-
-        if(Objects.isNull(isExistMenuCheck)){
+        if (Objects.isNull(existingMenu)) {
             MenuEntity menuEntity = menuCreateRequestToEntityConverter.convert(menuCreateRequest);
             return menuDtoConverter.convert(menuRepository.save(menuEntity));
-        }else{
+        } else {
             throw new InvalidCreatingException("Branch ' " + menuCreateRequest.getBranchId() + " ' has already a menu");
         }
     }
-
 
 }
 

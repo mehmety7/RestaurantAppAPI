@@ -24,9 +24,9 @@ import java.util.Objects;
 public class BranchServiceImpl implements BranchService {
 
     private final BranchRepository branchRepository;
-
     private final BranchDtoConverter branchDtoConverter;
     private final BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
+
     private final RestaurantService restaurantService;
     private final AddressService addressService;
     private final MenuService menuService;
