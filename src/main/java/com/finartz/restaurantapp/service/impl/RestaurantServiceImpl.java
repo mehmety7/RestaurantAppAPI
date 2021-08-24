@@ -11,7 +11,7 @@ import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import com.finartz.restaurantapp.repository.RestaurantRepository;
 import com.finartz.restaurantapp.service.RestaurantService;
-import com.finartz.restaurantapp.service.UserService;
+import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantDtoConverter restaurantDtoConverter;
     private final RestaurantCreateRequestToEntityConverter restaurantCreateRequestToEntityConverter;
     private final RestaurantUpdateRequestToEntityConverter restaurantUpdateRequestToEntityConverter;
-    private final UserService userService;
+    private final TokenService tokenService;
 
 
     @Override
@@ -49,8 +49,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantDto createRestaurant(RestaurantCreateRequest restaurantCreateRequest){
-        RestaurantEntity restaurantEntity = restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest);
-        return restaurantDtoConverter.convert(restaurantRepository.save(restaurantEntity));
+        if (tokenService.isRequestOwnerAuthoritative(restaurantCreateRequest.getUserId())){
+            RestaurantEntity restaurantEntity = restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest);
+            return restaurantDtoConverter.convert(restaurantRepository.save(restaurantEntity));
+        }else {
+            return null;
+        }
+
     }
 
     @Override

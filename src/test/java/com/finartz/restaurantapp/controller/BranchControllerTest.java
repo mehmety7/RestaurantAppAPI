@@ -113,7 +113,7 @@ public class BranchControllerTest {
                 .restaurantId(1l)
                 .build();
 
-        Mockito.when(branchService.createBranch(branchCreateRequest, "jwt")).thenReturn(branch);
+        Mockito.when(branchService.createBranch(branchCreateRequest)).thenReturn(branch);
 
         String requestJson = objectWriter.writeValueAsString(branchCreateRequest);
 

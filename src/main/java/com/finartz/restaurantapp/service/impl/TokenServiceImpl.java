@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finartz.restaurantapp.exception.InvalidOwnerException;
 import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.enumerated.Role;
 import com.finartz.restaurantapp.service.TokenService;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -29,6 +31,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class TokenServiceImpl implements TokenService {
 
     private final UserService userService;
+    private final HttpServletRequest request;
 
     private final Integer  ACCESS_TOKEN_MINUTE = 10;
 
@@ -42,6 +45,16 @@ public class TokenServiceImpl implements TokenService {
         DecodedJWT decodedJWT = verifier.verify(token);
         String email = decodedJWT.getSubject();
         return userService.getUser(email);
+    }
+
+    @Override
+    public Boolean isRequestOwnerAuthoritative(Long entityOwnerId) {
+        String token = request.getHeader("Authorization");
+        UserDto requestOwner = getUser(token);
+        if(Objects.nonNull(token) && Objects.equals(entityOwnerId, requestOwner.getId())) {
+            return true;
+        }
+        throw new InvalidOwnerException(requestOwner.getEmail());
     }
 
     @Override

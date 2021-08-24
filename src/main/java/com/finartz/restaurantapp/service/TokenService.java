@@ -10,6 +10,8 @@ public interface TokenService {
 
     UserDto getUser(String token);
 
+    Boolean isRequestOwnerAuthoritative(Long entityOwnerId);
+
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 }

@@ -51,7 +51,7 @@ public class BranchControllerIntegrationTest {
                 .addressCreateRequest(null)
                 .build();
 
-        ResponseEntity<BranchDto> response = branchController.createBranch(branchCreateRequest, "jwt");
+        ResponseEntity<BranchDto> response = branchController.createBranch(branchCreateRequest);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
         Assertions.assertEquals(response.getBody().getName(), "Branch");

@@ -11,6 +11,6 @@ public interface BranchService {
 
     List<BranchDto> getBranches(Long countyId);
 
-    BranchDto createBranch(BranchCreateRequest branchCreateRequest, String jwt);
+    BranchDto createBranch(BranchCreateRequest branchCreateRequest);
 
 }

@@ -1,13 +1,11 @@
 package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
-import com.finartz.restaurantapp.exception.InvalidOwnerException;
 import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
-import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
@@ -52,10 +50,9 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     @Transactional
-    public BranchDto createBranch(BranchCreateRequest branchCreateRequest, String jwt) {
-        UserDto requestOwner = tokenService.getUser(jwt);
+    public BranchDto createBranch(BranchCreateRequest branchCreateRequest) {
         RestaurantDto restaurant = restaurantService.getRestaurant(branchCreateRequest.getRestaurantId());
-        if(requestOwner.getId().equals(restaurant.getUserId())){
+        if(tokenService.isRequestOwnerAuthoritative(restaurant.getUserId())){
             if (!restaurantService.isRestaurantApproved(branchCreateRequest.getRestaurantId()))
                 throw new InvalidStatusException("The status of restaurant must be APPROVED by admin to create branch");
 
@@ -70,8 +67,7 @@ public class BranchServiceImpl implements BranchService {
 
             return branchDtoConverter.convert(branchEntity);
         } else {
-            throw new InvalidOwnerException("Person " + requestOwner.getEmail() + " who attempt is not be owner"
-                    + " of the entity " + restaurant.getName());
+            return null;
         }
     }
 }

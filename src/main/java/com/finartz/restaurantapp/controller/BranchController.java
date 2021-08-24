@@ -29,8 +29,8 @@ public class BranchController {
     }
 
     @PostMapping
-    public ResponseEntity<BranchDto> createBranch(@Valid @RequestBody BranchCreateRequest branchCreateRequest, @RequestHeader("Authorization") String jwt){
-        return new ResponseEntity(branchService.createBranch(branchCreateRequest, jwt), HttpStatus.CREATED);
+    public ResponseEntity<BranchDto> createBranch(@Valid @RequestBody BranchCreateRequest branchCreateRequest){
+        return new ResponseEntity(branchService.createBranch(branchCreateRequest), HttpStatus.CREATED);
     }
 
 }
