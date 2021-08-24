@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
+import com.finartz.restaurantapp.service.TokenService;
 import com.finartz.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+    private final TokenService tokenService;
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id){
@@ -32,7 +34,7 @@ public class UserController {
 
     @GetMapping("refresh-token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        userService.refreshToken(request, response);
+        tokenService.refreshToken(request, response);
     }
 
 }

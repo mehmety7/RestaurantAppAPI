@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,18 +28,20 @@ public class ItemServiceImpl implements ItemService {
     private final ItemCreateRequestToEntityConverter itemCreateRequestToEntityConverter;
 
     @Override
-    public List<ItemDto> getItems(Integer pageNo, Integer pageSize, String sortBy) {
+    public PageDto<ItemDto> getItems(Integer pageNo, Integer pageSize, String sortBy) {
 
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<ItemEntity> itemEntityPage = itemRepository.findAll(paging);
-        List<ItemDto> items = new ArrayList<>();
+        List<ItemDto> itemPage = new ArrayList<>();
         itemEntityPage.forEach(itemEntity -> {
-            items.add(itemDtoConverter.convert(itemEntity));
+            itemPage.add(itemDtoConverter.convert(itemEntity));
         });
 
-        PageDto page = new PageDto(Optional.of(items), 5);
+        Integer totalCount = itemRepository.countItemEntitiesBy();
+        Integer pageCount = totalCount/pageSize;
+        PageDto page = new PageDto(itemPage, totalCount, pageCount);
 
-        return items;
+        return page;
     }
 
     @Override

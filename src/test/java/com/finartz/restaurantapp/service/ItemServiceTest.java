@@ -3,6 +3,7 @@ package com.finartz.restaurantapp.service;
 import com.finartz.restaurantapp.model.converter.dtoconverter.ItemDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.ItemCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.ItemDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.entity.ItemEntity;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
 import com.finartz.restaurantapp.repository.ItemRepository;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ItemServiceTest {
@@ -49,14 +51,16 @@ public class ItemServiceTest {
 
         List<ItemEntity> itemEntities = Arrays.asList(itemEntity);
         List<ItemDto> items = Arrays.asList(item);
+
         Page<ItemEntity> itemEntityPage = new PageImpl<>(itemEntities);
 
         Mockito.when(itemDtoConverter.convert(itemEntity)).thenReturn(item);
         Mockito.when(itemRepository.findAll(PageRequest.of(0, 10, Sort.by("id")))).thenReturn(itemEntityPage);
+        Mockito.when(itemRepository.countItemEntitiesBy()).thenReturn(anyInt());
 
-        List<ItemDto> resultItems = itemService.getItems(0,10,"id");
+        PageDto resultPage = itemService.getItems(0,10,"id");
 
-        assertEquals(items.size(), resultItems.size());
+        assertEquals(items.size(), resultPage.getResponse().size());
     }
 
     @Test

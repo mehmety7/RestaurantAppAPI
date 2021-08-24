@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.ItemDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
 import com.finartz.restaurantapp.service.ItemService;
 import org.hamcrest.Matchers;
@@ -23,9 +24,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,16 +51,15 @@ public class ItemControllerTest {
     @Test
     public void whenGetAll_thenReturnAllItems() throws Exception {
 
-        ItemDto item = ItemDto.builder().id(1l).name(NAME_HAMBURGER).build();
+        ItemDto item = ItemDto.builder().id(1l).build();
         List<ItemDto> items = Arrays.asList(item);
+        PageDto<ItemDto> pageDto = new PageDto<>(items, 1, 1);
 
-        Mockito.when(itemService.getItems(anyInt(),anyInt(),anyString())).thenReturn(items);
+        Mockito.when(itemService.getItems(0,1,"id")).thenReturn(pageDto);
 
         mockMvc.perform(get(URI_ITEM)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].name", Matchers.is(NAME_HAMBURGER)));
+                .andExpect(status().isOk());
 
     }
 

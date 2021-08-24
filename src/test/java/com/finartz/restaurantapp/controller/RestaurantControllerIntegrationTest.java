@@ -44,6 +44,8 @@ public class RestaurantControllerIntegrationTest {
                 .userId(2l)
                 .build();
 
+        String token = "";
+
         ResponseEntity<RestaurantDto> response = restaurantController.createRestaurant(restaurantCreateRequest);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);

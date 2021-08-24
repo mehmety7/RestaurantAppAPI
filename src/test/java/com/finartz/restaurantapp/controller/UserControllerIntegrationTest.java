@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.main.banner-mode=off")
 @TestPropertySource("classpath:application-test.properties")
@@ -33,7 +35,7 @@ public class UserControllerIntegrationTest {
     public void whenCreateNewUser_thenReturnUser() {
         UserCreateRequest userCreateRequest = UserCreateRequest
                 .builder()
-                .name("name").email("email").password("pass").role(Role.USER).addressCreateRequest(null)
+                .name("name").email("email").password("pass").roles(Arrays.asList(Role.USER)).addressCreateRequest(null)
                 .build();
 
         ResponseEntity<UserDto> response = userController.createUser(userCreateRequest);

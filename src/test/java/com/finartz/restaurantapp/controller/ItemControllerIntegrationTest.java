@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.ItemDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -12,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.main.banner-mode=off")
 @TestPropertySource("classpath:application-test.properties")
@@ -24,10 +23,10 @@ public class ItemControllerIntegrationTest {
 
     @Test
     public void whenGetAll_thenReturnAllItems(){
-        ResponseEntity<List<ItemDto>> response = itemController.getItems(0,2, "id");
+        ResponseEntity<PageDto<ItemDto>> response = itemController.getItems(0,2, "id");
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().get(0).getId(), 1l);
+        Assertions.assertEquals(response.getBody().getResponse().get(0).getId() , 1l);
     }
 
     @Test

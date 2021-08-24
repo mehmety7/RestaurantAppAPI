@@ -1,15 +1,18 @@
 package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.InvalidOwnerException;
 import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.dto.RestaurantDto;
+import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
 import com.finartz.restaurantapp.repository.BranchRepository;
-import com.finartz.restaurantapp.service.BranchService;
+import com.finartz.restaurantapp.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +29,10 @@ public class BranchServiceImpl implements BranchService {
 
     private final BranchDtoConverter branchDtoConverter;
     private final BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
-    private final RestaurantServiceImpl restaurantService;
-    private final AddressServiceImpl addressService;
-    private final MenuServiceImpl menuService;
+    private final RestaurantService restaurantService;
+    private final AddressService addressService;
+    private final MenuService menuService;
+    private final TokenService tokenService;
 
     @Override
     public BranchDto getBranch(Long id) {
@@ -48,19 +52,26 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     @Transactional
-    public BranchDto createBranch(BranchCreateRequest branchCreateRequest) {
-        if (!restaurantService.isRestaurantApproved(branchCreateRequest.getRestaurantId()))
-            throw new InvalidStatusException("The status of restaurant must be APPROVED by admin to create branch");
+    public BranchDto createBranch(BranchCreateRequest branchCreateRequest, String jwt) {
+        UserDto requestOwner = tokenService.getUser(jwt);
+        RestaurantDto restaurant = restaurantService.getRestaurant(branchCreateRequest.getRestaurantId());
+        if(requestOwner.getId().equals(restaurant.getUserId())){
+            if (!restaurantService.isRestaurantApproved(branchCreateRequest.getRestaurantId()))
+                throw new InvalidStatusException("The status of restaurant must be APPROVED by admin to create branch");
 
-        BranchEntity branchEntity = branchRepository.save(branchCreateRequestToEntityConverter.convert(branchCreateRequest));
-        if (Objects.nonNull(branchCreateRequest.getAddressCreateRequest())){
-            branchCreateRequest.getAddressCreateRequest().setBranchId(branchEntity.getId());
-            addressService.createAddress(branchCreateRequest.getAddressCreateRequest());
+            BranchEntity branchEntity = branchRepository.save(branchCreateRequestToEntityConverter.convert(branchCreateRequest));
+            if (Objects.nonNull(branchCreateRequest.getAddressCreateRequest())) {
+                branchCreateRequest.getAddressCreateRequest().setBranchId(branchEntity.getId());
+                addressService.createAddress(branchCreateRequest.getAddressCreateRequest());
+            }
+
+            MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(branchEntity.getId()).build();
+            menuService.createMenu(menuCreateRequest);
+
+            return branchDtoConverter.convert(branchEntity);
+        } else {
+            throw new InvalidOwnerException("Person " + requestOwner.getEmail() + " who attempt is not be owner"
+                    + " of the entity " + restaurant.getName());
         }
-
-        MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(branchEntity.getId()).build();
-        menuService.createMenu(menuCreateRequest);
-
-        return branchDtoConverter.convert(branchEntity);
     }
 }

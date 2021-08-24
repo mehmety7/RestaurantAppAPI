@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.enumerated.Role;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
+import com.finartz.restaurantapp.service.TokenService;
 import com.finartz.restaurantapp.service.UserService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -24,6 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,6 +48,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private TokenService tokenService;
 
     private ObjectWriter objectWriter;
 
@@ -89,7 +95,7 @@ public class UserControllerTest {
                 .name(NAME_ALI_AKAY)
                 .email(EMAIL_ALI)
                 .password(PASSWORD_ALI1212)
-                .role(Role.USER)
+                .roles(Arrays.asList(Role.USER))
                 .build();
 
         Mockito.when(userService.createUser(userCreateRequest)).thenReturn(user);
@@ -110,7 +116,7 @@ public class UserControllerTest {
 
         Mockito.when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + refreshToken);
 
-        Mockito.doNothing().when(userService).refreshToken(request, response);
+        Mockito.doNothing().when(tokenService).refreshToken(request, response);
 
         mockMvc.perform(get(URI_USER + "/refresh-token")
                 .contentType(MediaType.APPLICATION_JSON))

@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.ItemDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
 import com.finartz.restaurantapp.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("item")
@@ -24,9 +24,9 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getItems(@RequestParam(defaultValue = "0") Integer pageNo,
-                                                  @RequestParam(defaultValue = "10") Integer pageSize,
-                                                  @RequestParam(defaultValue = "id") String sortBy){
+    public ResponseEntity<PageDto<ItemDto>> getItems(@RequestParam(defaultValue = "0") Integer pageNo,
+                                            @RequestParam(defaultValue = "10") Integer pageSize,
+                                            @RequestParam(defaultValue = "id") String sortBy){
         return new ResponseEntity(itemService.getItems(pageNo, pageSize, sortBy), HttpStatus.OK);
     }
 

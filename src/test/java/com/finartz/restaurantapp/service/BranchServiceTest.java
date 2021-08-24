@@ -109,7 +109,7 @@ public class BranchServiceTest {
         Mockito.when(restaurantService.isRestaurantApproved(1l)).thenReturn(true);
         Mockito.doReturn(addressDto).when(addressService).createAddress(addressCreateRequest);
 
-        BranchDto resultBranch = branchService.createBranch(branchCreateRequest);
+        BranchDto resultBranch = branchService.createBranch(branchCreateRequest, "jwt");
 
         assertEquals(branchEntity.getName(), resultBranch.getName());
     }

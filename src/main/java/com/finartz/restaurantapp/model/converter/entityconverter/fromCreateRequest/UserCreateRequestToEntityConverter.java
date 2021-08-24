@@ -30,7 +30,7 @@ public class UserCreateRequestToEntityConverter implements GenericConverter<User
         userEntity.setName(userCreateRequest.getName());
         userEntity.setEmail(userCreateRequest.getEmail());
         userEntity.setPassword(userCreateRequest.getPassword());
-        userEntity.setRoles(Arrays.asList(userCreateRequest.getRole()));
+        userEntity.setRoles(userCreateRequest.getRoles());
 
         if(Objects.nonNull(userCreateRequest.getAddressCreateRequest())) {
             userEntity.setAddressEntities(Arrays.asList(convert(userCreateRequest.getAddressCreateRequest())));

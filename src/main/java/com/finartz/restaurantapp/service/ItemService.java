@@ -1,13 +1,12 @@
 package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.dto.ItemDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
-
-import java.util.List;
 
 public interface ItemService {
 
-    List<ItemDto> getItems(Integer pageNo, Integer pageSize, String sortBy);
+    PageDto<ItemDto> getItems(Integer pageNo, Integer pageSize, String sortBy);
 
     ItemDto getItem(Long id);
 

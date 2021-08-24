@@ -56,6 +56,7 @@ public class RestaurantControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         objectWriter = mapper.writer().withDefaultPrettyPrinter();
+
     }
 
     @Test
@@ -72,6 +73,25 @@ public class RestaurantControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", Matchers.is(Status.WAITING.toString())));
+
+    }
+
+    @Test
+    public void whenGetRestaurantIsWaiting_thenReturnRestaurant() throws Exception {
+
+        RestaurantDto restaurant = RestaurantDto.builder()
+                .id(1L)
+                .status(Status.WAITING)
+                .build();
+
+        List<RestaurantDto> restaurantList = Arrays.asList(restaurant);
+
+        Mockito.when(restaurantService.getRestaurants(Status.WAITING)).thenReturn(restaurantList);
+
+        mockMvc.perform(get(URI_RESTAURANT + "/waiting")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.hasSize(1)));
 
     }
 
@@ -101,25 +121,6 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void whenGetRestaurantIsWaiting_thenReturnRestaurant() throws Exception {
-
-        RestaurantDto restaurant = RestaurantDto.builder()
-                .id(1L)
-                .status(Status.WAITING)
-                .build();
-
-        List<RestaurantDto> restaurantList = Arrays.asList(restaurant);
-
-        Mockito.when(restaurantService.getRestaurants(Status.WAITING)).thenReturn(restaurantList);
-
-        mockMvc.perform(get(URI_RESTAURANT + "/waiting")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(1)));
-
-    }
-
-    @Test
     public void whenUpdateRestaurant_thenReturnRestaurant() throws Exception {
 
         RestaurantDto restaurant = RestaurantDto.builder()
@@ -146,6 +147,8 @@ public class RestaurantControllerTest {
                 .builder()
                 .status(Status.APPROVED)
                 .build();
+
+
 
         Mockito.when(restaurantService.createRestaurant(restaurantCreateRequest)).thenReturn(restaurant);
         Mockito.when(restaurantService.updateRestaurant(1L, restaurantUpdateRequest)).thenReturn(restaurantUpdate);

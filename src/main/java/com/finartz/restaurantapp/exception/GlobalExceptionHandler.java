@@ -71,6 +71,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(errorMessage, HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @ExceptionHandler(value = {InvalidOwnerException.class})
+    public ResponseEntity<ErrorMessage> handleInvalidOwnerException(InvalidOwnerException ex, WebRequest webRequest){
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.FORBIDDEN.value(),
+                new Date(),
+                ex.getMessage(),
+                webRequest.getDescription(false)
+        );
+
+        return new ResponseEntity(errorMessage, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> globalExceptionHandler(Exception ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
