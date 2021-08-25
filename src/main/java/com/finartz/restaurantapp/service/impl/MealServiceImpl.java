@@ -47,6 +47,9 @@ public class MealServiceImpl implements MealService {
         }else if(Objects.nonNull(mealCreateRequest.getMenuId())){
             MenuDto menu = menuService.getMenu(mealCreateRequest.getMenuId());
             mealCreateRequest.setBranchId(menu.getBranchId());
+        }else if(Objects.nonNull(mealCreateRequest.getBranchId())){
+            MenuDto menu = menuService.getBranchMenu(mealCreateRequest.getBranchId());
+            mealCreateRequest.setMenuId(menu.getId());
         }
         BranchDto branch = branchService.getBranch(mealCreateRequest.getBranchId());
         RestaurantDto restaurant = restaurantService.getRestaurant(branch.getRestaurantId());

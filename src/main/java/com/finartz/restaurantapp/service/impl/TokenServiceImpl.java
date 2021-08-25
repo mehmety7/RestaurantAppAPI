@@ -5,11 +5,14 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.InvalidOwnerException;
+import com.finartz.restaurantapp.model.converter.dtoconverter.UserDtoConverter;
 import com.finartz.restaurantapp.model.dto.UserDto;
+import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.enumerated.Role;
+import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.TokenService;
-import com.finartz.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,7 +33,8 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final UserDtoConverter userDtoConverter;
     private final HttpServletRequest request;
 
     private final Integer  ACCESS_TOKEN_MINUTE = 10;
@@ -44,17 +48,26 @@ public class TokenServiceImpl implements TokenService {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);
         String email = decodedJWT.getSubject();
-        return userService.getUser(email);
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if(Objects.nonNull(userEntity)) {
+            return userDtoConverter.convert(userEntity);
+        }else{
+            throw new EntityNotFoundException("Not found User with email: " + email);
+        }
     }
 
     @Override
     public Boolean isRequestOwnerAuthoritative(Long entityOwnerId) {
         String token = request.getHeader("Authorization");
-        UserDto requestOwner = getUser(token);
-        if(Objects.nonNull(token) && Objects.equals(entityOwnerId, requestOwner.getId())) {
-            return true;
+        if(Objects.nonNull(token)){
+            UserDto requestOwner = getUser(token);
+            if (Objects.nonNull(token) && Objects.equals(entityOwnerId, requestOwner.getId())) {
+                return true;
+            }
+            throw new InvalidOwnerException(requestOwner.getEmail());
+        }else{
+            throw new EntityNotFoundException("Access token may not be null");
         }
-        throw new InvalidOwnerException(requestOwner.getEmail());
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import com.finartz.restaurantapp.repository.UserRepository;
+import com.finartz.restaurantapp.service.AddressService;
 import com.finartz.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserDtoConverter userDtoConverter;
     private final UserCreateRequestToEntityConverter userCreateRequestToEntityConverter;
-    private final AddressServiceImpl addressService;
+    private final AddressService addressService;
     private final Validator validator;
 
     @Override

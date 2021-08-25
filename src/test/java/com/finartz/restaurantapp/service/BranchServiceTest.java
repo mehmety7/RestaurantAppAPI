@@ -5,10 +5,14 @@ import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.dto.MenuDto;
+import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
+import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
+import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
 import com.finartz.restaurantapp.repository.BranchRepository;
 import com.finartz.restaurantapp.service.impl.AddressServiceImpl;
 import com.finartz.restaurantapp.service.impl.BranchServiceImpl;
@@ -51,6 +55,12 @@ public class BranchServiceTest {
     @Mock
     private BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
 
+    @Mock
+    private TokenService tokenService;
+
+    @Mock
+    private MenuService menuService;
+
     @Test
     public void whenFetchById_thenReturnBranch() {
         BranchEntity branchEntity = BranchEntity.builder().id(1l).name(NAME_KB_UMRANIYE).build();
@@ -82,7 +92,9 @@ public class BranchServiceTest {
 
     @Test
     public void whenAddBranch_thenReturnSavedBranch() {
-        RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).build();
+        UserEntity userEntity = UserEntity.builder().id(1l).build();
+        RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).userEntity(userEntity).build();
+        RestaurantDto restaurantDto = RestaurantDto.builder().id(1l).userId(1l).build();
         AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().build();
         AddressDto addressDto = AddressDto.builder().build();
         BranchEntity branchEntity = BranchEntity
@@ -102,12 +114,18 @@ public class BranchServiceTest {
                 .addressCreateRequest(addressCreateRequest)
                 .name(NAME_KB_UMRANIYE)
                 .build();
+        MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(branchEntity.getId()).build();
+        MenuDto menuDto = MenuDto.builder().branchId(branchEntity.getId()).id(1l).build();
 
+        Mockito.when(restaurantService.getRestaurant(anyLong())).thenReturn(restaurantDto);
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.when(restaurantService.isRestaurantApproved(anyLong())).thenReturn(true);
         Mockito.when(branchCreateRequestToEntityConverter.convert(branchCreateRequest)).thenReturn(branchEntity);
         Mockito.when(branchDtoConverter.convert(branchEntity)).thenReturn(branch);
         Mockito.when(branchRepository.save(branchEntity)).thenReturn(branchEntity);
         Mockito.when(restaurantService.isRestaurantApproved(1l)).thenReturn(true);
         Mockito.doReturn(addressDto).when(addressService).createAddress(addressCreateRequest);
+        Mockito.when(menuService.createMenu(menuCreateRequest)).thenReturn(menuDto);
 
         BranchDto resultBranch = branchService.createBranch(branchCreateRequest);
 

@@ -8,6 +8,7 @@ import com.finartz.restaurantapp.model.entity.AddressEntity;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.repository.AddressRepository;
 import com.finartz.restaurantapp.service.AddressService;
+import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
     private final AddressDtoConverter addressDtoConverter;
     private final AddressCreateRequestToEntityConverter addressCreateRequestToEntityConverter;
+    private final TokenService tokenService;
 
     @Override
     public AddressDto getAddress(Long id) {
@@ -52,8 +54,10 @@ public class AddressServiceImpl implements AddressService {
         if(Objects.nonNull(addressCreateRequest.getUserId())){
             AddressEntity existingActiveAddress = addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId());
             if(Objects.nonNull(existingActiveAddress)){
-                existingActiveAddress.setEnable(false);
-                addressRepository.save(existingActiveAddress);
+                if(tokenService.isRequestOwnerAuthoritative(existingActiveAddress.getUserEntity().getId())) {
+                    existingActiveAddress.setEnable(false);
+                    addressRepository.save(existingActiveAddress);
+                }
             }
         }
 

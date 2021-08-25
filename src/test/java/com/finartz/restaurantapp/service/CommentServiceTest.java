@@ -5,6 +5,7 @@ import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateReque
 import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.CommentUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.CommentDto;
 import com.finartz.restaurantapp.model.entity.CommentEntity;
+import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.request.create.CommentCreateRequest;
 import com.finartz.restaurantapp.model.request.update.CommentUpdateRequest;
 import com.finartz.restaurantapp.repository.CommentRepository;
@@ -20,6 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommentServiceTest {
@@ -42,6 +44,9 @@ public class CommentServiceTest {
     @Mock
     private CommentUpdateRequestToEntityConverter commentUpdateRequestToEntityConverter;
 
+    @Mock
+    private TokenService tokenService;
+
     @Test
     public void whenFetchById_thenReturnComment() {
         CommentEntity commentEntity = CommentEntity.builder().comment(COMMENT_HARIKA).build();
@@ -57,13 +62,15 @@ public class CommentServiceTest {
 
     @Test
     public void whenAddComment_thenReturnSavedComment() {
-        CommentEntity commentEntity = CommentEntity.builder().comment(COMMENT_HARIKA).build();
-        CommentDto comment = CommentDto.builder().comment(COMMENT_HARIKA).build();
-        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder().build();
+        UserEntity userEntity = UserEntity.builder().id(1l).build();
+        CommentEntity commentEntity = CommentEntity.builder().userEntity(userEntity).comment(COMMENT_HARIKA).build();
+        CommentDto comment = CommentDto.builder().userId(1l).comment(COMMENT_HARIKA).build();
+        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder().userId(1l).build();
 
         Mockito.when(commentDtoConverter.convert(commentEntity)).thenReturn(comment);
         Mockito.when(commentCreateRequestToEntityConverter.convert(commentCreateRequest)).thenReturn(commentEntity);
         Mockito.when(commentRepository.save(commentEntity)).thenReturn(commentEntity);
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         CommentDto resultComment = commentService.createComment(commentCreateRequest);
 
@@ -72,8 +79,9 @@ public class CommentServiceTest {
 
     @Test
     public void whenUpdateComment_thenReturnUpdatedComment(){
-        CommentEntity commentEntity = CommentEntity.builder().id(1l).comment(COMMENT_HARIKA).build();
-        CommentEntity commentEntityUpdated = CommentEntity.builder().id(1l).comment(COMMENT_ORTALAMA).build();
+        UserEntity userEntity = UserEntity.builder().id(1l).build();
+        CommentEntity commentEntity = CommentEntity.builder().id(1l).userEntity(userEntity).comment(COMMENT_HARIKA).build();
+        CommentEntity commentEntityUpdated = CommentEntity.builder().id(1l).userEntity(userEntity).comment(COMMENT_ORTALAMA).build();
         CommentDto comment = CommentDto.builder().id(1l).comment(COMMENT_HARIKA).build();
         CommentDto commentUpdated = CommentDto.builder().id(1l).comment(COMMENT_ORTALAMA).build();
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder().build();
@@ -82,6 +90,7 @@ public class CommentServiceTest {
         Mockito.when(commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentEntity)).thenReturn(commentEntityUpdated);
         Mockito.when(commentRepository.save(commentEntityUpdated)).thenReturn(commentEntityUpdated);
         Mockito.when(commentDtoConverter.convert(commentEntityUpdated)).thenReturn(commentUpdated);
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         CommentDto resultComment = commentService.updateComment(1L, commentUpdateRequest);
 
@@ -92,8 +101,8 @@ public class CommentServiceTest {
 
     @Test
     public void whenDeleteComment_thenReturnNothing(){
-        commentService.deleteComment(Mockito.anyLong());
-        Mockito.verify(commentRepository).deleteById(Mockito.anyLong());
+        commentService.deleteComment(anyLong());
+        Mockito.verify(commentRepository).deleteById(anyLong());
     }
 
 }

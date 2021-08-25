@@ -40,6 +40,9 @@ public class AddressServiceTest {
     @Mock
     private AddressCreateRequestToEntityConverter addressCreateRequestToEntityConverter;
 
+    @Mock
+    private TokenService tokenService;
+
     @Test
     public void whenFetchById_thenReturnAddress() {
         AddressEntity addressEntity = AddressEntity.builder().name(NAME_EV).district(DISTRICT_MERKEZ).build();
@@ -81,8 +84,9 @@ public class AddressServiceTest {
 
     @Test
     public void whenAddAddress_thenReturnSavedAddress() {
-        AddressEntity addressEntity = AddressEntity.builder().name(NAME_EV).build();
-        AddressDto address = AddressDto.builder().name(NAME_EV).build();
+        UserEntity userEntity = UserEntity.builder().id(1l).build();
+        AddressEntity addressEntity = AddressEntity.builder().name(NAME_EV).userEntity(userEntity).build();
+        AddressDto address = AddressDto.builder().name(NAME_EV).userId(1l).build();
         AddressCreateRequest addressCreateRequest = AddressCreateRequest
                 .builder()
                 .name(NAME_EV)
@@ -98,8 +102,9 @@ public class AddressServiceTest {
         Mockito.doReturn(addressEntity).when(addressCreateRequestToEntityConverter).convert(addressCreateRequest);
         Mockito.doReturn(address).when(addressDtoConverter).convert(addressEntity);
 
-        AddressEntity existingActiveAddressEntity = AddressEntity.builder().enable(true).build();
+        AddressEntity existingActiveAddressEntity = AddressEntity.builder().userEntity(userEntity).enable(true).build();
         Mockito.doReturn(existingActiveAddressEntity).when(addressRepository).getActiveAddressByUserId(1L);
+        Mockito.doReturn(true).when(tokenService).isRequestOwnerAuthoritative(existingActiveAddressEntity.getUserEntity().getId());
 
         AddressDto result = addressService.createAddress(addressCreateRequest);
 
