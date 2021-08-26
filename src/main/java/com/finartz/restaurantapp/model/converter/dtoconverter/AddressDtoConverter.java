@@ -25,29 +25,29 @@ public class AddressDtoConverter implements GenericConverter<AddressEntity, Addr
 
         if(Objects.nonNull(addressEntity.getCityEntity())){
             address.setCityId(addressEntity.getCityEntity().getId());
-        }
-        if(Objects.nonNull(addressEntity.getCityEntity())) {
             address.setCityName(addressEntity.getCityEntity().getName());
         }
         if(Objects.nonNull(addressEntity.getCountyEntity())) {
             address.setCountyId(addressEntity.getCountyEntity().getId());
-        }
-        if(Objects.nonNull(addressEntity.getCountyEntity())) {
             address.setCountyName(addressEntity.getCountyEntity().getName());
         }
 
         address.setDistrict(addressEntity.getDistrict());
         address.setOtherContent(addressEntity.getOtherContent());
 
-        if(Objects.nonNull(addressEntity.getUserEntity()))
+        if(Objects.nonNull(addressEntity.getUserEntity())) {
             address.setUserId(addressEntity.getUserEntity().getId());
-        else
+        }
+        else {
             address.setUserId(null);
+        }
 
-        if(Objects.nonNull(addressEntity.getBranchEntity()))
+        if(Objects.nonNull(addressEntity.getBranchEntity())) {
             address.setBranchId(addressEntity.getBranchEntity().getId());
-        else
+        }
+        else {
             address.setBranchId(null);
+        }
 
         address.setEnable(addressEntity.getEnable());
 
