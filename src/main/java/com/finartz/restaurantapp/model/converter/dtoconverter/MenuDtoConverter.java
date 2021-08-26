@@ -26,8 +26,13 @@ public class MenuDtoConverter implements GenericConverter<MenuEntity, MenuDto> {
 
         MenuDto menuDto = new MenuDto();
 
-        menuDto.setId(menuEntity.getId());
-        menuDto.setBranchId(menuEntity.getBranchEntity().getId());
+        if(Objects.nonNull(menuEntity.getId())){
+            menuDto.setId(menuEntity.getId());
+        }
+
+        if(Objects.nonNull(menuEntity.getBranchEntity().getId())){
+            menuDto.setBranchId(menuEntity.getBranchEntity().getId());
+        }
 
         List<MealDto> meals = new ArrayList<>();
         if(Objects.nonNull(menuEntity.getMealEntities())){

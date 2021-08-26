@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.CommentDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.CommentCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.CommentUpdateRequestToEntityConverter;
@@ -48,7 +49,7 @@ public class CommentServiceTest {
     private TokenService tokenService;
 
     @Test
-    public void whenFetchById_thenReturnComment() {
+    public void whenFetchByValidId_thenReturnComment() {
         CommentEntity commentEntity = CommentEntity.builder().comment(COMMENT_HARIKA).build();
         CommentDto comment = CommentDto.builder().comment(COMMENT_HARIKA).build();
 
@@ -58,6 +59,14 @@ public class CommentServiceTest {
         CommentDto resultComment = commentService.getComment(1L);
 
         assertEquals(comment, resultComment);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(commentRepository.findById(anyLong())).thenReturn(Optional.empty());
+        commentService.getComment(anyLong());
+
     }
 
     @Test

@@ -22,16 +22,26 @@ public class CommentCreateRequestToEntityConverter implements GenericConverter<C
 
         CommentEntity commentEntity = new CommentEntity();
 
-        commentEntity.setComment(commentCreateRequest.getComment());
-        commentEntity.setSpeedPoint(commentCreateRequest.getSpeedPoint());
-        commentEntity.setTastePoint(commentCreateRequest.getTastePoint());
+        if (Objects.nonNull(commentCreateRequest.getComment())){
+            commentEntity.setComment(commentCreateRequest.getComment());
+        }
+        if (Objects.nonNull(commentCreateRequest.getSpeedPoint())) {
+            commentEntity.setSpeedPoint(commentCreateRequest.getSpeedPoint());
+        }
+        if (Objects.nonNull(commentCreateRequest.getTastePoint())) {
+            commentEntity.setTastePoint(commentCreateRequest.getTastePoint());
+        }
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setId(commentCreateRequest.getUserId());
+        if (Objects.nonNull(commentCreateRequest.getUserId())){
+            userEntity.setId(commentCreateRequest.getUserId());
+        }
         commentEntity.setUserEntity(userEntity);
 
         BranchEntity branchEntity = new BranchEntity();
-        branchEntity.setId(commentCreateRequest.getBranchId());
+        if (Objects.nonNull(commentCreateRequest.getBranchId())){
+            branchEntity.setId(commentCreateRequest.getBranchId());
+        }
         commentEntity.setBranchEntity(branchEntity);
 
         return commentEntity;

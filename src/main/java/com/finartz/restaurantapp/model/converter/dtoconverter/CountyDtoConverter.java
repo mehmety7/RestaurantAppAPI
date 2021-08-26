@@ -20,9 +20,13 @@ public class CountyDtoConverter implements GenericConverter<CountyEntity, County
 
         CountyDto countyDto = new CountyDto();
 
-        countyDto.setId(countyEntity.getId());
-        countyDto.setName(countyEntity.getName());
-        if(Objects.nonNull(countyEntity.getCityEntity())) {
+        if(Objects.nonNull(countyEntity.getId())){
+            countyDto.setId(countyEntity.getId());
+        }
+        if(Objects.nonNull(countyEntity.getName())){
+            countyDto.setName(countyEntity.getName());
+        }
+        if(Objects.nonNull(countyEntity.getCityEntity()) && Objects.nonNull(countyEntity.getCityEntity().getId())) {
             countyDto.setCityId(countyEntity.getCityEntity().getId());
         }
 

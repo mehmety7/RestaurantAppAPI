@@ -20,10 +20,18 @@ public class UserDtoConverter implements GenericConverter<UserEntity, UserDto> {
 
         UserDto userDto = new UserDto();
 
-        userDto.setId(userEntity.getId());
-        userDto.setName(userEntity.getName());
-        userDto.setEmail(userEntity.getEmail());
-        userDto.setRoles(userEntity.getRoles());
+        if(Objects.nonNull(userEntity.getId())){
+            userDto.setId(userEntity.getId());
+        }
+        if(Objects.nonNull(userEntity.getName())){
+            userDto.setName(userEntity.getName());
+        }
+        if(Objects.nonNull(userEntity.getEmail())){
+            userDto.setEmail(userEntity.getEmail());
+        }
+        if(Objects.nonNull(userEntity.getRoles())){
+            userDto.setRoles(userEntity.getRoles());
+        }
 
         return userDto;
     }

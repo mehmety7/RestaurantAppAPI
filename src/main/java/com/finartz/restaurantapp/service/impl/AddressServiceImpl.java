@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.AddressDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.AddressCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
@@ -13,9 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
     private final AddressDtoConverter addressDtoConverter;
     private final AddressCreateRequestToEntityConverter addressCreateRequestToEntityConverter;
+    private final Validator validator;
     private final TokenService tokenService;
 
     @Override
@@ -59,6 +64,11 @@ public class AddressServiceImpl implements AddressService {
                     addressRepository.save(existingActiveAddress);
                 }
             }
+        }
+
+        Set<ConstraintViolation<AddressCreateRequest>> violations = validator.validate(addressCreateRequest);
+        if (!violations.isEmpty()) {
+            throw new MissingArgumentsException("Address fields may not be null");
         }
 
         AddressEntity addressEntity = addressRepository.save(addressCreateRequestToEntityConverter.convert(addressCreateRequest));

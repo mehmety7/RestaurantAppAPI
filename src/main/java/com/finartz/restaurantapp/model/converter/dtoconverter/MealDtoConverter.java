@@ -26,9 +26,15 @@ public class MealDtoConverter implements GenericConverter<MealEntity, MealDto> {
 
         MealDto mealDto = new MealDto();
 
-        mealDto.setId(mealEntity.getId());
-        mealDto.setName(mealEntity.getName());
-        mealDto.setPrice(mealEntity.getPrice());
+        if(Objects.nonNull(mealEntity.getId())){
+            mealDto.setId(mealEntity.getId());
+        }
+        if (Objects.nonNull(mealEntity.getName())){
+            mealDto.setName(mealEntity.getName());
+        }
+        if(Objects.nonNull(mealEntity.getPrice())){
+            mealDto.setPrice(mealEntity.getPrice());
+        }
 
         List<ItemDto> items = new ArrayList<>();
         if(Objects.nonNull(mealEntity.getItemEntities())){

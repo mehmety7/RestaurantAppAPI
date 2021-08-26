@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.ItemDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.ItemCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.ItemDto;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ItemServiceTest {
@@ -64,7 +66,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void whenFetchById_thenReturnItem() throws Exception {
+    public void whenFetchByValidId_thenReturnItem() throws Exception {
         ItemEntity itemEntity = ItemEntity.builder().name(NAME_HAMBURGER).build();
         ItemDto item = ItemDto.builder().name(NAME_HAMBURGER).build();
 
@@ -74,6 +76,14 @@ public class ItemServiceTest {
         ItemDto resultItem = itemService.getItem(1L);
 
         assertEquals(item, resultItem);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(itemRepository.findById(anyLong())).thenReturn(Optional.empty());
+        itemService.getItem(anyLong());
+
     }
 
     @Test

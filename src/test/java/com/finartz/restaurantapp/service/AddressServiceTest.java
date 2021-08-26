@@ -1,5 +1,7 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.AddressDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.AddressCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
@@ -15,11 +17,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddressServiceTest {
@@ -43,8 +46,11 @@ public class AddressServiceTest {
     @Mock
     private TokenService tokenService;
 
+    @Mock
+    private Validator validator;
+
     @Test
-    public void whenFetchById_thenReturnAddress() {
+    public void whenFetchByValidId_thenReturnAddress() {
         AddressEntity addressEntity = AddressEntity.builder().name(NAME_EV).district(DISTRICT_MERKEZ).build();
         AddressDto address = AddressDto.builder().name(NAME_EV).district(DISTRICT_MERKEZ).build();
 
@@ -54,6 +60,14 @@ public class AddressServiceTest {
         AddressDto result = addressService.getAddress(1L);
 
         assertEquals(result.getId(), address.getId());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(addressRepository.findById(anyLong())).thenReturn(Optional.empty());
+        addressService.getAddress(anyLong());
+
     }
 
     @Test
@@ -83,7 +97,7 @@ public class AddressServiceTest {
     }
 
     @Test
-    public void whenAddAddress_thenReturnSavedAddress() {
+    public void givenValidCreatingArguments_whenAddAddress_thenReturnSavedAddress() {
         UserEntity userEntity = UserEntity.builder().id(1l).build();
         AddressEntity addressEntity = AddressEntity.builder().name(NAME_EV).userEntity(userEntity).build();
         AddressDto address = AddressDto.builder().name(NAME_EV).userId(1l).build();
@@ -106,13 +120,28 @@ public class AddressServiceTest {
         Mockito.doReturn(existingActiveAddressEntity).when(addressRepository).getActiveAddressByUserId(1L);
         Mockito.doReturn(true).when(tokenService).isRequestOwnerAuthoritative(existingActiveAddressEntity.getUserEntity().getId());
 
+        Set<ConstraintViolation<AddressCreateRequest>> violations = Collections.emptySet();
+        Mockito.when(validator.validate(addressCreateRequest)).thenReturn(violations);
+
         AddressDto result = addressService.createAddress(addressCreateRequest);
 
         assertEquals(address.getName(), result.getName());
     }
 
+    @Test(expected = MissingArgumentsException.class)
+    public void givenMissingCreatingArguments_whenAddAddress_thenThrowMissingArgumentsException() {
+        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().userId(1l).build();
+
+        Mockito.when(addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId())).thenReturn(null);
+
+        Mockito.when(validator.validate(addressCreateRequest)).thenThrow(MissingArgumentsException.class);
+
+        addressService.createAddress(addressCreateRequest);
+
+    }
+
     @Test
-    public void whenSetActiveAddress_thenReturnNothing(){
+    public void givenValidId_whenSetActiveAddress_thenReturnNothing(){
         UserEntity userEntity = UserEntity.builder().id(1l).build();
         AddressEntity newActiveAddressEntity = AddressEntity.builder().id(1l).userEntity(userEntity).build();
         AddressEntity existActiveAddressEntity = AddressEntity.builder().id(2l).userEntity(userEntity).build();
@@ -123,6 +152,14 @@ public class AddressServiceTest {
         Mockito.doReturn(existActiveAddressEntity).when(addressRepository).save(existActiveAddressEntity);
 
         addressService.setActiveAddress(1l);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void givenInvalidId_whenSetActiveAddress_thenThrowEntityNotFoundException(){
+
+        Mockito.when(addressRepository.findById(anyLong())).thenReturn(Optional.empty());
+        addressService.setActiveAddress(anyLong());
+
     }
 
 

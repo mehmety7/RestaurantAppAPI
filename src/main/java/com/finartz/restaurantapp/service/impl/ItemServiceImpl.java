@@ -53,14 +53,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto createItem(ItemCreateRequest itemCreateRequest){
-        try{
-            ItemEntity itemEntity = itemCreateRequestToEntityConverter.convert(itemCreateRequest);
-            return itemDtoConverter.convert(itemRepository.save(itemEntity));
-        }catch (IllegalArgumentException iae){
-            throw new IllegalArgumentException("Invalid create request");
-        }
 
-
+        ItemEntity itemEntity = itemCreateRequestToEntityConverter.convert(itemCreateRequest);
+        return itemDtoConverter.convert(itemRepository.save(itemEntity));
 
     }
 

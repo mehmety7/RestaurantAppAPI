@@ -1,6 +1,8 @@
 package com.finartz.restaurantapp.service;
 
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
@@ -10,6 +12,7 @@ import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
+import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
@@ -62,7 +65,7 @@ public class BranchServiceTest {
     private MenuService menuService;
 
     @Test
-    public void whenFetchById_thenReturnBranch() {
+    public void whenFetchByValidId_thenReturnBranch() {
         BranchEntity branchEntity = BranchEntity.builder().id(1l).name(NAME_KB_UMRANIYE).build();
         BranchDto branch = BranchDto.builder().id(1L).name(NAME_KB_UMRANIYE).build();
 
@@ -72,6 +75,14 @@ public class BranchServiceTest {
         BranchDto result = branchService.getBranch(1L);
 
         assertEquals(branch.getId(), result.getId());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(branchRepository.findById(anyLong())).thenReturn(Optional.empty());
+        branchService.getBranch(anyLong());
+
     }
 
     @Test
@@ -91,7 +102,7 @@ public class BranchServiceTest {
     }
 
     @Test
-    public void whenAddBranch_thenReturnSavedBranch() {
+    public void givenRestaurantIsApproved_whenAddBranch_thenReturnSavedBranch() {
         UserEntity userEntity = UserEntity.builder().id(1l).build();
         RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).userEntity(userEntity).build();
         RestaurantDto restaurantDto = RestaurantDto.builder().id(1l).userId(1l).build();
@@ -130,6 +141,19 @@ public class BranchServiceTest {
         BranchDto resultBranch = branchService.createBranch(branchCreateRequest);
 
         assertEquals(branchEntity.getName(), resultBranch.getName());
+    }
+
+    @Test(expected = InvalidStatusException.class)
+    public void givenRestaurantIsNotApproved_whenAddBranch_thenThrowInvalidStatusException(){
+        RestaurantDto restaurant = RestaurantDto.builder().userId(1l).id(1l).status(Status.WAITING).build();
+        BranchCreateRequest branchCreateRequest = BranchCreateRequest.builder().restaurantId(1l).addressCreateRequest(null).build();
+
+        Mockito.when(restaurantService.getRestaurant(1l)).thenReturn(restaurant);
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(restaurant.getUserId())).thenReturn(true);
+        Mockito.when(restaurantService.isRestaurantApproved(restaurant.getId())).thenReturn(false);
+
+        branchService.createBranch(branchCreateRequest);
+
     }
 
 }

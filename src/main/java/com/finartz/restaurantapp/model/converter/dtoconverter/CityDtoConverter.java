@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.dto.CityDto;
 import com.finartz.restaurantapp.model.dto.CountyDto;
@@ -21,14 +22,17 @@ public class CityDtoConverter implements GenericConverter<CityEntity, CityDto> {
     @Override
     public CityDto convert(final CityEntity cityEntity){
         if(Objects.isNull(cityEntity)){
-            return null;
+            throw new EntityNotFoundException("Not found City Entity");
         }
 
         CityDto cityDto = new CityDto();
 
-        cityDto.setId(cityEntity.getId());
-        cityDto.setName(cityEntity.getName());
-
+        if(Objects.nonNull(cityEntity.getId())) {
+            cityDto.setId(cityEntity.getId());
+        }
+        if(Objects.nonNull(cityEntity.getName())) {
+            cityDto.setName(cityEntity.getName());
+        }
         List<CountyDto> counties = new ArrayList<>();
         if(cityEntity.getCountyEntities() != null) {
             cityEntity.getCountyEntities().forEach(countyEntity -> {

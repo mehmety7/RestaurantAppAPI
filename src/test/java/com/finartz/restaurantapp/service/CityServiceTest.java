@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.CityDtoConverter;
 import com.finartz.restaurantapp.model.dto.CityDto;
 import com.finartz.restaurantapp.model.entity.CityEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CityServiceTest {
@@ -50,7 +52,7 @@ public class CityServiceTest {
     }
 
     @Test
-    public void whenFetchById_thenReturnCity() {
+    public void whenFetchByValidId_thenReturnCity() {
         CityEntity cityEntity = CityEntity.builder().name(CITY_ISTANBUL).build();
 
         CityDto city = CityDto.builder().name(CITY_ISTANBUL).build();
@@ -61,6 +63,14 @@ public class CityServiceTest {
         CityDto resultCity = cityService.getCity(1L);
 
         assertEquals(city, resultCity);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(cityRepository.findById(anyLong())).thenReturn(Optional.empty());
+        cityService.getCity(anyLong());
+
     }
 
 }

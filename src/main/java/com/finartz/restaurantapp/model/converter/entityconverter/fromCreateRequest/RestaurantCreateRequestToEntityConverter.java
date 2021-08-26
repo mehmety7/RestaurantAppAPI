@@ -21,11 +21,17 @@ public class RestaurantCreateRequestToEntityConverter implements GenericConverte
 
         RestaurantEntity restaurantEntity = new RestaurantEntity();
 
-        restaurantEntity.setName(restaurantCreateRequest.getName());
-        restaurantEntity.setStatus(restaurantCreateRequest.getStatus());
+        if(Objects.nonNull(restaurantCreateRequest.getName())){
+            restaurantEntity.setName(restaurantCreateRequest.getName());
+        }
+        if(Objects.nonNull(restaurantCreateRequest.getStatus())){
+            restaurantEntity.setStatus(restaurantCreateRequest.getStatus());
+        }
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setId(restaurantCreateRequest.getUserId());
+        if(Objects.nonNull(restaurantCreateRequest.getUserId())){
+            userEntity.setId(restaurantCreateRequest.getUserId());
+        }
         restaurantEntity.setUserEntity(userEntity);
 
         return restaurantEntity;

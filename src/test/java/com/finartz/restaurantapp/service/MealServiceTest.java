@@ -1,5 +1,7 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MealDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MealCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
@@ -52,7 +54,7 @@ public class MealServiceTest {
     private RestaurantService restaurantService;
 
     @Test
-    public void whenFetchById_thenReturnMeal() {
+    public void whenFetchByValidId_thenReturnMeal() {
         MealEntity mealEntity = MealEntity.builder().name(NAME_FIRSAT).build();
         MealDto meal = MealDto.builder().name(NAME_FIRSAT).build();
 
@@ -64,21 +66,29 @@ public class MealServiceTest {
         assertEquals(meal, resultMeal);
     }
 
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(mealRepository.findById(anyLong())).thenReturn(Optional.empty());
+        mealService.getMeal(anyLong());
+
+    }
+
     @Test
-    public void whenAddMeal_thenReturnSavedMeal() {
+    public void givenValidMenuId_whenAddMeal_thenReturnSavedMeal() {
         MealEntity mealEntity = MealEntity.builder().name(NAME_FIRSAT).build();
         MealDto meal = MealDto.builder().name(NAME_FIRSAT).build();
-        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().menuId(1l).branchId(1l).name(NAME_FIRSAT).build();
+        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().menuId(1l).name(NAME_FIRSAT).build();
 
         MenuDto menu = MenuDto.builder().id(1l).branchId(1l).build();
         BranchDto branch = BranchDto.builder().id(1l).menuId(1l).restaurantId(1l).build();
         RestaurantDto restaurant = RestaurantDto.builder().id(1l).userId(1l).build();
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
         Mockito.when(menuService.getMenu(1l)).thenReturn(menu);
-        Mockito.when(menuService.getBranchMenu(1l)).thenReturn(menu);
+
         Mockito.when(branchService.getBranch(1l)).thenReturn(branch);
         Mockito.when(restaurantService.getRestaurant(1l)).thenReturn(restaurant);
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         Mockito.when(mealCreateRequestToEntityConverter.convert(mealCreateRequest)).thenReturn(mealEntity);
         Mockito.when(mealRepository.save(mealEntity)).thenReturn(mealEntity);
@@ -88,5 +98,40 @@ public class MealServiceTest {
 
         assertEquals(meal.getName(), resultMeal.getName());
     }
+
+    @Test
+    public void givenValidBranchId_whenAddMeal_thenReturnSavedMeal() {
+        MealEntity mealEntity = MealEntity.builder().name(NAME_FIRSAT).build();
+        MealDto meal = MealDto.builder().name(NAME_FIRSAT).build();
+        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().branchId(1l).name(NAME_FIRSAT).build();
+
+        MenuDto menu = MenuDto.builder().id(1l).branchId(1l).build();
+        BranchDto branch = BranchDto.builder().id(1l).menuId(1l).restaurantId(1l).build();
+        RestaurantDto restaurant = RestaurantDto.builder().id(1l).userId(1l).build();
+
+        Mockito.when(menuService.getBranchMenu(1l)).thenReturn(menu);
+
+        Mockito.when(branchService.getBranch(1l)).thenReturn(branch);
+        Mockito.when(restaurantService.getRestaurant(1l)).thenReturn(restaurant);
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+
+        Mockito.when(mealCreateRequestToEntityConverter.convert(mealCreateRequest)).thenReturn(mealEntity);
+        Mockito.when(mealRepository.save(mealEntity)).thenReturn(mealEntity);
+        Mockito.when(mealDtoConverter.convert(mealEntity)).thenReturn(meal);
+
+        MealDto resultMeal = mealService.createMeal(mealCreateRequest);
+
+        assertEquals(meal.getName(), resultMeal.getName());
+    }
+
+    @Test(expected = MissingArgumentsException.class)
+    public void givenBothNotExistBranchIdAndMenuId_whenAddMeal_thenThrowMissingArgumentException() {
+
+        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().menuId(null).branchId(null).build();
+        mealService.createMeal(mealCreateRequest);
+
+    }
+
+
 
 }

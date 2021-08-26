@@ -20,15 +20,16 @@ public class BranchDtoConverter implements GenericConverter<BranchEntity, Branch
 
         BranchDto branchDto = new BranchDto();
 
-        branchDto.setId(branchEntity.getId());
-        branchDto.setName(branchEntity.getName());
+        if(Objects.nonNull(branchEntity.getId())){
+            branchDto.setId(branchEntity.getId());
+        }        branchDto.setName(branchEntity.getName());
         if (Objects.nonNull(branchEntity.getMenuEntity())) {
             branchDto.setMenuId(branchEntity.getMenuEntity().getId());
         }
         else {
             branchDto.setMenuId(null);
         }
-        if(Objects.nonNull(branchEntity.getRestaurantEntity())) {
+        if(Objects.nonNull(branchEntity.getRestaurantEntity()) && Objects.nonNull(branchEntity.getRestaurantEntity().getId())) {
             branchDto.setRestaurantId(branchEntity.getRestaurantEntity().getId());
         }
 

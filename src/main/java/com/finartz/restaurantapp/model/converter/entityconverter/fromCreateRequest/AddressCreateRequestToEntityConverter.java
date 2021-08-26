@@ -20,17 +20,27 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
 
         AddressEntity addressEntity = new AddressEntity();
 
-        addressEntity.setName(addressCreateRequest.getName());
-        addressEntity.setDistrict(addressCreateRequest.getDistrict());
-        addressEntity.setOtherContent(addressCreateRequest.getOtherContent());
+        if (Objects.nonNull(addressCreateRequest.getName())){
+            addressEntity.setName(addressCreateRequest.getName());
+        }
+        if (Objects.nonNull(addressCreateRequest.getDistrict())){
+            addressEntity.setDistrict(addressCreateRequest.getDistrict());
+        }
+        if (Objects.nonNull(addressCreateRequest.getOtherContent())){
+            addressEntity.setOtherContent(addressCreateRequest.getOtherContent());
+        }
         addressEntity.setEnable(true);
 
         CityEntity cityEntity = new CityEntity();
-        cityEntity.setId(addressCreateRequest.getCityId());
+        if (Objects.nonNull(addressCreateRequest.getCountyId())){
+            cityEntity.setId(addressCreateRequest.getCityId());
+        }
         addressEntity.setCityEntity(cityEntity);
 
         CountyEntity countyEntity = new CountyEntity();
-        countyEntity.setId(addressCreateRequest.getCountyId());
+        if (Objects.nonNull(addressCreateRequest.getCountyId())){
+            countyEntity.setId(addressCreateRequest.getCountyId());
+        }
         addressEntity.setCountyEntity(countyEntity);
 
         if(Objects.nonNull(addressCreateRequest.getUserId())) {

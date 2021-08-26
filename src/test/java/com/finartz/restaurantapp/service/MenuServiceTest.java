@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MenuDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MenuCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.MenuDto;
@@ -17,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MenuServiceTest {
@@ -34,7 +36,7 @@ public class MenuServiceTest {
     private MenuCreateRequestToEntityConverter menuCreateRequestToEntityConverter;
 
     @Test
-    public void whenFetchById_thenReturnMenu() {
+    public void whenFetchByValidId_thenReturnMenu() {
         MenuEntity menuEntity = MenuEntity.builder().id(1L).build();
         MenuDto menu = MenuDto.builder().id(1L).build();
 
@@ -44,6 +46,36 @@ public class MenuServiceTest {
         MenuDto resultMenu = menuService.getMenu(1L);
 
         assertEquals(menu.getId(), resultMenu.getId());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(menuRepository.findById(anyLong())).thenReturn(Optional.empty());
+        menuService.getMenu(anyLong());
+
+    }
+
+    @Test
+    public void whenFetchByValidBranchId_thenReturnMenu() {
+        MenuEntity menuEntity = MenuEntity.builder().id(1l).build();
+        MenuDto menu = MenuDto.builder().id(1l).build();
+
+        Mockito.when(menuRepository.getMenuEntityByBranchEntity_Id(anyLong())).thenReturn(menuEntity);
+        Mockito.when(menuDtoConverter.convert(menuEntity)).thenReturn(menu);
+
+        MenuDto resultMenu = menuService.getBranchMenu(anyLong());
+
+        assertEquals(menu.getId(), resultMenu.getId());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+
+    public void whenFetchByInvalidBranchId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(menuRepository.getMenuEntityByBranchEntity_Id(anyLong())).thenReturn(null);
+        menuService.getBranchMenu(anyLong());
+
     }
 
     @Test

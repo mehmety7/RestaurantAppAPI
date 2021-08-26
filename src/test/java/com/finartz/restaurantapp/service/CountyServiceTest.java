@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.CountyDtoConverter;
 import com.finartz.restaurantapp.model.dto.CountyDto;
 import com.finartz.restaurantapp.model.entity.CountyEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CountyServiceTest {
@@ -44,6 +46,14 @@ public class CountyServiceTest {
         CountyDto resultCounty = countyService.getCounty(1L);
 
         assertEquals(county, resultCounty);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(countyRepository.findById(anyLong())).thenReturn(Optional.empty());
+        countyService.getCounty(anyLong());
+
     }
 
     @Test

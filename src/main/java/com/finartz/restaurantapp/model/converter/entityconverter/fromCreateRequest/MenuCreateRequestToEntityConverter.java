@@ -22,7 +22,9 @@ public class MenuCreateRequestToEntityConverter implements GenericConverter<Menu
         MenuEntity menuEntity = new MenuEntity();
 
         BranchEntity branchEntity = new BranchEntity();
-        branchEntity.setId(menuCreateRequest.getBranchId());
+        if(Objects.nonNull(menuCreateRequest.getBranchId())){
+            branchEntity.setId(menuCreateRequest.getBranchId());
+        }
         menuEntity.setBranchEntity(branchEntity);
 
         return menuEntity;

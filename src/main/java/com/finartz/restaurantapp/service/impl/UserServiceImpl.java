@@ -1,11 +1,10 @@
 package com.finartz.restaurantapp.service.impl;
 
-import com.finartz.restaurantapp.exception.MissingArgumentsException;
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.UserDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.UserCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.entity.UserEntity;
-import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.AddressService;
@@ -17,13 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +29,6 @@ public class UserServiceImpl implements UserService {
     private final UserDtoConverter userDtoConverter;
     private final UserCreateRequestToEntityConverter userCreateRequestToEntityConverter;
     private final AddressService addressService;
-    private final Validator validator;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws EntityNotFoundException {
@@ -58,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUser(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
-        if (userEntity == null)
+        if (Objects.isNull(userEntity))
             throw new EntityNotFoundException("Not found User with email: " + email);
         return userDtoConverter.convert(userEntity);
     }
@@ -71,17 +65,6 @@ public class UserServiceImpl implements UserService {
 
         if(Objects.nonNull(userCreateRequest.getAddressCreateRequest())){
             userCreateRequest.getAddressCreateRequest().setUserId(userEntity.getId());
-
-            Set<ConstraintViolation<AddressCreateRequest>> violations = validator.validate(userCreateRequest.getAddressCreateRequest());
-
-            if (!violations.isEmpty()) {
-                StringBuilder sb = new StringBuilder();
-                for (ConstraintViolation<AddressCreateRequest> constraintViolation : violations) {
-                    sb.append(constraintViolation.getMessage());
-                }
-                throw new MissingArgumentsException(sb.toString());
-            }
-
             addressService.createAddress(userCreateRequest.getAddressCreateRequest());
         }
 

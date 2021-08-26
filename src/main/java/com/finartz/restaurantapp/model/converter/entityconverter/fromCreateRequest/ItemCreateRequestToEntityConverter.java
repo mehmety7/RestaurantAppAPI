@@ -20,8 +20,12 @@ public class ItemCreateRequestToEntityConverter implements GenericConverter<Item
 
         ItemEntity itemEntity = new ItemEntity();
 
-        itemEntity.setName(itemCreateRequest.getName());
-        itemEntity.setUnitType(itemCreateRequest.getUnitType());
+        if (Objects.nonNull(itemCreateRequest.getName())){
+            itemEntity.setName(itemCreateRequest.getName());
+        }
+        if (Objects.nonNull(itemCreateRequest.getUnitType())) {
+            itemEntity.setUnitType(itemCreateRequest.getUnitType());
+        }
 
         return itemEntity;
     }

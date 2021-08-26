@@ -1,30 +1,34 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.UserDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.UserCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.entity.UserEntity;
+import com.finartz.restaurantapp.model.enumerated.Role;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.impl.AddressServiceImpl;
 import com.finartz.restaurantapp.service.impl.UserServiceImpl;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -42,10 +46,10 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private Validator validator;
+    private AddressServiceImpl addressService;
 
     @Mock
-    private AddressServiceImpl addressService;
+    private UserDetailsService userDetailsService;
 
     @Mock
     private UserDtoConverter userDtoConverter;
@@ -54,7 +58,7 @@ public class UserServiceTest {
     private UserCreateRequestToEntityConverter userCreateRequestToEntityConverter;
 
     @Test
-    public void whenFetchById_thenReturnUser() {
+    public void whenFetchByValidId_thenReturnUser() {
         UserEntity userEntity = UserEntity.builder().name(NAME_ALI_AKAY).build();
         UserDto user = UserDto.builder().name(NAME_ALI_AKAY).build();
 
@@ -64,6 +68,14 @@ public class UserServiceTest {
         UserDto resultUser = userService.getUser(1L);
 
         assertEquals(user.getId(), resultUser.getId());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        userService.getUser(anyLong());
+
     }
 
     @Test
@@ -77,6 +89,14 @@ public class UserServiceTest {
         UserDto resultUser = userService.getUser(EMAIL_ALI_GMAIL_COM);
 
         assertEquals(user.getEmail(), resultUser.getEmail());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidMail_thenThrowEntityNotFoundException() {
+
+        Mockito.when(userRepository.findByEmail(anyString())).thenReturn(null);
+        userService.getUser(anyString());
+
     }
 
     @Test
@@ -97,12 +117,27 @@ public class UserServiceTest {
         Mockito.when(userDtoConverter.convert(userEntity)).thenReturn(user);
         Mockito.when(addressService.createAddress(addressCreateRequest)).thenReturn(addressDto);
 
-        Set<ConstraintViolation<AddressCreateRequest>> violations = Collections.emptySet();
-        Mockito.when(validator.validate(userCreateRequest.getAddressCreateRequest())).thenReturn(violations);
-
         UserDto resultUser = userService.createUser(userCreateRequest);
 
         assertEquals(userEntity.getName(), resultUser.getName());
+    }
+
+    @Test
+    public void giveValidUsername_whenFetchByUsername_thenReturnSpringUser(){
+        UserEntity userEntity = UserEntity.builder().email("name").password("password").roles(Arrays.asList(Role.USER)).build();
+
+        Mockito.when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+        UserDetails userDetails = userService.loadUserByUsername(anyString());
+
+        Assertions.assertEquals(userDetails.getUsername(), userEntity.getEmail());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void giveInvalidUsername_whenFetchByUsername_thenReturnSpringUser(){
+
+        Mockito.when(userRepository.findByEmail(anyString())).thenReturn(null);
+        userService.loadUserByUsername(anyString());
+
     }
 
 }

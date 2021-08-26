@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.service;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.RestaurantDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RestaurantServiceTest {
@@ -48,7 +50,7 @@ public class RestaurantServiceTest {
     private TokenService tokenService;
 
     @Test
-    public void whenFetchById_thenReturnRestaurant() {
+    public void whenFetchByValidId_thenReturnRestaurant() {
         RestaurantEntity restaurantEntity = RestaurantEntity.builder().name(NAME_KRAL_BURGER).build();
         RestaurantDto restaurant = RestaurantDto.builder().name(NAME_KRAL_BURGER).build();
 
@@ -58,6 +60,14 @@ public class RestaurantServiceTest {
         RestaurantDto resultRestaurant = restaurantService.getRestaurant(1L);
 
         assertEquals(restaurant.getId(), resultRestaurant.getId());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenFetchByInvalidId_thenThrowEntityNotFoundException() {
+
+        Mockito.when(restaurantRepository.findById(anyLong())).thenReturn(Optional.empty());
+        restaurantService.getRestaurant(anyLong());
+
     }
 
 
@@ -81,11 +91,12 @@ public class RestaurantServiceTest {
     public void whenAddRestaurant_thenReturnSavedRestaurant() {
         RestaurantEntity restaurantEntity = RestaurantEntity.builder().name(NAME_KRAL_BURGER).build();
         RestaurantDto restaurant = RestaurantDto.builder().name(NAME_KRAL_BURGER).build();
-        RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest.builder().name(NAME_KRAL_BURGER).build();
+        RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest.builder().userId(1l).name(NAME_KRAL_BURGER).build();
 
         Mockito.when(restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest)).thenReturn(restaurantEntity);
         Mockito.when(restaurantRepository.save(restaurantEntity)).thenReturn(restaurantEntity);
         Mockito.when(restaurantDtoConverter.convert(restaurantEntity)).thenReturn(restaurant);
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         RestaurantDto resultRestaurant = restaurantService.createRestaurant(restaurantCreateRequest);
 
@@ -93,14 +104,13 @@ public class RestaurantServiceTest {
     }
 
     @Test
-    public void whenUpdateRestaurant_thenReturnUpdatedRestaurant(){
+    public void giveValidId_whenUpdateRestaurant_thenReturnUpdatedRestaurant(){
         RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).status(Status.WAITING).build();
         RestaurantEntity restaurantEntityUpdated = RestaurantEntity.builder().id(1l).status(Status.CANCELED).build();
         RestaurantDto restaurant = RestaurantDto.builder().id(1l).status(Status.WAITING).build();
         RestaurantDto restaurantUpdated = RestaurantDto.builder().id(1l).status(Status.CANCELED).build();
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().build();
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(restaurant.getUserId())).thenReturn(true);
         Mockito.when(restaurantRepository.getById(1l)).thenReturn(restaurantEntity);
         Mockito.when(restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantEntity)).thenReturn(restaurantEntityUpdated);
         Mockito.when(restaurantRepository.save(restaurantEntityUpdated)).thenReturn(restaurantEntityUpdated);
@@ -110,6 +120,15 @@ public class RestaurantServiceTest {
 
         Assertions.assertNotEquals(restaurant.getStatus(), Status.CANCELED);
         Assertions.assertEquals(resultRestaurant.getStatus(), Status.CANCELED);
+
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void giveInvalidId_whenUpdateRestaurant_thenThrowEntityNotFoundException(){
+        RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().build();
+
+        Mockito.when(restaurantRepository.getById(anyLong())).thenReturn(null);
+        restaurantService.updateRestaurant(1L, restaurantUpdateRequest);
 
     }
 
@@ -123,6 +142,18 @@ public class RestaurantServiceTest {
         Boolean result = restaurantService.isRestaurantApproved(1l);
 
         Assertions.assertEquals(result, true);
+    }
+
+    @Test
+    public void whenIsRestaurantStatusNotApproved_thenReturnFalse(){
+        RestaurantEntity restaurantEntity = RestaurantEntity.builder()
+                .id(1l).status(Status.CANCELED).build();
+
+        Mockito.when(restaurantRepository.getById(1l)).thenReturn(restaurantEntity);
+
+        Boolean result = restaurantService.isRestaurantApproved(1l);
+
+        Assertions.assertEquals(result, false);
     }
 
 }

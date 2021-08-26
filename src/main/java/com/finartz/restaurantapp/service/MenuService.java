@@ -7,8 +7,6 @@ public interface MenuService {
 
     MenuDto getMenu(Long id);
 
-    MenuDto getMenuByBranchId(Long branchId);
-
     MenuDto getBranchMenu(Long branch_id);
 
     MenuDto createMenu(MenuCreateRequest menuCreateRequest);

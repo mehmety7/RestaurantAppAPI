@@ -32,18 +32,13 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuDto getMenuByBranchId(Long branchId){
+    public MenuDto getBranchMenu(Long branchId){
         MenuEntity menuEntity = menuRepository.getMenuEntityByBranchEntity_Id(branchId);
-        if(Objects.nonNull(menuEntity.getId())){
+        if(Objects.nonNull(menuEntity)){
             return menuDtoConverter.convert(menuEntity);
         }else{
             throw new EntityNotFoundException("Not found Menu with branch id:" + branchId);
         }
-    }
-
-    @Override
-    public MenuDto getBranchMenu(Long branch_id) {
-        return menuDtoConverter.convert(menuRepository.getMenuEntityByBranchEntity_Id(branch_id));
     }
 
     //unnecessary method (ask it)

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -62,10 +63,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     public RestaurantDto updateRestaurant(Long id, RestaurantUpdateRequest restaurantUpdateRequest){
         RestaurantEntity restaurantExisted = restaurantRepository.getById(id);
-        RestaurantEntity restaurantUpdated =
-                restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisted);
-
-        return restaurantDtoConverter.convert(restaurantRepository.save(restaurantUpdated));
+        if(Objects.nonNull(restaurantExisted)){
+            RestaurantEntity restaurantUpdated =
+                    restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisted);
+            return restaurantDtoConverter.convert(restaurantRepository.save(restaurantUpdated));
+        }else {
+            throw new EntityNotFoundException("Not found Restaurant with id: " + id);
+        }
 
     }
 
