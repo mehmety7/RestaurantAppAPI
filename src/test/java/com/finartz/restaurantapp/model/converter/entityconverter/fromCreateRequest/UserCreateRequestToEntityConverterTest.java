@@ -25,12 +25,14 @@ public class UserCreateRequestToEntityConverterTest {
 
     @Test
     public void whenPassValidUserCreateRequest_thenReturnUserEntity(){
-        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
-                .name("User")
-                .build();
 
         AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().build();
         AddressEntity addressEntity = AddressEntity.builder().build();
+
+        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
+                .name("User")
+                .addressCreateRequest(addressCreateRequest)
+                .build();
 
         Mockito.when(addressCreateRequestToEntityConverter.convert(addressCreateRequest)).thenReturn(addressEntity);
         UserEntity userEntity = userCreateRequestToEntityConverter.convert(userCreateRequest);

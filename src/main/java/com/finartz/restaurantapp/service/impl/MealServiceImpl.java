@@ -4,14 +4,13 @@ import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MealDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MealCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
-import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.MealEntity;
 import com.finartz.restaurantapp.model.request.create.MealCreateRequest;
 import com.finartz.restaurantapp.repository.MealRepository;
-import com.finartz.restaurantapp.service.*;
+import com.finartz.restaurantapp.service.MealService;
+import com.finartz.restaurantapp.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +25,7 @@ public class MealServiceImpl implements MealService {
     private final MealDtoConverter mealDtoConverter;
     private final MealCreateRequestToEntityConverter mealCreateRequestToEntityConverter;
 
-    private final RestaurantService restaurantService;
-    private final BranchService branchService;
     private final MenuService menuService;
-    private final TokenService tokenService;
 
 
     @Override
@@ -51,15 +47,9 @@ public class MealServiceImpl implements MealService {
             MenuDto menu = menuService.getBranchMenu(mealCreateRequest.getBranchId());
             mealCreateRequest.setMenuId(menu.getId());
         }
-        BranchDto branch = branchService.getBranch(mealCreateRequest.getBranchId());
-        RestaurantDto restaurant = restaurantService.getRestaurant(branch.getRestaurantId());
 
-        if (tokenService.isRequestOwnerAuthoritative(restaurant.getUserId())){
-            MealEntity mealEntity = mealCreateRequestToEntityConverter.convert(mealCreateRequest);
+        MealEntity mealEntity = mealCreateRequestToEntityConverter.convert(mealCreateRequest);
             return mealDtoConverter.convert(mealRepository.save(mealEntity));
-        }else{
-            return null;
-        }
     }
 
 }

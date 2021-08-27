@@ -21,9 +21,8 @@ public class BranchCreateRequestToEntityConverter implements GenericConverter<Br
 
         BranchEntity branchEntity = new BranchEntity();
 
-        if (Objects.nonNull(branchCreateRequest.getName())){
-            branchEntity.setName(branchCreateRequest.getName());
-        }
+        branchEntity.setName(branchCreateRequest.getName());
+
         RestaurantEntity restaurantEntity = new RestaurantEntity();
         if (Objects.nonNull(branchCreateRequest.getRestaurantId())){
             restaurantEntity.setId(branchCreateRequest.getRestaurantId());

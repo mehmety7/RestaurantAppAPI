@@ -103,7 +103,8 @@ public class CommentControllerTest {
 
         mockMvc.perform(post(URI_COMMENT)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("comment", Matchers.is(COMMENT_HARIKA)));
     }
 
     @Test

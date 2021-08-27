@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.InvalidCreatingException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MenuDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MenuCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.MenuDto;
@@ -91,6 +92,16 @@ public class MenuServiceTest {
         MenuDto resultMenu = menuService.createMenu(menuCreateRequest);
 
         assertEquals(menu.getId(), resultMenu.getId());
+    }
+
+    @Test(expected = InvalidCreatingException.class)
+    public void givenExistingMenu_whenAddNewMenu_ThenThrowInvalidCreatingException(){
+        MenuEntity menuEntity = MenuEntity.builder().build();
+        MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(anyLong()).build();
+
+        Mockito.when(menuRepository.getMenuEntityByBranchEntity_Id(menuCreateRequest.getBranchId())).thenReturn(menuEntity);
+        menuService.createMenu(menuCreateRequest);
+
     }
 
 }

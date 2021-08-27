@@ -20,18 +20,11 @@ public class CommentDtoConverter implements GenericConverter<CommentEntity, Comm
 
         CommentDto commentDto = new CommentDto();
 
-        if(Objects.nonNull(commentEntity.getId())){
-            commentDto.setId(commentEntity.getId());
-        }
-        if(Objects.nonNull(commentEntity.getComment())){
-            commentDto.setComment(commentEntity.getComment());
-        }
-        if(Objects.nonNull(commentEntity.getSpeedPoint())) {
-            commentDto.setSpeedPoint(commentEntity.getSpeedPoint());
-        }
-        if(Objects.nonNull(commentEntity.getTastePoint())) {
-            commentDto.setTastePoint(commentEntity.getTastePoint());
-        }
+        commentDto.setId(commentEntity.getId());
+        commentDto.setComment(commentEntity.getComment());
+        commentDto.setSpeedPoint(commentEntity.getSpeedPoint());
+        commentDto.setTastePoint(commentEntity.getTastePoint());
+
         if(Objects.nonNull(commentEntity.getUserEntity())) {
             commentDto.setUserId(commentEntity.getUserEntity().getId());
         }

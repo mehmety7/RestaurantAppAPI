@@ -20,15 +20,9 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
 
         AddressEntity addressEntity = new AddressEntity();
 
-        if (Objects.nonNull(addressCreateRequest.getName())){
-            addressEntity.setName(addressCreateRequest.getName());
-        }
-        if (Objects.nonNull(addressCreateRequest.getDistrict())){
-            addressEntity.setDistrict(addressCreateRequest.getDistrict());
-        }
-        if (Objects.nonNull(addressCreateRequest.getOtherContent())){
-            addressEntity.setOtherContent(addressCreateRequest.getOtherContent());
-        }
+        addressEntity.setName(addressCreateRequest.getName());
+        addressEntity.setDistrict(addressCreateRequest.getDistrict());
+        addressEntity.setOtherContent(addressCreateRequest.getOtherContent());
         addressEntity.setEnable(true);
 
         CityEntity cityEntity = new CityEntity();

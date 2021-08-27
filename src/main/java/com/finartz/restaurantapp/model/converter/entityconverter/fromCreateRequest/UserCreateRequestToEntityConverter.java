@@ -27,18 +27,11 @@ public class UserCreateRequestToEntityConverter implements GenericConverter<User
 
         UserEntity userEntity = new UserEntity();
 
-        if (Objects.nonNull(userCreateRequest.getName())){
-            userEntity.setName(userCreateRequest.getName());
-        }
-        if (Objects.nonNull(userCreateRequest.getEmail())) {
-            userEntity.setEmail(userCreateRequest.getEmail());
-        }
-        if (Objects.nonNull(userCreateRequest.getPassword())) {
-            userEntity.setPassword(userCreateRequest.getPassword());
-        }
-        if (Objects.nonNull(userCreateRequest.getRoles())) {
-            userEntity.setRoles(userCreateRequest.getRoles());
-        }
+        userEntity.setName(userCreateRequest.getName());
+        userEntity.setEmail(userCreateRequest.getEmail());
+        userEntity.setPassword(userCreateRequest.getPassword());
+        userEntity.setRoles(userCreateRequest.getRoles());
+
         if(Objects.nonNull(userCreateRequest.getAddressCreateRequest())) {
             userEntity.setAddressEntities(Arrays.asList(convert(userCreateRequest.getAddressCreateRequest())));
         }else{

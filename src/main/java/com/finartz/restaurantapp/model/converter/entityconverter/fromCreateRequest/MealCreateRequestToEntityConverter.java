@@ -24,12 +24,8 @@ public class MealCreateRequestToEntityConverter implements GenericConverter<Meal
 
         MealEntity mealEntity = new MealEntity();
 
-        if(Objects.nonNull(mealCreateRequest.getName())){
-            mealEntity.setName(mealCreateRequest.getName());
-        }
-        if(Objects.nonNull(mealCreateRequest.getPrice())){
-            mealEntity.setPrice(mealCreateRequest.getPrice());
-        }
+        mealEntity.setName(mealCreateRequest.getName());
+        mealEntity.setPrice(mealCreateRequest.getPrice());
 
         MenuEntity menuEntity = new MenuEntity();
         if(Objects.nonNull(mealCreateRequest.getMenuId())){

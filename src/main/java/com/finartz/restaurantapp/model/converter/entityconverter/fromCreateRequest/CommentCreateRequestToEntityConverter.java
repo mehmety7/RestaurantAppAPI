@@ -22,15 +22,9 @@ public class CommentCreateRequestToEntityConverter implements GenericConverter<C
 
         CommentEntity commentEntity = new CommentEntity();
 
-        if (Objects.nonNull(commentCreateRequest.getComment())){
-            commentEntity.setComment(commentCreateRequest.getComment());
-        }
-        if (Objects.nonNull(commentCreateRequest.getSpeedPoint())) {
-            commentEntity.setSpeedPoint(commentCreateRequest.getSpeedPoint());
-        }
-        if (Objects.nonNull(commentCreateRequest.getTastePoint())) {
-            commentEntity.setTastePoint(commentCreateRequest.getTastePoint());
-        }
+        commentEntity.setComment(commentCreateRequest.getComment());
+        commentEntity.setSpeedPoint(commentCreateRequest.getSpeedPoint());
+        commentEntity.setTastePoint(commentCreateRequest.getTastePoint());
 
         UserEntity userEntity = new UserEntity();
         if (Objects.nonNull(commentCreateRequest.getUserId())){

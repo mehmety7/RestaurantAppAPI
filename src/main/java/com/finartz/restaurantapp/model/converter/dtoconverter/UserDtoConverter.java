@@ -6,6 +6,7 @@ import com.finartz.restaurantapp.model.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Component
@@ -20,17 +21,14 @@ public class UserDtoConverter implements GenericConverter<UserEntity, UserDto> {
 
         UserDto userDto = new UserDto();
 
-        if(Objects.nonNull(userEntity.getId())){
-            userDto.setId(userEntity.getId());
-        }
-        if(Objects.nonNull(userEntity.getName())){
-            userDto.setName(userEntity.getName());
-        }
-        if(Objects.nonNull(userEntity.getEmail())){
-            userDto.setEmail(userEntity.getEmail());
-        }
+        userDto.setId(userEntity.getId());
+        userDto.setName(userEntity.getName());
+        userDto.setEmail(userEntity.getEmail());
+
         if(Objects.nonNull(userEntity.getRoles())){
             userDto.setRoles(userEntity.getRoles());
+        }else{
+            userDto.setRoles(new ArrayList<>());
         }
 
         return userDto;

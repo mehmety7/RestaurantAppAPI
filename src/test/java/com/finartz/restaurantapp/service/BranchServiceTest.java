@@ -8,11 +8,9 @@ import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateReque
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
-import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
-import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
@@ -59,9 +57,6 @@ public class BranchServiceTest {
     private BranchCreateRequestToEntityConverter branchCreateRequestToEntityConverter;
 
     @Mock
-    private TokenService tokenService;
-
-    @Mock
     private MenuService menuService;
 
     @Test
@@ -105,7 +100,6 @@ public class BranchServiceTest {
     public void givenRestaurantIsApproved_whenAddBranch_thenReturnSavedBranch() {
         UserEntity userEntity = UserEntity.builder().id(1l).build();
         RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).userEntity(userEntity).build();
-        RestaurantDto restaurantDto = RestaurantDto.builder().id(1l).userId(1l).build();
         AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().build();
         AddressDto addressDto = AddressDto.builder().build();
         BranchEntity branchEntity = BranchEntity
@@ -128,8 +122,6 @@ public class BranchServiceTest {
         MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(branchEntity.getId()).build();
         MenuDto menuDto = MenuDto.builder().branchId(branchEntity.getId()).id(1l).build();
 
-        Mockito.when(restaurantService.getRestaurant(anyLong())).thenReturn(restaurantDto);
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
         Mockito.when(restaurantService.isRestaurantApproved(anyLong())).thenReturn(true);
         Mockito.when(branchCreateRequestToEntityConverter.convert(branchCreateRequest)).thenReturn(branchEntity);
         Mockito.when(branchDtoConverter.convert(branchEntity)).thenReturn(branch);
@@ -145,15 +137,11 @@ public class BranchServiceTest {
 
     @Test(expected = InvalidStatusException.class)
     public void givenRestaurantIsNotApproved_whenAddBranch_thenThrowInvalidStatusException(){
-        RestaurantDto restaurant = RestaurantDto.builder().userId(1l).id(1l).status(Status.WAITING).build();
-        BranchCreateRequest branchCreateRequest = BranchCreateRequest.builder().restaurantId(1l).addressCreateRequest(null).build();
+        BranchCreateRequest branchCreateRequest = BranchCreateRequest.builder().build();
 
-        Mockito.when(restaurantService.getRestaurant(1l)).thenReturn(restaurant);
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(restaurant.getUserId())).thenReturn(true);
-        Mockito.when(restaurantService.isRestaurantApproved(restaurant.getId())).thenReturn(false);
+        //Mockito.when(restaurantService.isRestaurantApproved(anyLong())).thenReturn(false);
 
         branchService.createBranch(branchCreateRequest);
-
     }
 
 }

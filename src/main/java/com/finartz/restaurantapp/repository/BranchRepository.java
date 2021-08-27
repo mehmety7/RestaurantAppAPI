@@ -10,6 +10,4 @@ public interface BranchRepository extends BaseRepository<BranchEntity> {
 
     List<BranchEntity> getBranchEntitiesByAddressEntity_CountyEntity_Id(Long countyId);
 
-    List<BranchEntity> countBranchEntitiesByAddressEntity_CountyEntity_Id(Long countyId);
-
 }

@@ -20,12 +20,10 @@ public class AddressDtoConverter implements GenericConverter<AddressEntity, Addr
 
         AddressDto address = new AddressDto();
 
-        if (Objects.nonNull(addressEntity.getId())) {
-            address.setId(addressEntity.getId());
-        }
-        if (Objects.nonNull(addressEntity.getName())) {
-            address.setName(addressEntity.getName());
-        }
+        address.setId(addressEntity.getId());
+        address.setName(addressEntity.getName());
+        address.setDistrict(addressEntity.getDistrict());
+        address.setOtherContent(addressEntity.getOtherContent());
 
         if(Objects.nonNull(addressEntity.getCityEntity())){
             address.setCityId(addressEntity.getCityEntity().getId());
@@ -34,13 +32,6 @@ public class AddressDtoConverter implements GenericConverter<AddressEntity, Addr
         if(Objects.nonNull(addressEntity.getCountyEntity())) {
             address.setCountyId(addressEntity.getCountyEntity().getId());
             address.setCountyName(addressEntity.getCountyEntity().getName());
-        }
-
-        if (Objects.nonNull(addressEntity.getDistrict())){
-            address.setDistrict(addressEntity.getDistrict());
-        }
-        if (Objects.nonNull(addressEntity.getOtherContent())) {
-            address.setOtherContent(addressEntity.getOtherContent());
         }
 
         if(Objects.nonNull(addressEntity.getUserEntity())) {
@@ -57,9 +48,7 @@ public class AddressDtoConverter implements GenericConverter<AddressEntity, Addr
             address.setBranchId(null);
         }
 
-        if (Objects.nonNull(addressEntity.getEnable())){
-            address.setEnable(addressEntity.getEnable());
-        }
+        address.setEnable(addressEntity.getEnable());
 
         return address;
 

@@ -53,7 +53,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto createItem(ItemCreateRequest itemCreateRequest){
-
         ItemEntity itemEntity = itemCreateRequestToEntityConverter.convert(itemCreateRequest);
         return itemDtoConverter.convert(itemRepository.save(itemEntity));
 

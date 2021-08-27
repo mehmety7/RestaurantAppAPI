@@ -45,9 +45,6 @@ public class CommentServiceTest {
     @Mock
     private CommentUpdateRequestToEntityConverter commentUpdateRequestToEntityConverter;
 
-    @Mock
-    private TokenService tokenService;
-
     @Test
     public void whenFetchByValidId_thenReturnComment() {
         CommentEntity commentEntity = CommentEntity.builder().comment(COMMENT_HARIKA).build();
@@ -79,7 +76,6 @@ public class CommentServiceTest {
         Mockito.when(commentDtoConverter.convert(commentEntity)).thenReturn(comment);
         Mockito.when(commentCreateRequestToEntityConverter.convert(commentCreateRequest)).thenReturn(commentEntity);
         Mockito.when(commentRepository.save(commentEntity)).thenReturn(commentEntity);
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         CommentDto resultComment = commentService.createComment(commentCreateRequest);
 
@@ -99,7 +95,6 @@ public class CommentServiceTest {
         Mockito.when(commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentEntity)).thenReturn(commentEntityUpdated);
         Mockito.when(commentRepository.save(commentEntityUpdated)).thenReturn(commentEntityUpdated);
         Mockito.when(commentDtoConverter.convert(commentEntityUpdated)).thenReturn(commentUpdated);
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         CommentDto resultComment = commentService.updateComment(1L, commentUpdateRequest);
 

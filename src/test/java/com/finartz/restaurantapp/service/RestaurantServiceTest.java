@@ -46,9 +46,6 @@ public class RestaurantServiceTest {
     @Mock
     private RestaurantUpdateRequestToEntityConverter restaurantUpdateRequestToEntityConverter;
 
-    @Mock
-    private TokenService tokenService;
-
     @Test
     public void whenFetchByValidId_thenReturnRestaurant() {
         RestaurantEntity restaurantEntity = RestaurantEntity.builder().name(NAME_KRAL_BURGER).build();
@@ -96,7 +93,6 @@ public class RestaurantServiceTest {
         Mockito.when(restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest)).thenReturn(restaurantEntity);
         Mockito.when(restaurantRepository.save(restaurantEntity)).thenReturn(restaurantEntity);
         Mockito.when(restaurantDtoConverter.convert(restaurantEntity)).thenReturn(restaurant);
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         RestaurantDto resultRestaurant = restaurantService.createRestaurant(restaurantCreateRequest);
 

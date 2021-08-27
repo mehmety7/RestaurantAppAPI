@@ -44,9 +44,6 @@ public class AddressServiceTest {
     private AddressCreateRequestToEntityConverter addressCreateRequestToEntityConverter;
 
     @Mock
-    private TokenService tokenService;
-
-    @Mock
     private Validator validator;
 
     @Test
@@ -118,7 +115,6 @@ public class AddressServiceTest {
 
         AddressEntity existingActiveAddressEntity = AddressEntity.builder().userEntity(userEntity).enable(true).build();
         Mockito.doReturn(existingActiveAddressEntity).when(addressRepository).getActiveAddressByUserId(1L);
-        Mockito.doReturn(true).when(tokenService).isRequestOwnerAuthoritative(existingActiveAddressEntity.getUserEntity().getId());
 
         Set<ConstraintViolation<AddressCreateRequest>> violations = Collections.emptySet();
         Mockito.when(validator.validate(addressCreateRequest)).thenReturn(violations);
@@ -128,13 +124,14 @@ public class AddressServiceTest {
         assertEquals(address.getName(), result.getName());
     }
 
+    // to do - ask it how create constraint violation instance
     @Test(expected = MissingArgumentsException.class)
     public void givenMissingCreatingArguments_whenAddAddress_thenThrowMissingArgumentsException() {
         AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().userId(1l).build();
 
         Mockito.when(addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId())).thenReturn(null);
 
-        Mockito.when(validator.validate(addressCreateRequest)).thenThrow(MissingArgumentsException.class);
+        Mockito.when(validator.validate(addressCreateRequest)).thenThrow(MissingArgumentsException.class); // hand-made throwing
 
         addressService.createAddress(addressCreateRequest);
 

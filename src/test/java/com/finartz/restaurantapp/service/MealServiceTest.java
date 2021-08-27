@@ -4,10 +4,8 @@ import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MealDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MealCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
-import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.MealEntity;
 import com.finartz.restaurantapp.model.request.create.MealCreateRequest;
 import com.finartz.restaurantapp.repository.MealRepository;
@@ -40,9 +38,6 @@ public class MealServiceTest {
 
     @Mock
     private MealCreateRequestToEntityConverter mealCreateRequestToEntityConverter;
-
-    @Mock
-    private TokenService tokenService;
 
     @Mock
     private MenuService menuService;
@@ -81,14 +76,8 @@ public class MealServiceTest {
         MealCreateRequest mealCreateRequest = MealCreateRequest.builder().menuId(1l).name(NAME_FIRSAT).build();
 
         MenuDto menu = MenuDto.builder().id(1l).branchId(1l).build();
-        BranchDto branch = BranchDto.builder().id(1l).menuId(1l).restaurantId(1l).build();
-        RestaurantDto restaurant = RestaurantDto.builder().id(1l).userId(1l).build();
 
         Mockito.when(menuService.getMenu(1l)).thenReturn(menu);
-
-        Mockito.when(branchService.getBranch(1l)).thenReturn(branch);
-        Mockito.when(restaurantService.getRestaurant(1l)).thenReturn(restaurant);
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         Mockito.when(mealCreateRequestToEntityConverter.convert(mealCreateRequest)).thenReturn(mealEntity);
         Mockito.when(mealRepository.save(mealEntity)).thenReturn(mealEntity);
@@ -106,14 +95,8 @@ public class MealServiceTest {
         MealCreateRequest mealCreateRequest = MealCreateRequest.builder().branchId(1l).name(NAME_FIRSAT).build();
 
         MenuDto menu = MenuDto.builder().id(1l).branchId(1l).build();
-        BranchDto branch = BranchDto.builder().id(1l).menuId(1l).restaurantId(1l).build();
-        RestaurantDto restaurant = RestaurantDto.builder().id(1l).userId(1l).build();
 
         Mockito.when(menuService.getBranchMenu(1l)).thenReturn(menu);
-
-        Mockito.when(branchService.getBranch(1l)).thenReturn(branch);
-        Mockito.when(restaurantService.getRestaurant(1l)).thenReturn(restaurant);
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
 
         Mockito.when(mealCreateRequestToEntityConverter.convert(mealCreateRequest)).thenReturn(mealEntity);
         Mockito.when(mealRepository.save(mealEntity)).thenReturn(mealEntity);

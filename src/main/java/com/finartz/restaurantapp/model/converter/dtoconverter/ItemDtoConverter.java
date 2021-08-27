@@ -20,15 +20,9 @@ public class ItemDtoConverter implements GenericConverter<ItemEntity, ItemDto> {
 
         ItemDto itemDto = new ItemDto();
 
-        if(Objects.nonNull(itemEntity.getId())){
-            itemDto.setId(itemEntity.getId());
-        }
-        if(Objects.nonNull(itemDto.getName())){
-            itemDto.setName(itemEntity.getName());
-        }
-        if(Objects.nonNull(itemEntity.getUnitType())){
-            itemDto.setUnitType(itemEntity.getUnitType());
-        }
+        itemDto.setId(itemEntity.getId());
+        itemDto.setName(itemEntity.getName());
+        itemDto.setUnitType(itemEntity.getUnitType());
 
         return itemDto;
     }

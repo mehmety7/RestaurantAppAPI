@@ -5,7 +5,6 @@ import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
-import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
@@ -30,7 +29,6 @@ public class BranchServiceImpl implements BranchService {
     private final RestaurantService restaurantService;
     private final AddressService addressService;
     private final MenuService menuService;
-    private final TokenService tokenService;
 
     @Override
     public BranchDto getBranch(Long id) {
@@ -51,10 +49,9 @@ public class BranchServiceImpl implements BranchService {
     @Override
     @Transactional
     public BranchDto createBranch(BranchCreateRequest branchCreateRequest) {
-        RestaurantDto restaurant = restaurantService.getRestaurant(branchCreateRequest.getRestaurantId());
-        if(tokenService.isRequestOwnerAuthoritative(restaurant.getUserId())){
-            if (!restaurantService.isRestaurantApproved(branchCreateRequest.getRestaurantId()))
+            if (!restaurantService.isRestaurantApproved(branchCreateRequest.getRestaurantId())) {
                 throw new InvalidStatusException("The status of restaurant must be APPROVED by admin to create branch");
+            }
 
             BranchEntity branchEntity = branchRepository.save(branchCreateRequestToEntityConverter.convert(branchCreateRequest));
             if (Objects.nonNull(branchCreateRequest.getAddressCreateRequest())) {
@@ -66,8 +63,5 @@ public class BranchServiceImpl implements BranchService {
             menuService.createMenu(menuCreateRequest);
 
             return branchDtoConverter.convert(branchEntity);
-        } else {
-            return null;
-        }
     }
 }

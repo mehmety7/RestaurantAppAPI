@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Arrays;
+
 @RunWith(MockitoJUnitRunner.class)
 public class MealDtoConverterTest {
 
@@ -25,13 +27,14 @@ public class MealDtoConverterTest {
 
     @Test
     public void whenPassValidMealEntity_thenReturnMealDto(){
+        ItemEntity itemEntity = ItemEntity.builder().build();
+        ItemDto itemDto = ItemDto.builder().build();
+
         MealEntity mealEntity = MealEntity.builder()
                 .id(1l)
                 .name("Meal")
+                .itemEntities(Arrays.asList(itemEntity))
                 .build();
-
-        ItemEntity itemEntity = ItemEntity.builder().build();
-        ItemDto itemDto = ItemDto.builder().build();
 
         Mockito.when(itemDtoConverter.convert(itemEntity)).thenReturn(itemDto);
         MealDto mealDto = mealDtoConverter.convert(mealEntity);

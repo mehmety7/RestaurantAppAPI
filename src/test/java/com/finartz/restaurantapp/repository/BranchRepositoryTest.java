@@ -25,5 +25,4 @@ public class BranchRepositoryTest {
 
         Assertions.assertEquals(branchEntities.get(0).getAddressEntity().getCountyEntity().getId(), 896l);
     }
-
 }

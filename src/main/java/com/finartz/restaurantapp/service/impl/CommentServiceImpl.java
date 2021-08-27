@@ -10,7 +10,6 @@ import com.finartz.restaurantapp.model.request.create.CommentCreateRequest;
 import com.finartz.restaurantapp.model.request.update.CommentUpdateRequest;
 import com.finartz.restaurantapp.repository.CommentRepository;
 import com.finartz.restaurantapp.service.CommentService;
-import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ public class CommentServiceImpl implements CommentService {
     private final CommentDtoConverter commentDtoConverter;
     private final CommentCreateRequestToEntityConverter commentCreateRequestToEntityConverter;
     private final CommentUpdateRequestToEntityConverter commentUpdateRequestToEntityConverter;
-    private final TokenService tokenService;
 
     @Override
     public CommentDto getComment(Long id){
@@ -34,25 +32,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto createComment(CommentCreateRequest commentCreateRequest){
-        if(tokenService.isRequestOwnerAuthoritative(commentCreateRequest.getUserId())){
-            CommentEntity commentEntity = commentCreateRequestToEntityConverter.convert(commentCreateRequest);
-            return commentDtoConverter.convert(commentRepository.save(commentEntity));
-        }else {
-            return null;
-        }
+        CommentEntity commentEntity = commentCreateRequestToEntityConverter.convert(commentCreateRequest);
+        return commentDtoConverter.convert(commentRepository.save(commentEntity));
     }
 
     @Override
     @Transactional
     public CommentDto updateComment(Long id, CommentUpdateRequest commentUpdateRequest){
         CommentEntity commentExisted = commentRepository.getById(id);
-        if(tokenService.isRequestOwnerAuthoritative(commentExisted.getUserEntity().getId())){
-            CommentEntity commentUpdated = commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentExisted);
-            return commentDtoConverter.convert(commentRepository.save(commentUpdated));
-        }else{
-            return null;
-        }
-
+        CommentEntity commentUpdated = commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentExisted);
+        return commentDtoConverter.convert(commentRepository.save(commentUpdated));
     }
 
     @Override
