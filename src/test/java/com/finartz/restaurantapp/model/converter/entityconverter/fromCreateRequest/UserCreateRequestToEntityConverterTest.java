@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.entity.AddressEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
@@ -24,7 +25,7 @@ public class UserCreateRequestToEntityConverterTest {
     private AddressCreateRequestToEntityConverter addressCreateRequestToEntityConverter;
 
     @Test
-    public void whenPassValidUserCreateRequest_thenReturnUserEntity(){
+    public void whenPassValidUserCreateRequestWithAddressCreateRequest_thenReturnUserEntity(){
 
         AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().build();
         AddressEntity addressEntity = AddressEntity.builder().build();
@@ -38,6 +39,26 @@ public class UserCreateRequestToEntityConverterTest {
         UserEntity userEntity = userCreateRequestToEntityConverter.convert(userCreateRequest);
 
         Assertions.assertEquals(userEntity.getName(), userCreateRequest.getName());
+    }
+
+    @Test
+    public void whenPassValidUserCreateRequestWithoutAddressCreateRequest_thenReturnUserEntity(){
+
+        AddressEntity addressEntity = AddressEntity.builder().build();
+
+        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
+                .name("User")
+                .addressCreateRequest(null)
+                .build();
+
+        UserEntity userEntity = userCreateRequestToEntityConverter.convert(userCreateRequest);
+
+        Assertions.assertEquals(userEntity.getName(), userCreateRequest.getName());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullUserCreateRequest_thenThrowEntityNotFoundException(){
+        userCreateRequestToEntityConverter.convert(null);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
@@ -20,8 +21,8 @@ public class MenuDtoConverter implements GenericConverter<MenuEntity, MenuDto> {
 
     @Override
     public MenuDto convert(final MenuEntity menuEntity){
-        if(Objects.isNull(menuEntity)){
-            return null;
+        if (Objects.isNull(menuEntity)){
+            throw new EntityNotFoundException("Not found menu entity");
         }
 
         MenuDto menuDto = new MenuDto();

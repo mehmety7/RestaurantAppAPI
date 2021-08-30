@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.entity.AddressEntity;
@@ -14,8 +15,8 @@ public class AddressDtoConverter implements GenericConverter<AddressEntity, Addr
 
     @Override
     public AddressDto convert(final AddressEntity addressEntity){
-        if (addressEntity == null){
-            return null;
+        if (Objects.isNull(addressEntity)){
+            throw new EntityNotFoundException("Not found address entity");
         }
 
         AddressDto address = new AddressDto();

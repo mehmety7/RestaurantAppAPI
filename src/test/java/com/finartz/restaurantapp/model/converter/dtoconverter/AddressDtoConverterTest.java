@@ -1,7 +1,8 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.dto.AddressDto;
-import com.finartz.restaurantapp.model.entity.AddressEntity;
+import com.finartz.restaurantapp.model.entity.*;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -15,14 +16,40 @@ public class AddressDtoConverterTest {
     AddressDtoConverter addressDtoConverter;
 
     @Test
-    public void whenPassValidAddressEntity_thenReturnAddressDto(){
+    public void whenPassValidUserAddressEntity_thenReturnAddressDto(){
         AddressEntity addressEntity = AddressEntity.builder()
                 .id(1l)
                 .name("Address")
+                .cityEntity(CityEntity.builder().id(1l).name("city").build())
+                .countyEntity(CountyEntity.builder().id(1l).name("county").build())
+                .userEntity(UserEntity.builder().id(1l).build())
+                .branchEntity(null)
                 .build();
 
         AddressDto addressDto = addressDtoConverter.convert(addressEntity);
         Assertions.assertEquals(addressDto.getName(), addressEntity.getName());
+    }
+
+    @Test
+    public void whenPassValidBranchAddressEntity_thenReturnAddressDto(){
+        AddressEntity addressEntity = AddressEntity.builder()
+                .id(1l)
+                .name("Address")
+                .cityEntity(CityEntity.builder().id(1l).name("city").build())
+                .countyEntity(CountyEntity.builder().id(1l).name("county").build())
+                .userEntity(null)
+                .branchEntity(BranchEntity.builder().id(1l).build())
+                .build();
+
+        AddressDto addressDto = addressDtoConverter.convert(addressEntity);
+        Assertions.assertEquals(addressDto.getName(), addressEntity.getName());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullAddressEntity_thenThrowEntityNotFoundException(){
+
+        addressDtoConverter.convert(null);
+
     }
 
 }

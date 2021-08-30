@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.entity.CommentEntity;
@@ -16,8 +17,8 @@ public class CommentCreateRequestToEntityConverter implements GenericConverter<C
 
     @Override
     public CommentEntity convert(final CommentCreateRequest commentCreateRequest){
-        if(Objects.isNull(commentCreateRequest)){
-            return null;
+        if (Objects.isNull(commentCreateRequest)){
+            throw new EntityNotFoundException("Not found comment create request");
         }
 
         CommentEntity commentEntity = new CommentEntity();

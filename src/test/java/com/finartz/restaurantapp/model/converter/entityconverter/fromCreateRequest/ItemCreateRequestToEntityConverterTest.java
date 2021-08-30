@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.entity.ItemEntity;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
 import org.junit.Test;
@@ -23,6 +24,11 @@ public class ItemCreateRequestToEntityConverterTest {
         ItemEntity itemEntity = itemCreateRequestToEntityConverter.convert(itemCreateRequest);
 
         Assertions.assertEquals(itemEntity.getName(), itemCreateRequest.getName());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullItemCreateRequest_thenThrowEntityNotFoundException(){
+        itemCreateRequestToEntityConverter.convert(null);
     }
 
 }

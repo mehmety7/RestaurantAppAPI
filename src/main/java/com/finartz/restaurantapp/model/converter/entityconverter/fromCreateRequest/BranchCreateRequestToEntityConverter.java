@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
@@ -15,8 +16,8 @@ public class BranchCreateRequestToEntityConverter implements GenericConverter<Br
 
     @Override
     public BranchEntity convert(final BranchCreateRequest branchCreateRequest){
-        if(Objects.isNull(branchCreateRequest)){
-            return null;
+        if (Objects.isNull(branchCreateRequest)){
+            throw new EntityNotFoundException("Not found branch create request");
         }
 
         BranchEntity branchEntity = new BranchEntity();

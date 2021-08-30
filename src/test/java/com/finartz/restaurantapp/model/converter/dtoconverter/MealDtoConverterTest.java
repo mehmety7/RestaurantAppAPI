@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.dto.ItemDto;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.entity.ItemEntity;
@@ -41,6 +42,11 @@ public class MealDtoConverterTest {
 
         Assertions.assertEquals(mealDto.getName(), mealEntity.getName());
 
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullMealEntity_thenReturnThrowEntityNotFoundException(){
+        mealDtoConverter.convert(null);
     }
 
 }

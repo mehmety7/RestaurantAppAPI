@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
@@ -30,6 +31,16 @@ public class RestaurantUpdateRequestToEntityConverterTest {
         Assertions.assertEquals(restaurantUpdate.getStatus(), restaurantExisting.getStatus());
         Assertions.assertNotEquals(restaurantUpdate.getStatus(), previousStatus);
 
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullRestaurantUpdateRequest_thenThrowEntityNotFoundException(){
+        restaurantUpdateRequestToEntityConverter.convert(null, RestaurantEntity.builder().build());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullRestaurantExisting_thenThrowEntityNotFoundException(){
+        restaurantUpdateRequestToEntityConverter.convert(RestaurantUpdateRequest.builder().build(), null);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.entity.CommentEntity;
 import com.finartz.restaurantapp.model.request.create.CommentCreateRequest;
 import org.junit.Test;
@@ -18,11 +19,18 @@ public class CommentCreateRequestToEntityConverterTest {
     public void whenPassValidCommentCreateRequest_thenReturnCommentEntity(){
         CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder()
                 .comment("Comment")
+                .userId(1L)
+                .branchId(1L)
                 .build();
 
         CommentEntity commentEntity = commentCreateRequestToEntityConverter.convert(commentCreateRequest);
 
         Assertions.assertEquals(commentEntity.getComment(), commentCreateRequest.getComment());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullCommentCreateRequest_thenThrowEntityNotFoundException(){
+        commentCreateRequestToEntityConverter.convert(null);
     }
 
 }

@@ -1,7 +1,10 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
+import com.finartz.restaurantapp.model.entity.MenuEntity;
+import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -19,11 +22,35 @@ public class BranchDtoConverterTest {
         BranchEntity branchEntity = BranchEntity.builder()
                 .id(1l)
                 .name("Branch")
+                .restaurantEntity(RestaurantEntity.builder().id(1l).build())
+                .menuEntity(MenuEntity.builder().id(1l).build())
                 .build();
 
         BranchDto branchDto = branchDtoConverter.convert(branchEntity);
 
         Assertions.assertEquals(branchDto.getName(), branchEntity.getName());
+
+    }
+
+    @Test
+    public void whenPassValidBranchEntityWithoutMenuId_thenReturnBranchDto(){
+        BranchEntity branchEntity = BranchEntity.builder()
+                .id(1l)
+                .name("Branch")
+                .restaurantEntity(RestaurantEntity.builder().id(1l).build())
+                .menuEntity(null)
+                .build();
+
+        BranchDto branchDto = branchDtoConverter.convert(branchEntity);
+
+        Assertions.assertEquals(branchDto.getName(), branchEntity.getName());
+
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullAddressEntity_thenThrowEntityNotFoundException(){
+
+        branchDtoConverter.convert(null);
 
     }
 

@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
@@ -15,8 +16,8 @@ public class RestaurantCreateRequestToEntityConverter implements GenericConverte
 
     @Override
     public RestaurantEntity convert(final RestaurantCreateRequest restaurantCreateRequest){
-        if(Objects.isNull(restaurantCreateRequest)){
-            return null;
+        if (Objects.isNull(restaurantCreateRequest)){
+            throw new EntityNotFoundException("Not found restaurant create request");
         }
 
         RestaurantEntity restaurantEntity = new RestaurantEntity();

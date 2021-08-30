@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
@@ -24,12 +25,18 @@ public class BranchCreateRequestToEntityConverterTest {
 
         BranchCreateRequest branchCreateRequest = BranchCreateRequest.builder()
                 .name("Branch")
+                .restaurantId(1L)
                 .addressCreateRequest(addressCreateRequest)
                 .build();
 
         BranchEntity branchEntity = branchCreateRequestToEntityConverter.convert(branchCreateRequest);
 
         Assertions.assertEquals(branchEntity.getName(), branchCreateRequest.getName());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullBranchCreateRequest_thenThrowEntityNotFoundException(){
+        branchCreateRequestToEntityConverter.convert(null);
     }
 
 }

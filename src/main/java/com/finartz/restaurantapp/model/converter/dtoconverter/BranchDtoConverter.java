@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
@@ -14,8 +15,8 @@ public class BranchDtoConverter implements GenericConverter<BranchEntity, Branch
 
     @Override
     public BranchDto convert(final BranchEntity branchEntity){
-        if(branchEntity == null){
-            return null;
+        if(Objects.isNull(branchEntity)){
+            throw new EntityNotFoundException("Not found branch entity");
         }
 
         BranchDto branchDto = new BranchDto();

@@ -22,7 +22,7 @@ public class CityDtoConverter implements GenericConverter<CityEntity, CityDto> {
     @Override
     public CityDto convert(final CityEntity cityEntity){
         if(Objects.isNull(cityEntity)){
-            throw new EntityNotFoundException("Not found City Entity");
+            throw new EntityNotFoundException("Not found city entity");
         }
 
         CityDto cityDto = new CityDto();

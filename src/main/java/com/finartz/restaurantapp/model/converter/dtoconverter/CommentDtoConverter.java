@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.dto.CommentDto;
 import com.finartz.restaurantapp.model.entity.CommentEntity;
@@ -14,8 +15,8 @@ public class CommentDtoConverter implements GenericConverter<CommentEntity, Comm
 
     @Override
     public CommentDto convert(final CommentEntity commentEntity){
-        if(Objects.isNull(commentEntity)){
-            return null;
+        if (Objects.isNull(commentEntity)){
+            throw new EntityNotFoundException("Not found comment entity");
         }
 
         CommentDto commentDto = new CommentDto();

@@ -1,7 +1,9 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
+import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.entity.MealEntity;
 import com.finartz.restaurantapp.model.entity.MenuEntity;
 import org.junit.Test;
@@ -32,7 +34,8 @@ public class MenuDtoConverterTest {
 
         MenuEntity menuEntity = MenuEntity.builder()
                 .id(1l)
-                .mealEntities(Arrays.asList(mealEntity))
+                .mealEntities(Arrays.asList(MealEntity.builder().build()))
+                .branchEntity(BranchEntity.builder().id(1l).build())
                 .build();
 
 
@@ -41,6 +44,11 @@ public class MenuDtoConverterTest {
 
         Assertions.assertEquals(menuDto.getId(), menuEntity.getId());
 
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullMenuEntity_thenReturnThrowEntityNotFoundException(){
+        menuDtoConverter.convert(null);
     }
 
 }

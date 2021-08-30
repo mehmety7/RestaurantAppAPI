@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @TestPropertySource("classpath:application-test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SecurityJWTAuthorizationTest {
+public class SecurityConfigTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -38,20 +38,20 @@ public class SecurityJWTAuthorizationTest {
 
     @WithUserDetails("ali@gmail.com")
     @Test
-    public void givenAuthRequestOnPrivateService_shouldSucceedWith200() throws Exception {
+    public void givenAuthorizationRequestOnPrivateService_shouldSucceedWith200() throws Exception {
         mvc.perform(get("/restaurant/waiting").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @WithUserDetails("veli@gmail.com")
     @Test
-    public void givenAuthRequestOnPrivateService_shouldFailedWith403() throws Exception {
+    public void givenNoAuthorizationRequestOnPrivateService_shouldFailedWith403() throws Exception {
         mvc.perform(get("/restaurant/waiting").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void givenNoAuthRequestOnPrivateService_shouldFailedWith403() throws Exception {
+    public void givenNoAuthenticationRequestOnPrivateService_shouldFailedWith403() throws Exception {
         mvc.perform(get("/restaurant/waiting").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }

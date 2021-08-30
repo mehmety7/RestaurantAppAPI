@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.entity.CommentEntity;
 import com.finartz.restaurantapp.model.request.update.CommentUpdateRequest;
 import org.junit.Test;
@@ -18,6 +19,8 @@ public class CommentUpdateRequestToEntityConverterTest {
     public void whenPassValidCommentUpdateRequest_thenReturnCommentEntity(){
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder()
                 .comment("Comment2")
+                .speedPoint(5)
+                .tastePoint(6)
                 .build();
 
         CommentEntity commentExisting = CommentEntity.builder().comment("Comment1").build();
@@ -29,6 +32,16 @@ public class CommentUpdateRequestToEntityConverterTest {
         Assertions.assertEquals(commentUpdate.getComment(), commentExisting.getComment());
         Assertions.assertNotEquals(commentUpdate.getComment(), previousComment);
 
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullCommentUpdateRequest_thenThrowEntityNotFoundException(){
+        commentUpdateRequestToEntityConverter.convert(null, CommentEntity.builder().build());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenPassNullCommentExisting_thenThrowEntityNotFoundException(){
+        commentUpdateRequestToEntityConverter.convert(CommentUpdateRequest.builder().build(), null);
     }
 
 }

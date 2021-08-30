@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.dtoconverter;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.dto.CountyDto;
 import com.finartz.restaurantapp.model.entity.CountyEntity;
@@ -14,8 +15,8 @@ public class CountyDtoConverter implements GenericConverter<CountyEntity, County
 
     @Override
     public CountyDto convert(final CountyEntity countyEntity){
-        if(Objects.isNull(countyEntity)){
-            return null;
+        if (Objects.isNull(countyEntity)){
+            throw new EntityNotFoundException("Not found county entity");
         }
 
         CountyDto countyDto = new CountyDto();

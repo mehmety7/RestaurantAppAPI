@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
 
+import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.entity.*;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
@@ -14,8 +15,8 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
 
     @Override
     public AddressEntity convert(final AddressCreateRequest addressCreateRequest) {
-        if(Objects.isNull(addressCreateRequest)){
-            return null;
+        if (Objects.isNull(addressCreateRequest)){
+            throw new EntityNotFoundException("Not found address create request");
         }
 
         AddressEntity addressEntity = new AddressEntity();
