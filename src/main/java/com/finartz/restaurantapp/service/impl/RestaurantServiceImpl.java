@@ -2,8 +2,8 @@ package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.RestaurantDtoConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.RestaurantCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromupdaterequest.RestaurantUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
@@ -11,6 +11,7 @@ import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import com.finartz.restaurantapp.repository.RestaurantRepository;
 import com.finartz.restaurantapp.service.RestaurantService;
+import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantDtoConverter restaurantDtoConverter;
     private final RestaurantCreateRequestToEntityConverter restaurantCreateRequestToEntityConverter;
     private final RestaurantUpdateRequestToEntityConverter restaurantUpdateRequestToEntityConverter;
+
+    private final TokenService tokenService;
 
 
     @Override
@@ -48,6 +51,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantDto createRestaurant(RestaurantCreateRequest restaurantCreateRequest){
+        if (tokenService.isRequestOwnerAuthoritative(restaurantCreateRequest.getUserId())){}
+
         RestaurantEntity restaurantEntity = restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest);
         return restaurantDtoConverter.convert(restaurantRepository.save(restaurantEntity));
     }

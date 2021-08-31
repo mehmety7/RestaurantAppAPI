@@ -7,10 +7,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.InvalidOwnerException;
-import com.finartz.restaurantapp.model.dto.UserDto;
+import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.enumerated.Role;
+import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.TokenService;
-import com.finartz.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,7 +19,10 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -29,7 +32,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class TokenServiceImpl implements TokenService {
 
     private final HttpServletRequest request;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     private final Integer ACCESS_TOKEN_MINUTE = 60; // an hour
 
@@ -38,7 +41,7 @@ public class TokenServiceImpl implements TokenService {
         String token = request.getHeader("Authorization");
         if(Objects.nonNull(token)){
             String requestOwnerMail = getUserEmailByToken(token);
-            UserDto requestOwner = userService.getUser(requestOwnerMail);
+            UserEntity requestOwner = userRepository.findByEmail(requestOwnerMail);
             if (Objects.equals(entityOwnerId, requestOwner.getId())) {
                 return true;
             }
@@ -67,7 +70,7 @@ public class TokenServiceImpl implements TokenService {
             try {
                 String refreshToken = authorizationHeader.substring("Bearer ".length());
                 String email = getUserEmailByToken(refreshToken);
-                UserDto user = userService.getUser(email);
+                UserEntity user = userRepository.findByEmail(email);
                 Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
                 String accessToken = JWT.create()
                         .withSubject(user.getEmail())

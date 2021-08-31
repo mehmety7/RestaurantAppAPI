@@ -2,8 +2,8 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.CommentDtoConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.CommentCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.CommentUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.CommentCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromupdaterequest.CommentUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.CommentDto;
 import com.finartz.restaurantapp.model.entity.CommentEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
@@ -45,6 +45,9 @@ public class CommentServiceTest {
     @Mock
     private CommentUpdateRequestToEntityConverter commentUpdateRequestToEntityConverter;
 
+    @Mock
+    private TokenService tokenService;
+
     @Test
     public void whenFetchByValidId_thenReturnComment() {
         CommentEntity commentEntity = CommentEntity.builder().comment(COMMENT_HARIKA).build();
@@ -73,6 +76,7 @@ public class CommentServiceTest {
         CommentDto comment = CommentDto.builder().userId(1l).comment(COMMENT_HARIKA).build();
         CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder().userId(1l).build();
 
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(commentCreateRequest.getUserId())).thenReturn(true);
         Mockito.when(commentDtoConverter.convert(commentEntity)).thenReturn(comment);
         Mockito.when(commentCreateRequestToEntityConverter.convert(commentCreateRequest)).thenReturn(commentEntity);
         Mockito.when(commentRepository.save(commentEntity)).thenReturn(commentEntity);
@@ -91,7 +95,8 @@ public class CommentServiceTest {
         CommentDto commentUpdated = CommentDto.builder().id(1l).comment(COMMENT_ORTALAMA).build();
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder().build();
 
-        Mockito.when(commentRepository.getById(1l)).thenReturn(commentEntity);
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(commentEntity.getUserEntity().getId())).thenReturn(true);
+        Mockito.when(commentRepository.findById(1l)).thenReturn(Optional.of(commentEntity));
         Mockito.when(commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentEntity)).thenReturn(commentEntityUpdated);
         Mockito.when(commentRepository.save(commentEntityUpdated)).thenReturn(commentEntityUpdated);
         Mockito.when(commentDtoConverter.convert(commentEntityUpdated)).thenReturn(commentUpdated);

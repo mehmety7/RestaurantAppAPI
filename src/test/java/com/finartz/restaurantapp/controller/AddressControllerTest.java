@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.service.AddressService;
+import com.finartz.restaurantapp.service.TokenService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -45,6 +47,14 @@ public class AddressControllerTest {
 
     @MockBean
     private UserDetailsService userDetailsService;
+
+    @MockBean
+    private TokenService tokenService;
+
+    @BeforeEach
+    public void init(){
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+    }
 
     @Test
     public void whenGetByAddressId_thenReturnAddress() throws Exception {

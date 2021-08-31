@@ -4,7 +4,7 @@ package com.finartz.restaurantapp.service;
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.BranchCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.BranchCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
@@ -58,6 +58,9 @@ public class BranchServiceTest {
 
     @Mock
     private MenuService menuService;
+
+    @Mock
+    private TokenService tokenService;
 
     @Test
     public void whenFetchByValidId_thenReturnBranch() {
@@ -122,6 +125,8 @@ public class BranchServiceTest {
         MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(branchEntity.getId()).build();
         MenuDto menuDto = MenuDto.builder().branchId(branchEntity.getId()).id(1l).build();
 
+
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
         Mockito.when(restaurantService.isRestaurantApproved(anyLong())).thenReturn(true);
         Mockito.when(branchCreateRequestToEntityConverter.convert(branchCreateRequest)).thenReturn(branchEntity);
         Mockito.when(branchDtoConverter.convert(branchEntity)).thenReturn(branch);
@@ -139,6 +144,7 @@ public class BranchServiceTest {
     public void givenRestaurantIsNotApproved_whenAddBranch_thenThrowInvalidStatusException(){
         BranchCreateRequest branchCreateRequest = BranchCreateRequest.builder().build();
 
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
         //Mockito.when(restaurantService.isRestaurantApproved(anyLong())).thenReturn(false);
 
         branchService.createBranch(branchCreateRequest);

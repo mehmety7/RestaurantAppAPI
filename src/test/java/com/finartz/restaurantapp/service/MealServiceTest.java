@@ -3,7 +3,7 @@ package com.finartz.restaurantapp.service;
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MealDtoConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MealCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.MealCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
 import com.finartz.restaurantapp.model.entity.MealEntity;
@@ -43,10 +43,7 @@ public class MealServiceTest {
     private MenuService menuService;
 
     @Mock
-    private BranchService branchService;
-
-    @Mock
-    private RestaurantService restaurantService;
+    private TokenService tokenService;
 
     @Test
     public void whenFetchByValidId_thenReturnMeal() {
@@ -79,6 +76,7 @@ public class MealServiceTest {
 
         Mockito.when(menuService.getMenu(1l)).thenReturn(menu);
 
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
         Mockito.when(mealCreateRequestToEntityConverter.convert(mealCreateRequest)).thenReturn(mealEntity);
         Mockito.when(mealRepository.save(mealEntity)).thenReturn(mealEntity);
         Mockito.when(mealDtoConverter.convert(mealEntity)).thenReturn(meal);
@@ -98,6 +96,7 @@ public class MealServiceTest {
 
         Mockito.when(menuService.getBranchMenu(1l)).thenReturn(menu);
 
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
         Mockito.when(mealCreateRequestToEntityConverter.convert(mealCreateRequest)).thenReturn(mealEntity);
         Mockito.when(mealRepository.save(mealEntity)).thenReturn(mealEntity);
         Mockito.when(mealDtoConverter.convert(mealEntity)).thenReturn(meal);

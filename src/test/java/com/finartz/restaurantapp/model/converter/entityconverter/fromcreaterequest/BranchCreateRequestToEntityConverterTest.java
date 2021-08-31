@@ -1,4 +1,4 @@
-package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
+package com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.entity.BranchEntity;

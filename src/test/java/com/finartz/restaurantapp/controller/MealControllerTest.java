@@ -6,13 +6,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.request.create.MealCreateRequest;
 import com.finartz.restaurantapp.service.MealService;
+import com.finartz.restaurantapp.service.TokenService;
 import org.hamcrest.Matchers;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(MealController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class MealControllerTest {
 
     private static final String URI_MEAL = "/meal";
@@ -47,13 +51,12 @@ public class MealControllerTest {
     @MockBean
     private UserDetailsService userDetailsService;
 
-    private ObjectWriter objectWriter;
+    @MockBean
+    private TokenService tokenService;
 
-    @Before
-    public void init() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        objectWriter = mapper.writer().withDefaultPrettyPrinter();
+    @BeforeEach
+    public void init(){
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
     }
 
     @Test
@@ -88,11 +91,14 @@ public class MealControllerTest {
                 .name(NAME_KRAL_MENU)
                 .price(PRICE_15_99)
                 .menuId(1L)
-                .itemIds(new ArrayList<Long>())
+                .itemIds(new ArrayList<>())
                 .build();
 
         Mockito.when(mealService.createMeal(mealCreateRequest)).thenReturn(meal);
 
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter objectWriter = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = objectWriter.writeValueAsString(mealCreateRequest);
 
         mockMvc.perform(post(URI_MEAL)

@@ -4,8 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.InvalidOwnerException;
-import com.finartz.restaurantapp.model.dto.UserDto;
+import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.enumerated.Role;
+import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.impl.TokenServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class TokenServiceTest {
     private TokenServiceImpl tokenService;
 
     @Mock
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Mock
     private HttpServletRequest request;
@@ -70,10 +71,10 @@ public class TokenServiceTest {
 
     @Test
     public void givenRequestOwnerIsEntityOwner_whenIsRequestOwnerAuthoritative_thenReturnTrue(){
-        UserDto requestOwner = UserDto.builder().id(1l).email(USERNAME).roles(Arrays.asList(Role.USER)).build();
+        UserEntity requestOwner = UserEntity.builder().id(1l).email(USERNAME).roles(Arrays.asList(Role.USER)).build();
 
         Mockito.when(request.getHeader("Authorization")).thenReturn(token);
-        Mockito.when(userService.getUser(user.getUsername())).thenReturn(requestOwner);
+        Mockito.when(userRepository.findByEmail(user.getUsername())).thenReturn(requestOwner);
 
         Boolean result = tokenService.isRequestOwnerAuthoritative(1l);
         Assertions.assertEquals(result, true);
@@ -82,10 +83,10 @@ public class TokenServiceTest {
 
     @Test(expected = InvalidOwnerException.class)
     public void givenRequestOwnerIsNotOwnerOfEntity_whenIsRequestOwnerAuthoritative_thenThrowInvalidOwnerException(){
-        UserDto requestOwner = UserDto.builder().id(10l).email(USERNAME).roles(Arrays.asList(Role.USER)).build();
+        UserEntity requestOwner = UserEntity.builder().id(1l).email(USERNAME).roles(Arrays.asList(Role.USER)).build();
 
         Mockito.when(request.getHeader("Authorization")).thenReturn(token);
-        Mockito.when(userService.getUser(user.getUsername())).thenReturn(requestOwner);
+        Mockito.when(userRepository.findByEmail(user.getUsername())).thenReturn(requestOwner);
 
         tokenService.isRequestOwnerAuthoritative(20l);
 
@@ -119,7 +120,7 @@ public class TokenServiceTest {
     public void givenInvalidToken_whenRefreshToken_thenThrowException() throws IOException {
 
         Mockito.when(request.getHeader("Authorization")).thenReturn(token);
-        Mockito.when(userService.getUser(user.getUsername())).thenReturn(null);
+        Mockito.when(userRepository.findByEmail(user.getUsername())).thenReturn(null);
         tokenService.refreshToken(request, response);
 
     }

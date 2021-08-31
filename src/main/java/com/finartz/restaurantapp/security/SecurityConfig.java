@@ -1,6 +1,5 @@
 package com.finartz.restaurantapp.security;
 
-import com.finartz.restaurantapp.exception.GlobalSecurityExceptionHandler;
 import com.finartz.restaurantapp.filter.CustomAuthenticationFilter;
 import com.finartz.restaurantapp.filter.CustomAuthorizationFilter;
 import com.finartz.restaurantapp.model.enumerated.Role;
@@ -16,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -40,7 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/login/**", "/user/refresh-token/**", "/h2/**").permitAll();
         http.authorizeRequests().antMatchers("/restaurant/waiting/**").hasAnyAuthority(Role.ADMIN.toString());
         http.authorizeRequests().antMatchers(HttpMethod.PUT , "/restaurant/{id}").hasAnyAuthority(Role.ADMIN.toString());
+
         http.authorizeRequests().antMatchers(HttpMethod.POST , "/restaurant").hasAnyAuthority(Role. SELLER.toString());
+        http.authorizeRequests().antMatchers(HttpMethod.POST , "/branch").hasAnyAuthority(Role. SELLER.toString());
+        http.authorizeRequests().antMatchers(HttpMethod.POST , "/menu").hasAnyAuthority(Role. SELLER.toString());
+        http.authorizeRequests().antMatchers(HttpMethod.POST , "/meal").hasAnyAuthority(Role. SELLER.toString());
+
         http.authorizeRequests().antMatchers(HttpMethod.POST , "/comment").hasAnyAuthority(Role. USER.toString());
 
 //      http.authorizeRequests().anyRequest().authenticated(); // Obligation of authentication of all endpoints
@@ -55,18 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().sameOrigin(); // it solved to access denied issue on attempt to access h2 db
 //      http.headers().frameOptions().disable(); // it also solved access issue to h2 but this is less securely than above
 
-//      http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-
     }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(){
-        return new GlobalSecurityExceptionHandler();
     }
 }

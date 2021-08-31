@@ -25,4 +25,13 @@ public class BranchRepositoryTest {
 
         Assertions.assertEquals(branchEntities.get(0).getAddressEntity().getCountyEntity().getId(), 896l);
     }
+
+    @Test
+    public void whenGetEntityOwnerUserIdByRestaurantId(){
+        Long entityOwnerId = branchRepository.getEntityOwnerUserIdByRestaurantId(1l);
+
+        Assertions.assertEquals(entityOwnerId, 2L);
+
+    }
+
 }

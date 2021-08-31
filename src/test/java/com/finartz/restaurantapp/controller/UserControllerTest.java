@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.enumerated.Role;
+import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;
 import com.finartz.restaurantapp.service.TokenService;
 import com.finartz.restaurantapp.service.UserService;
@@ -68,7 +69,6 @@ public class UserControllerTest {
                 .id(1L)
                 .name(NAME_ALI_AKAY)
                 .email(EMAIL_ALI)
-//                .password(PASSWORD_ALI1212)
                 .build();
 
         Mockito.when(userService.getUser(1L)).thenReturn(user);
@@ -87,7 +87,6 @@ public class UserControllerTest {
                 .id(1L)
                 .name(NAME_ALI_AKAY)
                 .email(EMAIL_ALI)
-//                .password(PASSWORD_ALI1212)
                 .build();
 
         UserCreateRequest userCreateRequest = UserCreateRequest
@@ -96,6 +95,7 @@ public class UserControllerTest {
                 .email(EMAIL_ALI)
                 .password(PASSWORD_ALI1212)
                 .roles(Arrays.asList(Role.USER))
+                .addressCreateRequest(AddressCreateRequest.builder().build())
                 .build();
 
         Mockito.when(userService.createUser(userCreateRequest)).thenReturn(user);

@@ -3,7 +3,7 @@ package com.finartz.restaurantapp.service.impl;
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.InvalidCreatingException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MenuDtoConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MenuCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.MenuCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.MenuDto;
 import com.finartz.restaurantapp.model.entity.MenuEntity;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;

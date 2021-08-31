@@ -1,6 +1,7 @@
-package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
+package com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.entity.*;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
@@ -47,8 +48,7 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
             branchEntity.setId(addressCreateRequest.getBranchId());
             addressEntity.setBranchEntity(branchEntity);
         } else {
-            addressEntity.setBranchEntity(null);
-            addressEntity.setUserEntity(null);
+            throw new MissingArgumentsException("It must be neither user id or branch id for address creating");
         }
 
         return addressEntity;

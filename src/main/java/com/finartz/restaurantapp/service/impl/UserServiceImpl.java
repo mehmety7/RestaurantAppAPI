@@ -2,7 +2,7 @@ package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.UserDtoConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.UserCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.UserCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.UserDto;
 import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.request.create.UserCreateRequest;

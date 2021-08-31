@@ -29,6 +29,7 @@ public class UserCreateRequest {
     private List<Role> roles = Arrays.asList(Role.USER);
 
     @JsonAlias(value = "address")
+    @NotNull(message = "User initial address may not be null")
     private AddressCreateRequest addressCreateRequest;
 
 }

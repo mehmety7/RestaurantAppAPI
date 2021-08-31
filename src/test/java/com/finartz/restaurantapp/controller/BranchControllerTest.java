@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.service.BranchService;
 import org.hamcrest.Matchers;
@@ -109,7 +110,7 @@ public class BranchControllerTest {
         BranchCreateRequest branchCreateRequest = BranchCreateRequest
                 .builder()
                 .name(NAME_KRAL_SISLI)
-                .addressCreateRequest(null)
+                .addressCreateRequest(AddressCreateRequest.builder().build())
                 .restaurantId(1l)
                 .build();
 

@@ -1082,6 +1082,7 @@ INSERT INTO items (id, name, unit_type) values ( 3, 'Ayran', 'piece' );
 INSERT INTO items (id, name, unit_type) values ( 4, 'Kola', 'piece' );
 
 INSERT INTO menus (id, branch_id) values (1, 1);
+INSERT INTO menus (id, branch_id) values (2, 2);
 
 INSERT INTO meals (id, name, price, menu_id) values ( 1, 'Kral Hamburger', 20.00, 1 );
 INSERT INTO meals (id, name, price, menu_id) values ( 2, 'Kral Cheeseburger', 25.00, 1 );

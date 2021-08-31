@@ -21,6 +21,7 @@ public class BranchCreateRequest {
     private Long restaurantId;
 
     @JsonAlias(value = "address")
+    @NotNull(message = "Branch address may not be null")
     private AddressCreateRequest addressCreateRequest;
 
 }

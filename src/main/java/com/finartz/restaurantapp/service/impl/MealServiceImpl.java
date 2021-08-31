@@ -3,7 +3,7 @@ package com.finartz.restaurantapp.service.impl;
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.MealDtoConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.MealCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.MealCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.MealDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
 import com.finartz.restaurantapp.model.entity.MealEntity;
@@ -11,6 +11,7 @@ import com.finartz.restaurantapp.model.request.create.MealCreateRequest;
 import com.finartz.restaurantapp.repository.MealRepository;
 import com.finartz.restaurantapp.service.MealService;
 import com.finartz.restaurantapp.service.MenuService;
+import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public class MealServiceImpl implements MealService {
     private final MealCreateRequestToEntityConverter mealCreateRequestToEntityConverter;
 
     private final MenuService menuService;
-
+    private final TokenService tokenService;
 
     @Override
     @Transactional
@@ -37,6 +38,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
+    @Transactional
     public MealDto createMeal(MealCreateRequest mealCreateRequest){
         if(Objects.isNull(mealCreateRequest.getMenuId()) && Objects.isNull(mealCreateRequest.getBranchId())){
             throw new MissingArgumentsException("Either branch id or menu id may not be null for meal creating operation");
@@ -48,8 +50,11 @@ public class MealServiceImpl implements MealService {
             mealCreateRequest.setMenuId(menu.getId());
         }
 
+        Long entityOwnerId = mealRepository.getEntityOwnerUserIdByMenuId(mealCreateRequest.getMenuId());
+        if(Objects.nonNull(entityOwnerId) && tokenService.isRequestOwnerAuthoritative(entityOwnerId)){}
+
         MealEntity mealEntity = mealCreateRequestToEntityConverter.convert(mealCreateRequest);
-            return mealDtoConverter.convert(mealRepository.save(mealEntity));
+        return mealDtoConverter.convert(mealRepository.save(mealEntity));
     }
 
 }

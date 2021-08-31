@@ -1,6 +1,7 @@
-package com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest;
+package com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.entity.AddressEntity;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import org.junit.Test;
@@ -46,6 +47,18 @@ public class AddressCreateRequestToEntityConverterTest {
     @Test(expected = EntityNotFoundException.class)
     public void whenPassNullAddressCreateRequest_thenThrowEntityNotFoundException(){
         addressCreateRequestToEntityConverter.convert(null);
+    }
+
+    @Test(expected = MissingArgumentsException.class)
+    public void whenPassBothAreNullUserIdAndBranchId_thenThrowMissingArgumentsException(){
+
+        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder()
+                .name("Address")
+                .cityId(1L)
+                .countyId(1L)
+                .build();
+
+        addressCreateRequestToEntityConverter.convert(addressCreateRequest);
     }
 
 }

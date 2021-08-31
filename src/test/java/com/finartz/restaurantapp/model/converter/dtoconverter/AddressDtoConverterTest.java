@@ -13,7 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class AddressDtoConverterTest {
 
     @Spy
-    AddressDtoConverter addressDtoConverter;
+    private AddressDtoConverter addressDtoConverter;
 
     @Test
     public void whenPassValidUserAddressEntity_thenReturnAddressDto(){

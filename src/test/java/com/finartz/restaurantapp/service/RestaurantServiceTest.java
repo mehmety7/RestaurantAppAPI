@@ -2,8 +2,8 @@ package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.RestaurantDtoConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromCreateRequest.RestaurantCreateRequestToEntityConverter;
-import com.finartz.restaurantapp.model.converter.entityconverter.fromUpdateRequest.RestaurantUpdateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.RestaurantCreateRequestToEntityConverter;
+import com.finartz.restaurantapp.model.converter.entityconverter.fromupdaterequest.RestaurantUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.enumerated.Status;
@@ -45,6 +45,9 @@ public class RestaurantServiceTest {
 
     @Mock
     private RestaurantUpdateRequestToEntityConverter restaurantUpdateRequestToEntityConverter;
+
+    @Mock
+    private TokenService tokenService;
 
     @Test
     public void whenFetchByValidId_thenReturnRestaurant() {
@@ -90,6 +93,7 @@ public class RestaurantServiceTest {
         RestaurantDto restaurant = RestaurantDto.builder().name(NAME_KRAL_BURGER).build();
         RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest.builder().userId(1l).name(NAME_KRAL_BURGER).build();
 
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(restaurantCreateRequest.getUserId())).thenReturn(true);
         Mockito.when(restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest)).thenReturn(restaurantEntity);
         Mockito.when(restaurantRepository.save(restaurantEntity)).thenReturn(restaurantEntity);
         Mockito.when(restaurantDtoConverter.convert(restaurantEntity)).thenReturn(restaurant);

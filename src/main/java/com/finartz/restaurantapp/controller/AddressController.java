@@ -3,6 +3,7 @@ package com.finartz.restaurantapp.controller;
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.service.AddressService;
+import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 public class AddressController {
 
     private final AddressService addressService;
+    private final TokenService tokenService;
 
     @GetMapping("{id}")
     public ResponseEntity<AddressDto> getAddress(@PathVariable Long id){
@@ -35,6 +37,7 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<AddressDto> createAddress(@Valid @RequestBody AddressCreateRequest addressCreateRequest){
+        if (tokenService.isRequestOwnerAuthoritative(addressCreateRequest.getUserId())){}
         return new ResponseEntity(addressService.createAddress(addressCreateRequest), HttpStatus.CREATED);
     }
 

@@ -60,7 +60,7 @@ public class CustomAuthorizationTest {
     }
 
     @Test
-    public void givenRequestHaveNotValidToken_whenDoFilterInternal_thenDoFilterOnly() throws ServletException, IOException {
+    public void givenRequestHasNotValidToken_whenDoFilterInternal_thenDoFilterOnly() throws ServletException, IOException {
 
         request.addHeader(HttpHeaders.AUTHORIZATION, "");
         customAuthorizationFilter.doFilterInternal(request, response, filterChain);
@@ -68,7 +68,7 @@ public class CustomAuthorizationTest {
     }
 
     @Test
-    public void givenRequestHaveValidBearerToken_whenDoFilterInternal_thenSetAuthenticationAndAfterDoFilter() throws ServletException, IOException {
+    public void givenRequestHasValidBearerToken_whenDoFilterInternal_thenSetAuthenticationAndAfterDoFilter() throws ServletException, IOException {
 
         accessToken = "Bearer " + accessToken;
         request.addHeader(HttpHeaders.AUTHORIZATION, accessToken);
@@ -77,7 +77,7 @@ public class CustomAuthorizationTest {
     }
 
     @Test
-    public void givenRequestHaveInvalidBearerToken_whenDoFilterInternal_thenThrowException() throws ServletException, IOException {
+    public void givenRequestHasInvalidBearerToken_whenDoFilterInternal_thenThrowException() throws ServletException, IOException {
 
         accessToken = "Bearer ";
         request.addHeader(HttpHeaders.AUTHORIZATION, accessToken);
