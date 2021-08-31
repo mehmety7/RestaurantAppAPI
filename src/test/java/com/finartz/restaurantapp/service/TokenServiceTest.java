@@ -16,6 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpHeaders;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,6 +32,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenServiceTest {
@@ -89,7 +93,6 @@ public class TokenServiceTest {
         Mockito.when(userRepository.findByEmail(user.getUsername())).thenReturn(requestOwner);
 
         tokenService.isRequestOwnerAuthoritative(20l);
-
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -105,6 +108,22 @@ public class TokenServiceTest {
 
         String result = tokenService.getUserEmailByToken(token);
         Assertions.assertEquals(result, user.getUsername());
+
+    }
+
+    @Test
+    public void givenRequestIncludeValidToken_whenRefreshToken_thenSetResponseHeaderWithNewTokens() throws IOException {
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest("get", "/user/refresh-token");
+        MockHttpServletResponse mockResponse = new MockHttpServletResponse();
+        mockRequest.addHeader(HttpHeaders.AUTHORIZATION, token);
+
+        UserEntity requestOwner = UserEntity.builder().id(1l).email(USERNAME).roles(Arrays.asList(Role.USER)).build();
+        Mockito.when(userRepository.findByEmail(anyString())).thenReturn(requestOwner);
+
+        tokenService.refreshToken(mockRequest, mockResponse);
+
+        Assertions.assertEquals("Bearer " + mockResponse.getHeader("refresh-token"), token);
+        Assertions.assertNotNull(mockResponse.getHeader("access-token"));
 
     }
 

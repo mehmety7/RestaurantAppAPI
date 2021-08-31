@@ -108,6 +108,12 @@ public class CommentServiceTest {
 
     }
 
+    @Test(expected = EntityNotFoundException.class)
+    public void givenInvalidId_whenUpdateComment_thenThrowEntityNotFoundException(){
+        Mockito.when(commentRepository.findById(anyLong())).thenReturn(Optional.empty());
+        commentService.updateComment(1L, CommentUpdateRequest.builder().build());
+    }
+
     @Test
     public void whenDeleteComment_thenReturnNothing(){
         commentService.deleteComment(anyLong());
