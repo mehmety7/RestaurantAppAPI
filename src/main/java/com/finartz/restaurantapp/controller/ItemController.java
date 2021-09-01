@@ -3,6 +3,7 @@ package com.finartz.restaurantapp.controller;
 import com.finartz.restaurantapp.model.dto.ItemDto;
 import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
+import com.finartz.restaurantapp.model.request.get.ItemPageGetRequest;
 import com.finartz.restaurantapp.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,8 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<PageDto<ItemDto>> getItems(@RequestParam(defaultValue = "0") Integer pageNo,
-                                            @RequestParam(defaultValue = "10") Integer pageSize,
-                                            @RequestParam(defaultValue = "id") String sortBy){
-        return new ResponseEntity(itemService.getItems(pageNo, pageSize, sortBy), HttpStatus.OK);
+    public ResponseEntity<PageDto<ItemDto>> getItems(@Valid @RequestBody ItemPageGetRequest itemPageGetRequest){
+        return new ResponseEntity(itemService.getItems(itemPageGetRequest), HttpStatus.OK);
     }
 
     @PostMapping

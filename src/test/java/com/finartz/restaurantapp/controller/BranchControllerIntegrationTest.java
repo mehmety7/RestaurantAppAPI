@@ -1,7 +1,9 @@
 package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
+import com.finartz.restaurantapp.model.request.get.BranchPageGetRequest;
 import com.finartz.restaurantapp.service.TokenService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -15,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 
@@ -46,14 +46,16 @@ public class BranchControllerIntegrationTest {
 
     @Test
     public void whenGetByCountyId_thenReturnBranches() {
-        ResponseEntity<List<BranchDto>> response = branchController.getBranches(855l);
+        BranchPageGetRequest branchPageGetRequest = BranchPageGetRequest.builder().pageNo(0).pageSize(1).sortBy("id").countyId(855l).build();
+        ResponseEntity<PageDto<BranchDto>> response = branchController.getBranches(branchPageGetRequest);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 
 //      Reminder :
 //          INSERT INTO addresses (id, branch_id, user_id, name, city_id, county_id, district, other_content, enable)
-//          VALUES (3, 1, NULL, 'Kral Burger Şile', 34, 855, 'Ağva', '100. Sokak No 1', true);
-        Assertions.assertEquals(response.getBody().get(0).getName(), "Kral Burger Şile");
+//          VALUES                (3, 1, NULL, 'Kral Burger Şile', 34, 855, 'Ağva', '100. Sokak No 1', true);
+
+        Assertions.assertEquals(response.getBody().getResponse().get(0).getName(), "Kral Burger Şile");
     }
 
     @Test

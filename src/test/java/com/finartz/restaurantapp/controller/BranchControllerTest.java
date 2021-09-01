@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
+import com.finartz.restaurantapp.model.request.get.BranchPageGetRequest;
 import com.finartz.restaurantapp.service.BranchService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -79,6 +81,14 @@ public class BranchControllerTest {
     @Test
     public void whenGetByCountyId_thenReturnBranches() throws Exception {
 
+        BranchPageGetRequest branchPageGetRequest = BranchPageGetRequest
+                .builder()
+                .pageNo(0)
+                .pageSize(1)
+                .sortBy("id")
+                .countyId(1l)
+                .build();
+
         BranchDto branch = BranchDto
                 .builder()
                 .id(1L)
@@ -87,12 +97,17 @@ public class BranchControllerTest {
                 .restaurantId(1L)
                 .build();
 
-        Mockito.when(branchService.getBranches(1L)).thenReturn(Arrays.asList(branch));
+        PageDto<BranchDto> pageDto = new PageDto(Arrays.asList(branch), 1, 1);
 
-        mockMvc.perform(get(URI_BRANCH + "/county?countyId=1")
-                .contentType(MediaType.APPLICATION_JSON))
+        Mockito.when(branchService.getBranches(branchPageGetRequest)).thenReturn(pageDto);
+
+        String requestJson = objectWriter.writeValueAsString(branchPageGetRequest);
+
+        mockMvc.perform(get(URI_BRANCH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name", Matchers.is(NAME_KRAL_SISLI)));
+                .andExpect(jsonPath("$.response.[0].name", Matchers.is(NAME_KRAL_SISLI)));
 
     }
 

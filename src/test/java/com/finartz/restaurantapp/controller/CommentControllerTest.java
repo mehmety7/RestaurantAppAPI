@@ -128,18 +128,19 @@ public class CommentControllerTest {
                 .branchId(1L)
                 .build();
 
-        CommentDto commentUpdate = CommentDto.builder().
-                id(1l)
+        CommentDto commentUpdate = CommentDto.builder()
+                .id(1l)
                 .comment(COMMENT_ORTALAMA)
                 .build();
 
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest
                 .builder()
+                .id(1l)
                 .comment(COMMENT_ORTALAMA)
                 .build();
 
         Mockito.when(commentService.createComment(commentCreateRequest)).thenReturn(comment);
-        Mockito.when(commentService.updateComment(1L, commentUpdateRequest)).thenReturn(commentUpdate);
+        Mockito.when(commentService.updateComment(commentUpdateRequest)).thenReturn(commentUpdate);
 
         String requestJson1 = objectWriter.writeValueAsString(commentCreateRequest);
         String requestJson2 = objectWriter.writeValueAsString(commentUpdateRequest);
@@ -148,7 +149,7 @@ public class CommentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(put(URI_COMMENT + "/1")
+        mockMvc.perform(put(URI_COMMENT)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("comment", Matchers.is(COMMENT_ORTALAMA)))

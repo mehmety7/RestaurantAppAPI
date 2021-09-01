@@ -63,10 +63,11 @@ public class CommentControllerIntegrationTest {
     public void whenUpdateComment_thenReturnComment() {
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest
                 .builder()
+                .id(1l)
                 .speedPoint(5)
                 .build();
 
-        ResponseEntity<CommentDto> response = commentController.updateComment(1l, commentUpdateRequest);
+        ResponseEntity<CommentDto> response = commentController.updateComment(commentUpdateRequest);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
     }

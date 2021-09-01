@@ -14,6 +14,7 @@ public class RestaurantUpdateRequestToEntityConverter {
 
     public RestaurantEntity convert(final RestaurantUpdateRequest restaurantUpdateRequest ,
                                     final RestaurantEntity restaurantExisted){
+
         if (Objects.isNull(restaurantUpdateRequest)){
             throw new EntityNotFoundException("Not found restaurant update request");
         }

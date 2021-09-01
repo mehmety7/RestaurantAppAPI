@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserService {
             userCreateRequest.getAddressCreateRequest().setUserId(userEntity.getId());
             addressService.createAddress(userCreateRequest.getAddressCreateRequest());
         }
-
         return userDtoConverter.convert(userEntity);
     }
 

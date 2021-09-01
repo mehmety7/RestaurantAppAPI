@@ -7,6 +7,7 @@ import com.finartz.restaurantapp.model.dto.ItemDto;
 import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.entity.ItemEntity;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
+import com.finartz.restaurantapp.model.request.get.ItemPageGetRequest;
 import com.finartz.restaurantapp.repository.ItemRepository;
 import com.finartz.restaurantapp.service.impl.ItemServiceImpl;
 import org.junit.Test;
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,9 +47,10 @@ public class ItemServiceTest {
 
 
     @Test
-    public void whenFetchAll_thenReturnAllItem() {
+    public void whenFetchItemPage_thenReturnItemPage() {
         ItemEntity itemEntity = ItemEntity.builder().id(1l).name(NAME_HAMBURGER).build();
         ItemDto item = ItemDto.builder().id(1l).name(NAME_HAMBURGER).build();
+        ItemPageGetRequest itemPageGetRequest = ItemPageGetRequest.builder().pageNo(0).pageSize(1).sortBy("id").build();
 
         List<ItemEntity> itemEntities = Arrays.asList(itemEntity);
         List<ItemDto> items = Arrays.asList(item);
@@ -57,12 +58,14 @@ public class ItemServiceTest {
         Page<ItemEntity> itemEntityPage = new PageImpl<>(itemEntities);
 
         Mockito.when(itemDtoConverter.convert(itemEntity)).thenReturn(item);
-        Mockito.when(itemRepository.findAll(PageRequest.of(0, 10, Sort.by("id")))).thenReturn(itemEntityPage);
-        Mockito.when(itemRepository.countItemEntitiesBy()).thenReturn(anyInt());
+        Mockito.when(itemRepository.findAll(PageRequest.of(0, 1, Sort.by("id")))).thenReturn(itemEntityPage);
+        Mockito.when(itemRepository.countItemEntitiesBy()).thenReturn(items.size());
 
-        PageDto resultPage = itemService.getItems(0,10,"id");
+        PageDto resultPage = itemService.getItems(itemPageGetRequest);
 
         assertEquals(items.size(), resultPage.getResponse().size());
+        assertEquals(items.size(), resultPage.getTotalCount());
+        assertEquals((items.size()/1)+1, resultPage.getPageCount());
     }
 
     @Test

@@ -55,7 +55,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 }catch(Exception exception){
                     response.setHeader("error", exception.getMessage());
                     response.setStatus(FORBIDDEN.value());
-                    //response.sendError(FORBIDDEN.value());
                     Map<String,String> error = new HashMap<>();
                     error.put("error_msg", exception.getMessage());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);

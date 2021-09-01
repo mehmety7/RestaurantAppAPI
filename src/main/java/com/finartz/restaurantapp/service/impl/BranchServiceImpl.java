@@ -5,12 +5,18 @@ import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.BranchDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.BranchCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
+import com.finartz.restaurantapp.model.request.get.BranchPageGetRequest;
 import com.finartz.restaurantapp.repository.BranchRepository;
 import com.finartz.restaurantapp.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +45,19 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public List<BranchDto> getBranches(Long countyId) {
+    public PageDto<BranchDto> getBranches(BranchPageGetRequest branchPageGetRequest) {
+        Pageable paging = PageRequest.of(branchPageGetRequest.getPageNo(), branchPageGetRequest.getPageSize(), Sort.by(branchPageGetRequest.getSortBy()));
+        Page<BranchEntity> branchEntityPage = branchRepository.getBranchEntitiesByAddressEntity_CountyEntity_Id(branchPageGetRequest.getCountyId(), paging);
+
         List<BranchDto> branches = new ArrayList<>();
-        branchRepository.getBranchEntitiesByAddressEntity_CountyEntity_Id(countyId).forEach(branchEntity -> {
+        branchEntityPage.forEach(branchEntity -> {
             branches.add(branchDtoConverter.convert(branchEntity));
         });
-        return branches;
+
+        Integer totalCount = branchRepository.countBranchEntitiesByAddressEntity_CountyEntity_Id(branchPageGetRequest.getCountyId());
+        Integer pageCount = (totalCount / branchPageGetRequest.getPageSize()) + 1;
+
+        return  new PageDto<>(branches, totalCount, pageCount);
     }
 
     @Override

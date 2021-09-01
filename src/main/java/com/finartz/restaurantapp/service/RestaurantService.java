@@ -15,7 +15,7 @@ public interface RestaurantService {
 
     RestaurantDto createRestaurant(RestaurantCreateRequest restaurantCreateRequest);
 
-    RestaurantDto updateRestaurant(Long id, RestaurantUpdateRequest restaurantUpdateRequest);
+    RestaurantDto updateRestaurant(RestaurantUpdateRequest restaurantUpdateRequest);
 
     Boolean isRestaurantApproved(Long id);
 

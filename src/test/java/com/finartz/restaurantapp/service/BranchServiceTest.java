@@ -8,12 +8,14 @@ import com.finartz.restaurantapp.model.converter.entityconverter.fromcreatereque
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.dto.BranchDto;
 import com.finartz.restaurantapp.model.dto.MenuDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.entity.BranchEntity;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
 import com.finartz.restaurantapp.model.request.create.MenuCreateRequest;
+import com.finartz.restaurantapp.model.request.get.BranchPageGetRequest;
 import com.finartz.restaurantapp.repository.BranchRepository;
 import com.finartz.restaurantapp.service.impl.AddressServiceImpl;
 import com.finartz.restaurantapp.service.impl.BranchServiceImpl;
@@ -24,13 +26,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BranchServiceTest {
@@ -85,18 +88,26 @@ public class BranchServiceTest {
 
     @Test
     public void whenFetchedByAddressEntity_CountyEntity_Id_thenReturnSomeBranches() {
-        BranchEntity branchEntity = BranchEntity.builder().build();
-        BranchDto branch = BranchDto.builder().build();
+        BranchPageGetRequest branchPageGetRequest = BranchPageGetRequest.builder().pageNo(0).pageSize(1).sortBy("id").countyId(1l).build();
+        Pageable paging = PageRequest.of(0, 1, Sort.by("id"));
 
+        BranchEntity branchEntity = BranchEntity.builder().build();
         List<BranchEntity> branchEntities = Arrays.asList(branchEntity);
+
+        Page<BranchEntity> branchEntityPage = new PageImpl<>(branchEntities.subList(0, branchEntities.size()), paging, branchEntities.size());
+
+        BranchDto branch = BranchDto.builder().build();
         List<BranchDto> branches = Arrays.asList(branch);
 
+        PageDto<BranchDto> pageDto = new PageDto<>(branches, 1, 1);
+
+        Mockito.when(branchRepository.getBranchEntitiesByAddressEntity_CountyEntity_Id(1l, paging)).thenReturn(branchEntityPage);
         Mockito.when(branchDtoConverter.convert(branchEntity)).thenReturn(branch);
-        Mockito.when(branchRepository.getBranchEntitiesByAddressEntity_CountyEntity_Id(anyLong())).thenReturn(branchEntities);
+        Mockito.when(branchRepository.countBranchEntitiesByAddressEntity_CountyEntity_Id(anyLong())).thenReturn(branchEntities.size());
 
-        List<BranchDto> result = branchService.getBranches(anyLong());
+        PageDto<BranchDto> result = branchService.getBranches(branchPageGetRequest);
 
-        assertEquals(result, branches);
+        assertEquals(result.getResponse().size(), branches.size());
     }
 
     @Test

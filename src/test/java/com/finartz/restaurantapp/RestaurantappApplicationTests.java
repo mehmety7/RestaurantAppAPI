@@ -8,6 +8,8 @@ class RestaurantappApplicationTests {
 
 	@Test
 	void contextLoads() {
+		String[] args = new String[0];
+		RestaurantappApplication.main(args);
 	}
 
 }

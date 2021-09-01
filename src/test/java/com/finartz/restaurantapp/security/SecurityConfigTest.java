@@ -53,7 +53,7 @@ public class SecurityConfigTest {
     @Test
     public void givenNoAuthenticationRequestOnPrivateService_shouldFailedWith403() throws Exception {
         mvc.perform(get("/restaurant/waiting").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
 }

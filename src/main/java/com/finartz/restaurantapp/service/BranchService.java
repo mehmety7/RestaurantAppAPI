@@ -1,15 +1,15 @@
 package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
-
-import java.util.List;
+import com.finartz.restaurantapp.model.request.get.BranchPageGetRequest;
 
 public interface BranchService {
 
     BranchDto getBranch(Long id);
 
-    List<BranchDto> getBranches(Long countyId);
+    PageDto<BranchDto> getBranches(BranchPageGetRequest branchPageGetRequest);
 
     BranchDto createBranch(BranchCreateRequest branchCreateRequest);
 

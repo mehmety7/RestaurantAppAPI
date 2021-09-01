@@ -50,15 +50,33 @@ public class AddressCreateRequestToEntityConverterTest {
     }
 
     @Test(expected = MissingArgumentsException.class)
-    public void whenPassBothAreNullUserIdAndBranchId_thenThrowMissingArgumentsException(){
+    public void whenPassBothAreNullUserIdAndBranchIdOnNotFirstCreateAddressSituation_thenThrowMissingArgumentsException(){
 
         AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder()
+                .isFirst(false)
                 .name("Address")
                 .cityId(1L)
                 .countyId(1L)
                 .build();
 
         addressCreateRequestToEntityConverter.convert(addressCreateRequest);
+    }
+
+    @Test
+    public void whenPassBothAreNullUserIdAndBranchIdOnFirstTimeCreateAddressSituation_thenReturnAddressEntityWithoutBranchOrUserId(){
+
+        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder()
+                .isFirst(true)
+                .name("Address")
+                .cityId(1L)
+                .countyId(1L)
+                .build();
+
+        AddressEntity addressEntity = addressCreateRequestToEntityConverter.convert(addressCreateRequest);
+
+        Assertions.assertNull(addressEntity.getBranchEntity());
+        Assertions.assertNull(addressEntity.getUserEntity());
+
     }
 
 }

@@ -93,7 +93,7 @@ public class CommentServiceTest {
         CommentEntity commentEntityUpdated = CommentEntity.builder().id(1l).userEntity(userEntity).comment(COMMENT_ORTALAMA).build();
         CommentDto comment = CommentDto.builder().id(1l).comment(COMMENT_HARIKA).build();
         CommentDto commentUpdated = CommentDto.builder().id(1l).comment(COMMENT_ORTALAMA).build();
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder().build();
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder().id(1l).build();
 
         Mockito.when(tokenService.isRequestOwnerAuthoritative(commentEntity.getUserEntity().getId())).thenReturn(true);
         Mockito.when(commentRepository.findById(1l)).thenReturn(Optional.of(commentEntity));
@@ -101,7 +101,7 @@ public class CommentServiceTest {
         Mockito.when(commentRepository.save(commentEntityUpdated)).thenReturn(commentEntityUpdated);
         Mockito.when(commentDtoConverter.convert(commentEntityUpdated)).thenReturn(commentUpdated);
 
-        CommentDto resultComment = commentService.updateComment(1L, commentUpdateRequest);
+        CommentDto resultComment = commentService.updateComment(commentUpdateRequest);
 
         Assertions.assertNotEquals(comment.getComment(), COMMENT_ORTALAMA);
         Assertions.assertEquals(resultComment.getComment(), COMMENT_ORTALAMA);
@@ -111,7 +111,7 @@ public class CommentServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void givenInvalidId_whenUpdateComment_thenThrowEntityNotFoundException(){
         Mockito.when(commentRepository.findById(anyLong())).thenReturn(Optional.empty());
-        commentService.updateComment(1L, CommentUpdateRequest.builder().build());
+        commentService.updateComment(CommentUpdateRequest.builder().id(anyLong()).build());
     }
 
     @Test

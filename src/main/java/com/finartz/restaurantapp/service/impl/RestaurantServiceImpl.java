@@ -59,14 +59,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional
-    public RestaurantDto updateRestaurant(Long id, RestaurantUpdateRequest restaurantUpdateRequest){
-        RestaurantEntity restaurantExisted = restaurantRepository.getById(id);
+    public RestaurantDto updateRestaurant(RestaurantUpdateRequest restaurantUpdateRequest){
+        RestaurantEntity restaurantExisted = restaurantRepository.getById(restaurantUpdateRequest.getId());
         if(Objects.nonNull(restaurantExisted)){
             RestaurantEntity restaurantUpdated =
                     restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisted);
             return restaurantDtoConverter.convert(restaurantRepository.save(restaurantUpdated));
         }else {
-            throw new EntityNotFoundException("Not found Restaurant with id: " + id);
+            throw new EntityNotFoundException("Not found Restaurant with id: " + restaurantUpdateRequest.getId());
         }
 
     }

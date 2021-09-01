@@ -7,6 +7,7 @@ import com.finartz.restaurantapp.model.dto.ItemDto;
 import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.entity.ItemEntity;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
+import com.finartz.restaurantapp.model.request.get.ItemPageGetRequest;
 import com.finartz.restaurantapp.repository.ItemRepository;
 import com.finartz.restaurantapp.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,9 @@ public class ItemServiceImpl implements ItemService {
     private final ItemCreateRequestToEntityConverter itemCreateRequestToEntityConverter;
 
     @Override
-    public PageDto<ItemDto> getItems(Integer pageNo, Integer pageSize, String sortBy) {
+    public PageDto<ItemDto> getItems(ItemPageGetRequest itemPageGetRequest) {
 
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable paging = PageRequest.of(itemPageGetRequest.getPageNo(), itemPageGetRequest.getPageSize(), Sort.by(itemPageGetRequest.getSortBy()));
         Page<ItemEntity> itemEntityPage = itemRepository.findAll(paging);
         List<ItemDto> itemPage = new ArrayList<>();
         itemEntityPage.forEach(itemEntity -> {
@@ -38,10 +39,9 @@ public class ItemServiceImpl implements ItemService {
         });
 
         Integer totalCount = itemRepository.countItemEntitiesBy();
-        Integer pageCount = totalCount/pageSize;
-        PageDto page = new PageDto(itemPage, totalCount, pageCount);
+        Integer pageCount = (totalCount / itemPageGetRequest.getPageSize()) + 1;
 
-        return page;
+        return new PageDto<ItemDto>(itemPage, totalCount, pageCount);
     }
 
     @Override

@@ -46,6 +46,9 @@ public class AddressServiceTest {
     @Mock
     private Validator validator;
 
+    @Mock
+    private TokenService tokenService;
+
     @Test
     public void whenFetchByValidId_thenReturnAddress() {
         AddressEntity addressEntity = AddressEntity.builder().name(NAME_EV).district(DISTRICT_MERKEZ).build();
@@ -107,8 +110,10 @@ public class AddressServiceTest {
                 .branchId(null)
                 .otherContent(OTHER_CONTENT_SOKAK_NO)
                 .userId(1l)
+                .isFirst(false)
                 .build();
 
+        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
         Mockito.doReturn(addressEntity).when(addressRepository).save(addressEntity);
         Mockito.doReturn(addressEntity).when(addressCreateRequestToEntityConverter).convert(addressCreateRequest);
         Mockito.doReturn(address).when(addressDtoConverter).convert(addressEntity);
@@ -126,8 +131,8 @@ public class AddressServiceTest {
 
     // to do - ask it how create constraint violation instance
     @Test(expected = MissingArgumentsException.class)
-    public void givenMissingCreatingArguments_whenAddAddress_thenThrowMissingArgumentsException() {
-        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().userId(1l).build();
+    public void givenMissingCreatingArguments_whenAddInitialAddress_thenThrowMissingArgumentsException() {
+        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().userId(1l).isFirst(true).build();
 
         Mockito.when(addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId())).thenReturn(null);
 

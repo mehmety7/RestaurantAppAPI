@@ -6,14 +6,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.AddressDto;
 import com.finartz.restaurantapp.model.request.create.AddressCreateRequest;
 import com.finartz.restaurantapp.service.AddressService;
-import com.finartz.restaurantapp.service.TokenService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -33,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @RunWith(SpringRunner.class)
 @WebMvcTest(AddressController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class AddressControllerTest {
 
     private static final String URI_ADDRESS = "/address";
@@ -47,14 +47,6 @@ public class AddressControllerTest {
 
     @MockBean
     private UserDetailsService userDetailsService;
-
-    @MockBean
-    private TokenService tokenService;
-
-    @BeforeEach
-    public void init(){
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
-    }
 
     @Test
     public void whenGetByAddressId_thenReturnAddress() throws Exception {

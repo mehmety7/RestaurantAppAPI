@@ -43,9 +43,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto updateComment(Long id, CommentUpdateRequest commentUpdateRequest){
-        CommentEntity commentExisted = commentRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Not found comment entity with id: " + id)
+    public CommentDto updateComment(CommentUpdateRequest commentUpdateRequest){
+        CommentEntity commentExisted = commentRepository.findById(commentUpdateRequest.getId()).orElseThrow(
+                () -> new EntityNotFoundException("Not found comment entity with id: " + commentUpdateRequest.getId())
         );
 
         if (tokenService.isRequestOwnerAuthoritative(commentExisted.getUserEntity().getId())){}

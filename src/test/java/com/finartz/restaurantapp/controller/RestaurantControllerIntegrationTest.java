@@ -79,10 +79,11 @@ public class RestaurantControllerIntegrationTest {
     public void whenUpdateRestaurant_thenReturnRestaurant() {
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest
                 .builder()
+                .id(2l)
                 .status(Status.CANCELED)
                 .build();
 
-        ResponseEntity<RestaurantDto> response = restaurantController.updateRestaurant(2l, restaurantUpdateRequest);
+        ResponseEntity<RestaurantDto> response = restaurantController.updateRestaurant(restaurantUpdateRequest);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Assertions.assertNotEquals(response.getBody().getStatus(), Status.WAITING);

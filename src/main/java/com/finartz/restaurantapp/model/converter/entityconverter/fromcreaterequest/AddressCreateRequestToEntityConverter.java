@@ -47,6 +47,11 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
             BranchEntity branchEntity = new BranchEntity();
             branchEntity.setId(addressCreateRequest.getBranchId());
             addressEntity.setBranchEntity(branchEntity);
+        } else if(Objects.isNull(addressCreateRequest.getUserId())
+                && Objects.isNull(addressCreateRequest.getBranchId())
+                && addressCreateRequest.getIsFirst()){
+            addressEntity.setUserEntity(null);
+            addressEntity.setBranchEntity(null);
         } else {
             throw new MissingArgumentsException("It must be neither user id or branch id for address creating");
         }

@@ -145,13 +145,14 @@ public class RestaurantControllerTest {
 
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest
                 .builder()
+                .id(1l)
                 .status(Status.APPROVED)
                 .build();
 
 
 
         Mockito.when(restaurantService.createRestaurant(restaurantCreateRequest)).thenReturn(restaurant);
-        Mockito.when(restaurantService.updateRestaurant(1L, restaurantUpdateRequest)).thenReturn(restaurantUpdate);
+        Mockito.when(restaurantService.updateRestaurant(restaurantUpdateRequest)).thenReturn(restaurantUpdate);
 
         String requestJson1 = objectWriter.writeValueAsString(restaurantCreateRequest);
         String requestJson2 = objectWriter.writeValueAsString(restaurantUpdateRequest);
@@ -160,7 +161,7 @@ public class RestaurantControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson1))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(put(URI_RESTAURANT + "/1")
+        mockMvc.perform(put(URI_RESTAURANT)
                 .contentType(MediaType.APPLICATION_JSON).content(requestJson2))
                 .andExpect(status().isOk());
     }

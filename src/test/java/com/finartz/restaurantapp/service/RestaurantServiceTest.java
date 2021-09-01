@@ -109,14 +109,14 @@ public class RestaurantServiceTest {
         RestaurantEntity restaurantEntityUpdated = RestaurantEntity.builder().id(1l).status(Status.CANCELED).build();
         RestaurantDto restaurant = RestaurantDto.builder().id(1l).status(Status.WAITING).build();
         RestaurantDto restaurantUpdated = RestaurantDto.builder().id(1l).status(Status.CANCELED).build();
-        RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().build();
+        RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().id(1l).build();
 
-        Mockito.when(restaurantRepository.getById(1l)).thenReturn(restaurantEntity);
+        Mockito.when(restaurantRepository.getById(restaurantUpdateRequest.getId())).thenReturn(restaurantEntity);
         Mockito.when(restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantEntity)).thenReturn(restaurantEntityUpdated);
         Mockito.when(restaurantRepository.save(restaurantEntityUpdated)).thenReturn(restaurantEntityUpdated);
         Mockito.when(restaurantDtoConverter.convert(restaurantEntityUpdated)).thenReturn(restaurantUpdated);
 
-        RestaurantDto resultRestaurant = restaurantService.updateRestaurant(1L, restaurantUpdateRequest);
+        RestaurantDto resultRestaurant = restaurantService.updateRestaurant(restaurantUpdateRequest);
 
         Assertions.assertNotEquals(restaurant.getStatus(), Status.CANCELED);
         Assertions.assertEquals(resultRestaurant.getStatus(), Status.CANCELED);
@@ -125,10 +125,10 @@ public class RestaurantServiceTest {
 
     @Test(expected = EntityNotFoundException.class)
     public void giveInvalidId_whenUpdateRestaurant_thenThrowEntityNotFoundException(){
-        RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().build();
+        RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().id(1l).build();
 
-        Mockito.when(restaurantRepository.getById(anyLong())).thenReturn(null);
-        restaurantService.updateRestaurant(1L, restaurantUpdateRequest);
+        Mockito.when(restaurantRepository.getById(restaurantUpdateRequest.getId())).thenReturn(null);
+        restaurantService.updateRestaurant(restaurantUpdateRequest);
 
     }
 

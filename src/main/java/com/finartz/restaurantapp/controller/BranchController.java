@@ -1,7 +1,9 @@
 package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.BranchDto;
+import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.BranchCreateRequest;
+import com.finartz.restaurantapp.model.request.get.BranchPageGetRequest;
 import com.finartz.restaurantapp.service.BranchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("branch")
@@ -23,9 +24,9 @@ public class BranchController {
         return new ResponseEntity(branchService.getBranch(id), HttpStatus.OK);
     }
 
-    @GetMapping("county")
-    public ResponseEntity<List<BranchDto>> getBranches(@RequestParam Long countyId){
-        return new ResponseEntity(branchService.getBranches(countyId), HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity<PageDto<BranchDto>> getBranches(@Valid @RequestBody BranchPageGetRequest branchPageGetRequest){
+        return new ResponseEntity(branchService.getBranches(branchPageGetRequest), HttpStatus.OK);
     }
 
     @PostMapping

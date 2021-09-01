@@ -3,6 +3,7 @@ package com.finartz.restaurantapp.controller;
 import com.finartz.restaurantapp.model.dto.ItemDto;
 import com.finartz.restaurantapp.model.dto.PageDto;
 import com.finartz.restaurantapp.model.request.create.ItemCreateRequest;
+import com.finartz.restaurantapp.model.request.get.ItemPageGetRequest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -23,7 +24,8 @@ public class ItemControllerIntegrationTest {
 
     @Test
     public void whenGetAll_thenReturnAllItems(){
-        ResponseEntity<PageDto<ItemDto>> response = itemController.getItems(0,2, "id");
+        ItemPageGetRequest itemPageGetRequest = ItemPageGetRequest.builder().pageNo(0).pageSize(2).sortBy("id").build();
+        ResponseEntity<PageDto<ItemDto>> response = itemController.getItems(itemPageGetRequest);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Assertions.assertEquals(response.getBody().getResponse().get(0).getId() , 1l);
