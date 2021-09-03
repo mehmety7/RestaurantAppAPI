@@ -2,7 +2,7 @@ package com.finartz.restaurantapp.model.converter.entityconverter.fromupdaterequ
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -19,17 +19,17 @@ public class RestaurantUpdateRequestToEntityConverterTest {
     @Test
     public void whenPassValidRestaurantUpdateRequest_thenReturnRestaurantEntity(){
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder()
-                .status(Status.CANCELED)
+                .restaurantStatus(RestaurantStatus.CANCELED)
                 .build();
 
-        RestaurantEntity restaurantExisting = RestaurantEntity.builder().status(Status.WAITING).build();
-        Status previousStatus = restaurantExisting.getStatus();
+        RestaurantEntity restaurantExisting = RestaurantEntity.builder().restaurantStatus(RestaurantStatus.WAITING).build();
+        RestaurantStatus previousRestaurantStatus = restaurantExisting.getRestaurantStatus();
 
         RestaurantEntity restaurantUpdate = restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisting);
 
-        Assertions.assertEquals(restaurantUpdate.getStatus(), restaurantUpdateRequest.getStatus());
-        Assertions.assertEquals(restaurantUpdate.getStatus(), restaurantExisting.getStatus());
-        Assertions.assertNotEquals(restaurantUpdate.getStatus(), previousStatus);
+        Assertions.assertEquals(restaurantUpdate.getRestaurantStatus(), restaurantUpdateRequest.getRestaurantStatus());
+        Assertions.assertEquals(restaurantUpdate.getRestaurantStatus(), restaurantExisting.getRestaurantStatus());
+        Assertions.assertNotEquals(restaurantUpdate.getRestaurantStatus(), previousRestaurantStatus);
 
     }
 

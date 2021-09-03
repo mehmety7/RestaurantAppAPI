@@ -23,7 +23,7 @@ public class RestaurantDtoConverter implements GenericConverter<RestaurantEntity
 
         restaurantDto.setId(restaurantEntity.getId());
         restaurantDto.setName(restaurantEntity.getName());
-        restaurantDto.setStatus(restaurantEntity.getStatus());
+        restaurantDto.setRestaurantStatus(restaurantEntity.getRestaurantStatus());
 
         if(Objects.nonNull(restaurantEntity.getUserEntity())){
             restaurantDto.setUserId(restaurantEntity.getUserEntity().getId());

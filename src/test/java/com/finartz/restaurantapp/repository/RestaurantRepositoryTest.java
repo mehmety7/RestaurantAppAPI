@@ -1,7 +1,7 @@
 package com.finartz.restaurantapp.repository;
 
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -22,9 +22,9 @@ public class RestaurantRepositoryTest {
 
     @Test
     public void whenFindByStatus_thenReturnRestaurantEntities(){
-        List<RestaurantEntity> restaurantEntities = restaurantRepository.findByStatus(Status.WAITING);
+        List<RestaurantEntity> restaurantEntities = restaurantRepository.findByRestaurantStatus(RestaurantStatus.WAITING);
 
-        Assertions.assertEquals(restaurantEntities.get(0).getStatus(), Status.WAITING);
+        Assertions.assertEquals(restaurantEntities.get(0).getRestaurantStatus(), RestaurantStatus.WAITING);
     }
 
 }

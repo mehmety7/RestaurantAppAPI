@@ -6,7 +6,7 @@ import com.finartz.restaurantapp.model.converter.entityconverter.fromcreatereque
 import com.finartz.restaurantapp.model.converter.entityconverter.fromupdaterequest.RestaurantUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import com.finartz.restaurantapp.repository.RestaurantRepository;
@@ -73,16 +73,16 @@ public class RestaurantServiceTest {
 
     @Test
     public void whenFetchedByStatus_thenReturnSomeRestaurants() {
-        RestaurantEntity restaurantEntity = RestaurantEntity.builder().status(Status.WAITING).build();
-        RestaurantDto restaurant = RestaurantDto.builder().status(Status.WAITING).build();
+        RestaurantEntity restaurantEntity = RestaurantEntity.builder().restaurantStatus(RestaurantStatus.WAITING).build();
+        RestaurantDto restaurant = RestaurantDto.builder().restaurantStatus(RestaurantStatus.WAITING).build();
 
         List<RestaurantEntity> restaurantEntities = Arrays.asList(restaurantEntity);
         List<RestaurantDto> restaurants = Arrays.asList(restaurant);
 
-        Mockito.when(restaurantRepository.findByStatus(Status.WAITING)).thenReturn(restaurantEntities);
+        Mockito.when(restaurantRepository.findByRestaurantStatus(RestaurantStatus.WAITING)).thenReturn(restaurantEntities);
         Mockito.when(restaurantDtoConverter.convert(restaurantEntity)).thenReturn(restaurant);
 
-        List<RestaurantDto> resultRestaurants = restaurantService.getRestaurants(Status.WAITING);
+        List<RestaurantDto> resultRestaurants = restaurantService.getRestaurants(RestaurantStatus.WAITING);
 
         assertEquals(restaurants, resultRestaurants);
     }
@@ -105,10 +105,10 @@ public class RestaurantServiceTest {
 
     @Test
     public void giveValidId_whenUpdateRestaurant_thenReturnUpdatedRestaurant(){
-        RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).status(Status.WAITING).build();
-        RestaurantEntity restaurantEntityUpdated = RestaurantEntity.builder().id(1l).status(Status.CANCELED).build();
-        RestaurantDto restaurant = RestaurantDto.builder().id(1l).status(Status.WAITING).build();
-        RestaurantDto restaurantUpdated = RestaurantDto.builder().id(1l).status(Status.CANCELED).build();
+        RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).restaurantStatus(RestaurantStatus.WAITING).build();
+        RestaurantEntity restaurantEntityUpdated = RestaurantEntity.builder().id(1l).restaurantStatus(RestaurantStatus.CANCELED).build();
+        RestaurantDto restaurant = RestaurantDto.builder().id(1l).restaurantStatus(RestaurantStatus.WAITING).build();
+        RestaurantDto restaurantUpdated = RestaurantDto.builder().id(1l).restaurantStatus(RestaurantStatus.CANCELED).build();
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().id(1l).build();
 
         Mockito.when(restaurantRepository.getById(restaurantUpdateRequest.getId())).thenReturn(restaurantEntity);
@@ -116,10 +116,10 @@ public class RestaurantServiceTest {
         Mockito.when(restaurantRepository.save(restaurantEntityUpdated)).thenReturn(restaurantEntityUpdated);
         Mockito.when(restaurantDtoConverter.convert(restaurantEntityUpdated)).thenReturn(restaurantUpdated);
 
-        RestaurantDto resultRestaurant = restaurantService.updateRestaurant(restaurantUpdateRequest);
+        RestaurantDto resultRestaurant = restaurantService.updateRestaurantStatus(restaurantUpdateRequest);
 
-        Assertions.assertNotEquals(restaurant.getStatus(), Status.CANCELED);
-        Assertions.assertEquals(resultRestaurant.getStatus(), Status.CANCELED);
+        Assertions.assertNotEquals(restaurant.getRestaurantStatus(), RestaurantStatus.CANCELED);
+        Assertions.assertEquals(resultRestaurant.getRestaurantStatus(), RestaurantStatus.CANCELED);
 
     }
 
@@ -128,14 +128,14 @@ public class RestaurantServiceTest {
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest.builder().id(1l).build();
 
         Mockito.when(restaurantRepository.getById(restaurantUpdateRequest.getId())).thenReturn(null);
-        restaurantService.updateRestaurant(restaurantUpdateRequest);
+        restaurantService.updateRestaurantStatus(restaurantUpdateRequest);
 
     }
 
     @Test
     public void whenIsRestaurantStatusApproved_thenReturnTrue(){
         RestaurantEntity restaurantEntity = RestaurantEntity.builder()
-                .id(1l).status(Status.APPROVED).build();
+                .id(1l).restaurantStatus(RestaurantStatus.APPROVED).build();
 
         Mockito.when(restaurantRepository.getById(1l)).thenReturn(restaurantEntity);
 
@@ -147,7 +147,7 @@ public class RestaurantServiceTest {
     @Test
     public void whenIsRestaurantStatusNotApproved_thenReturnFalse(){
         RestaurantEntity restaurantEntity = RestaurantEntity.builder()
-                .id(1l).status(Status.CANCELED).build();
+                .id(1l).restaurantStatus(RestaurantStatus.CANCELED).build();
 
         Mockito.when(restaurantRepository.getById(1l)).thenReturn(restaurantEntity);
 

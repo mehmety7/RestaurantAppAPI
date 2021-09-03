@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.model.enumerated;
 
-public enum Status {
+public enum RestaurantStatus {
     WAITING,
     APPROVED,
     CANCELED

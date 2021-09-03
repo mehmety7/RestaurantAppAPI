@@ -23,8 +23,8 @@ public class RestaurantUpdateRequestToEntityConverter {
             throw new EntityNotFoundException("Not found existing restaurant record with given id");
         }
 
-        if(Objects.nonNull(restaurantUpdateRequest.getStatus())) {
-            restaurantExisted.setStatus(restaurantUpdateRequest.getStatus());
+        if(Objects.nonNull(restaurantUpdateRequest.getRestaurantStatus())) {
+            restaurantExisted.setRestaurantStatus(restaurantUpdateRequest.getRestaurantStatus());
         }
 
         return restaurantExisted;

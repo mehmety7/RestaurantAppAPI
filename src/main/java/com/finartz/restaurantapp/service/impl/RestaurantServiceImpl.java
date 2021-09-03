@@ -6,7 +6,7 @@ import com.finartz.restaurantapp.model.converter.entityconverter.fromcreatereque
 import com.finartz.restaurantapp.model.converter.entityconverter.fromupdaterequest.RestaurantUpdateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import com.finartz.restaurantapp.repository.RestaurantRepository;
@@ -33,8 +33,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
     @Override
-    public List<RestaurantDto> getRestaurants(Status status){
-        List<RestaurantEntity> restaurantEntities = restaurantRepository.findByStatus(status);
+    public List<RestaurantDto> getRestaurants(RestaurantStatus restaurantStatus){
+        List<RestaurantEntity> restaurantEntities = restaurantRepository.findByRestaurantStatus(restaurantStatus);
         List<RestaurantDto> restaurants = new ArrayList<>();
         restaurantEntities.forEach(restaurantEntity -> {
             restaurants.add(restaurantDtoConverter.convert(restaurantEntity));
@@ -59,7 +59,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional
-    public RestaurantDto updateRestaurant(RestaurantUpdateRequest restaurantUpdateRequest){
+    public RestaurantDto updateRestaurantStatus(RestaurantUpdateRequest restaurantUpdateRequest){
         RestaurantEntity restaurantExisted = restaurantRepository.getById(restaurantUpdateRequest.getId());
         if(Objects.nonNull(restaurantExisted)){
             RestaurantEntity restaurantUpdated =
@@ -74,7 +74,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Boolean isRestaurantApproved(Long restaurant_id){
         RestaurantEntity restaurantEntity = restaurantRepository.getById(restaurant_id);
-        if(restaurantEntity.getStatus().equals(Status.APPROVED))
+        if(restaurantEntity.getRestaurantStatus().equals(RestaurantStatus.APPROVED))
             return true;
         else
             return false;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import com.finartz.restaurantapp.service.RestaurantService;
@@ -64,7 +64,7 @@ public class RestaurantControllerTest {
 
         RestaurantDto restaurant = RestaurantDto.builder()
                 .id(1L)
-                .status(Status.WAITING)
+                .restaurantStatus(RestaurantStatus.WAITING)
                 .build();
 
         Mockito.when(restaurantService.getRestaurant(1L)).thenReturn(restaurant);
@@ -72,7 +72,7 @@ public class RestaurantControllerTest {
         mockMvc.perform(get(URI_RESTAURANT + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("status", Matchers.is(Status.WAITING.toString())));
+                .andExpect(jsonPath("restaurantStatus", Matchers.is(RestaurantStatus.WAITING.toString())));
 
     }
 
@@ -81,12 +81,12 @@ public class RestaurantControllerTest {
 
         RestaurantDto restaurant = RestaurantDto.builder()
                 .id(1L)
-                .status(Status.WAITING)
+                .restaurantStatus(RestaurantStatus.WAITING)
                 .build();
 
         List<RestaurantDto> restaurantList = Arrays.asList(restaurant);
 
-        Mockito.when(restaurantService.getRestaurants(Status.WAITING)).thenReturn(restaurantList);
+        Mockito.when(restaurantService.getRestaurants(RestaurantStatus.WAITING)).thenReturn(restaurantList);
 
         mockMvc.perform(get(URI_RESTAURANT + "/waiting")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -102,7 +102,7 @@ public class RestaurantControllerTest {
                 .id(1L)
                 .name(NAME_KRAL_BURGER)
                 .userId(1L)
-                .status(Status.WAITING)
+                .restaurantStatus(RestaurantStatus.WAITING)
                 .build();
 
         RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest
@@ -127,14 +127,14 @@ public class RestaurantControllerTest {
                 .id(1L)
                 .name(NAME_KRAL_BURGER)
                 .userId(1L)
-                .status(Status.WAITING)
+                .restaurantStatus(RestaurantStatus.WAITING)
                 .build();
 
         RestaurantDto restaurantUpdate = RestaurantDto.builder()
                 .id(1L)
                 .name(NAME_KRAL_BURGER)
                 .userId(1L)
-                .status(Status.APPROVED)
+                .restaurantStatus(RestaurantStatus.APPROVED)
                 .build();
 
         RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest
@@ -146,13 +146,13 @@ public class RestaurantControllerTest {
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest
                 .builder()
                 .id(1l)
-                .status(Status.APPROVED)
+                .restaurantStatus(RestaurantStatus.APPROVED)
                 .build();
 
 
 
         Mockito.when(restaurantService.createRestaurant(restaurantCreateRequest)).thenReturn(restaurant);
-        Mockito.when(restaurantService.updateRestaurant(restaurantUpdateRequest)).thenReturn(restaurantUpdate);
+        Mockito.when(restaurantService.updateRestaurantStatus(restaurantUpdateRequest)).thenReturn(restaurantUpdate);
 
         String requestJson1 = objectWriter.writeValueAsString(restaurantCreateRequest);
         String requestJson2 = objectWriter.writeValueAsString(restaurantUpdateRequest);

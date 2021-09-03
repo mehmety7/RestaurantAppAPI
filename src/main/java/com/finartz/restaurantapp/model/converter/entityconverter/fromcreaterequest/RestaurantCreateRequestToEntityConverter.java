@@ -4,6 +4,7 @@ import com.finartz.restaurantapp.exception.EntityNotFoundException;
 import com.finartz.restaurantapp.model.converter.GenericConverter;
 import com.finartz.restaurantapp.model.entity.RestaurantEntity;
 import com.finartz.restaurantapp.model.entity.UserEntity;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class RestaurantCreateRequestToEntityConverter implements GenericConverte
         RestaurantEntity restaurantEntity = new RestaurantEntity();
 
         restaurantEntity.setName(restaurantCreateRequest.getName());
-        restaurantEntity.setStatus(restaurantCreateRequest.getStatus());
+        restaurantEntity.setRestaurantStatus(RestaurantStatus.WAITING);
 
         UserEntity userEntity = new UserEntity();
         if(Objects.nonNull(restaurantCreateRequest.getUserId())){

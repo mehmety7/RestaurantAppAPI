@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  restaurantapp:
+    image: 'restaurantapp:latest'
+    build:
+      context: .
+    container_name: restaurantapp
+    depends_on:
+      - h2db
+    env_file:
+      - core.env
+    ports:
+    - "8080:8080"
+
+
+  h2db:
+    image: 'oscarfonts/h2'
+    container_name: h2db
+    ports:
+      - "8082:8081"
+    env_file:
+      - core.env

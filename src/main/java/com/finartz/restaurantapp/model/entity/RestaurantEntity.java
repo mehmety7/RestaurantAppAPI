@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.model.entity;
 
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +24,8 @@ public class RestaurantEntity extends BaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(20) default 'WAITING' ")
-    private Status status;
+    @Column(columnDefinition = "VARCHAR(20) default 'WAITING' ", name = "status")
+    private RestaurantStatus restaurantStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

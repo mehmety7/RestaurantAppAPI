@@ -1,7 +1,7 @@
 package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import com.finartz.restaurantapp.service.TokenService;
@@ -54,24 +54,24 @@ public class RestaurantControllerIntegrationTest {
         RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest
                 .builder()
                 .name("Restaurant")
-                .status(Status.WAITING)
                 .userId(2l)
                 .build();
 
         ResponseEntity<RestaurantDto> response = restaurantController.createRestaurant(restaurantCreateRequest);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+        Assertions.assertEquals(response.getBody().getRestaurantStatus(), RestaurantStatus.WAITING);
 
     }
 
     @Test
     public void whenGetRestaurantIsWaiting_thenReturnRestaurant() {
-        ResponseEntity<List<RestaurantDto>> response = restaurantController.getRestaurants(Status.WAITING);
+        ResponseEntity<List<RestaurantDto>> response = restaurantController.getRestaurants(RestaurantStatus.WAITING);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 
         if(! response.getBody().isEmpty()) {
-            Assertions.assertEquals(response.getBody().get(0).getStatus(), Status.WAITING);
+            Assertions.assertEquals(response.getBody().get(0).getRestaurantStatus(), RestaurantStatus.WAITING);
         }
     }
 
@@ -80,14 +80,14 @@ public class RestaurantControllerIntegrationTest {
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest
                 .builder()
                 .id(2l)
-                .status(Status.CANCELED)
+                .restaurantStatus(RestaurantStatus.CANCELED)
                 .build();
 
-        ResponseEntity<RestaurantDto> response = restaurantController.updateRestaurant(restaurantUpdateRequest);
+        ResponseEntity<RestaurantDto> response = restaurantController.updateRestaurantStatus(restaurantUpdateRequest);
 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertNotEquals(response.getBody().getStatus(), Status.WAITING);
-        Assertions.assertEquals(response.getBody().getStatus(), Status.CANCELED);
+        Assertions.assertNotEquals(response.getBody().getRestaurantStatus(), RestaurantStatus.WAITING);
+        Assertions.assertEquals(response.getBody().getRestaurantStatus(), RestaurantStatus.CANCELED);
     }
 
 }

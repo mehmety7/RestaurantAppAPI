@@ -1,7 +1,7 @@
 package com.finartz.restaurantapp.controller;
 
 import com.finartz.restaurantapp.model.dto.RestaurantDto;
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import com.finartz.restaurantapp.model.request.create.RestaurantCreateRequest;
 import com.finartz.restaurantapp.model.request.update.RestaurantUpdateRequest;
 import com.finartz.restaurantapp.service.RestaurantService;
@@ -21,8 +21,8 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping("waiting")
-    public ResponseEntity<List<RestaurantDto>> getRestaurants(@RequestParam(defaultValue = "WAITING") Status status){
-        return new ResponseEntity(restaurantService.getRestaurants(status), HttpStatus.OK);
+    public ResponseEntity<List<RestaurantDto>> getRestaurants(@RequestParam(defaultValue = "WAITING") RestaurantStatus restaurantStatus){
+        return new ResponseEntity(restaurantService.getRestaurants(restaurantStatus), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
@@ -36,8 +36,8 @@ public class RestaurantController {
     }
 
     @PutMapping
-    public ResponseEntity<RestaurantDto> updateRestaurant(@Valid @RequestBody RestaurantUpdateRequest restaurantUpdateRequest){
-        return new ResponseEntity(restaurantService.updateRestaurant(restaurantUpdateRequest), HttpStatus.OK);
+    public ResponseEntity<RestaurantDto> updateRestaurantStatus(@Valid @RequestBody RestaurantUpdateRequest restaurantUpdateRequest){
+        return new ResponseEntity(restaurantService.updateRestaurantStatus(restaurantUpdateRequest), HttpStatus.OK);
     }
 
 }

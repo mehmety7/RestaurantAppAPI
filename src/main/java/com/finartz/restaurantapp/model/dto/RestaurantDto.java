@@ -1,6 +1,6 @@
 package com.finartz.restaurantapp.model.dto;
 
-import com.finartz.restaurantapp.model.enumerated.Status;
+import com.finartz.restaurantapp.model.enumerated.RestaurantStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class RestaurantDto {
 
     private String name;
 
-    private Status status;
+    private RestaurantStatus restaurantStatus;
 
     private Long userId;
 
