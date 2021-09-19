@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.request.get;
 
+import com.finartz.restaurantapp.model.request.BaseRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BranchPageGetRequest {
+public class BranchPageGetRequest extends BaseRequest {
 
     @NotNull(message = "Page number may not be null")
     private Integer pageNo;

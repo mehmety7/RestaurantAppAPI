@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.request.get;
 
+import com.finartz.restaurantapp.model.request.BaseRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemPageGetRequest {
+public class ItemPageGetRequest extends BaseRequest {
 
     @NotNull(message = "Page number may not be null")
     private Integer pageNo;
@@ -19,6 +20,7 @@ public class ItemPageGetRequest {
     @NotNull(message = "Page size may not be null")
     private Integer pageSize;
 
+    @Builder.Default
     private String sortBy = "id";
 
 }
