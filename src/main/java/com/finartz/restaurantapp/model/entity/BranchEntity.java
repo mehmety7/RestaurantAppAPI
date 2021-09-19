@@ -28,7 +28,7 @@ public class BranchEntity extends BaseEntity {
     @OneToOne(mappedBy = "branchEntity")
     private MenuEntity menuEntity;
 
-    @OneToOne(mappedBy = "branchEntity", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "branchEntity")
     private AddressEntity addressEntity;
 
 }
