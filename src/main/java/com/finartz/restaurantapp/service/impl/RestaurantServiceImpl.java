@@ -13,6 +13,7 @@ import com.finartz.restaurantapp.repository.RestaurantRepository;
 import com.finartz.restaurantapp.service.RestaurantService;
 import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Cacheable("restaurants")
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
