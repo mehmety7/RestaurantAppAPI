@@ -13,6 +13,7 @@ import com.finartz.restaurantapp.repository.RestaurantRepository;
 import com.finartz.restaurantapp.service.RestaurantService;
 import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,6 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-@Cacheable("restaurants")
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
@@ -35,7 +35,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
     @Override
+    @Cacheable(value = "restaurantCache")
     public List<RestaurantDto> getRestaurants(RestaurantStatus restaurantStatus){
+        try{
+            Thread.sleep(1000);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         List<RestaurantEntity> restaurantEntities = restaurantRepository.findByRestaurantStatus(restaurantStatus);
         List<RestaurantDto> restaurants = new ArrayList<>();
         restaurantEntities.forEach(restaurantEntity -> {
@@ -61,11 +67,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "restaurantCache", allEntries = true)
     public RestaurantDto updateRestaurantStatus(RestaurantUpdateRequest restaurantUpdateRequest){
         RestaurantEntity restaurantExisted = restaurantRepository.getById(restaurantUpdateRequest.getId());
         if(Objects.nonNull(restaurantExisted)){
-            RestaurantEntity restaurantUpdated =
-                    restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisted);
+            RestaurantEntity restaurantUpdated = restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisted);
             return restaurantDtoConverter.convert(restaurantRepository.save(restaurantUpdated));
         }else {
             throw new EntityNotFoundException("Not found Restaurant with id: " + restaurantUpdateRequest.getId());
