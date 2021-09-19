@@ -1,5 +1,6 @@
 package com.finartz.restaurantapp.model.request.update;
 
+import com.finartz.restaurantapp.model.request.BaseRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentUpdateRequest {
+public class CommentUpdateRequest extends BaseRequest {
 
     @NotNull(message = "Restaurant id may not be null for updating")
     private Long id;
