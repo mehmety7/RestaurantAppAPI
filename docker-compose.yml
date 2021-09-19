@@ -21,3 +21,11 @@ services:
       - "8082:8081"
     env_file:
       - core.env
+
+  hazelcast:
+    image: 'hazelcast/hazelcast-jet'
+    container_name: 'hazelcast-instance'
+    ports:
+      - "5701:5701"
+    volumes:
+      - ./hazelcast.yaml:/src/main/resources/hazelcast.yaml
