@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressDto {
+public class AddressDto extends BaseDto {
 
     private Long id;
 

@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CityDto {
+public class CityDto extends BaseDto {
 
     private Long id;
 

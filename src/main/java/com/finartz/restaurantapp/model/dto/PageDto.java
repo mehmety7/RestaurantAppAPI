@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageDto<T> {
+public class PageDto<T> extends BaseDto {
 
     private List<T> response;
 

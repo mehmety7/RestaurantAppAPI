@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuDto {
+public class MenuDto extends BaseDto {
 
     private Long id;
 

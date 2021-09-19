@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CountyDto {
+public class CountyDto extends BaseDto {
 
     private Long id;
 

@@ -1,15 +1,13 @@
 package com.finartz.restaurantapp.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BranchDto {
+@ToString
+public class BranchDto extends BaseDto {
 
     private Long id;
 

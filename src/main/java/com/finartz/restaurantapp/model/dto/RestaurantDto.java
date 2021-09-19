@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RestaurantDto {
+public class RestaurantDto extends BaseDto {
 
     private Long id;
 
