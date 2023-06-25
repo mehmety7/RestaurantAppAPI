@@ -1,6 +1,0 @@
-# hazelcast.yaml
-hazelcast:
-  network:
-    join:
-      multicast:
-        enabled: true

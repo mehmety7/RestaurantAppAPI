@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    hikari:
+      username: sa
+      password:
+      jdbc-url: jdbc:h2:mem:prod;DB_CLOSE_DELAY=-1
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+  cache:
+    type: hazelcast
+  hazelcast:
+    config: hazelcast-prod.yaml

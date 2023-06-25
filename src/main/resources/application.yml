@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: restaurant-app
+  profiles:
+    active: dev
+  jpa:
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        hbm2ddl:
+          import_files: import.sql
+  datasource:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  security:
+    user:
+      name: user
+      password: pass
+
+server:
+  port: 8080
+  servlet:
+    context-path: /rest-app

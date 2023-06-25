@@ -28,4 +28,4 @@ services:
     ports:
       - "5701:5701"
     volumes:
-      - ./hazelcast.yaml:/src/main/resources/hazelcast.yaml
+      - ./hazelcast-prod.yaml:/src/main/resources/hazelcast-prod.yaml

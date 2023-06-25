@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    hikari:
+      username: sa
+      password:
+      jdbc-url: jdbc:h2:mem:dev;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: update
+  cache:
+    type: none

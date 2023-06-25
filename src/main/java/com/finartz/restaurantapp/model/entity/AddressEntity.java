@@ -32,6 +32,7 @@ public class AddressEntity extends BaseEntity {
 
     private String district;
 
+    @Column(name = "other_content")
     private String otherContent;
 
     private Boolean enable;

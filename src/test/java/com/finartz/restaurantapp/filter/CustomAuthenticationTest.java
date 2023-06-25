@@ -16,7 +16,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.servlet.ServletException;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.main.banner-mode=off")
-@TestPropertySource("classpath:application-test.properties")
+@ActiveProfiles("test")
 public class CustomAuthenticationTest {
 
     private CustomAuthenticationFilter customAuthenticationFilter;

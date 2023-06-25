@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        hbm2ddl:
+          import_files: import-test.sql
+  cache:
+    type: none

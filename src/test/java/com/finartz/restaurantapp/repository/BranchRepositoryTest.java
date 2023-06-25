@@ -10,14 +10,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
-@TestPropertySource("classpath:application-test.properties")
+@ActiveProfiles("test")
 @DataJpaTest
 public class BranchRepositoryTest {
 
