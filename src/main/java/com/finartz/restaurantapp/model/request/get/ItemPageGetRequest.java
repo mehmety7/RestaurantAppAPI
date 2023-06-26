@@ -1,13 +1,11 @@
 package com.finartz.restaurantapp.model.request.get;
 
 import com.finartz.restaurantapp.model.request.BaseRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
 @AllArgsConstructor

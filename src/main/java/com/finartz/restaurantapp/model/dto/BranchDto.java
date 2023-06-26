@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.model.dto;
 
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor

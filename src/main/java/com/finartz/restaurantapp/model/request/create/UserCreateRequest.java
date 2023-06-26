@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -26,7 +26,8 @@ public class UserCreateRequest {
     @NotNull(message = "User name may not be null")
     private String name;
 
-    private List<Role> roles = Arrays.asList(Role.USER);
+    @Builder.Default
+    private List<Role> roles = Collections.singletonList(Role.USER);
 
     @JsonAlias(value = "address")
     @NotNull(message = "User initial address may not be null")
