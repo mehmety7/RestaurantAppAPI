@@ -16,8 +16,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static com.finartz.restaurantapp.model.constant.ConfigConstant.LOGIN_PATH;
+import static com.finartz.restaurantapp.model.constant.ConfigConstant.SLASH;
 
 @Configuration
 @EnableWebSecurity
@@ -34,39 +36,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-        customAuthenticationFilter.setFilterProcessesUrl("/login"); // login url can change with this line
+        http.cors().and().csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers(SLASH + LOGIN_PATH, "**/refresh-token/**", "**/h2/**").permitAll()
+                .antMatchers(HttpMethod.GET, "**/restaurant/waiting/**").hasAnyAuthority(Role.ADMIN.toString())
+                .antMatchers(HttpMethod.PUT , "**/restaurant/{id}").hasAnyAuthority(Role.ADMIN.toString())
+                .antMatchers(HttpMethod.POST , "**/restaurant").hasAnyAuthority(Role.SELLER.toString())
+                .antMatchers(HttpMethod.POST , "**/branch").hasAnyAuthority(Role.SELLER.toString())
+                .antMatchers(HttpMethod.POST , "**/menu").hasAnyAuthority(Role.SELLER.toString())
+                .antMatchers(HttpMethod.POST , "**/meal").hasAnyAuthority(Role.SELLER.toString())
+                .antMatchers(HttpMethod.POST , "**/comment").hasAnyAuthority(Role.USER.toString())
+                .and()
+                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilter(customAuthenticationFilter());
 
-        http.authorizeRequests().antMatchers("/login/**", "/user/refresh-token/**", "/h2/**").permitAll();
-        http.authorizeRequests().antMatchers("/restaurant/waiting/**").hasAnyAuthority(Role.ADMIN.toString());
-        http.authorizeRequests().antMatchers(HttpMethod.PUT , "/restaurant/{id}").hasAnyAuthority(Role.ADMIN.toString());
+        http.headers().frameOptions().sameOrigin();
 
-        http.authorizeRequests().antMatchers(HttpMethod.POST , "/restaurant").hasAnyAuthority(Role. SELLER.toString());
-        http.authorizeRequests().antMatchers(HttpMethod.POST , "/branch").hasAnyAuthority(Role. SELLER.toString());
-        http.authorizeRequests().antMatchers(HttpMethod.POST , "/menu").hasAnyAuthority(Role. SELLER.toString());
-        http.authorizeRequests().antMatchers(HttpMethod.POST , "/meal").hasAnyAuthority(Role. SELLER.toString());
 
-        http.authorizeRequests().antMatchers(HttpMethod.POST , "/comment").hasAnyAuthority(Role. USER.toString());
+//      http.authorizeRequests().antMatchers().permitAll();
 
-        http.authorizeRequests().anyRequest().authenticated(); // Obligation of authentication of all endpoints
-        http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+//      http.authorizeRequests().anyRequest().authenticated(); // Obligation of authentication of all endpoints
+//      http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)); // 401 will throw for missing token
 //      http.authorizeRequests().anyRequest().permitAll();   // It throws SpringSecurity out of picture.
+//
+//      http.addFilter(customAuthenticationFilter);
+//      http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+//      http.csrf().disable(); // cross-side request forgery
 
-        http.csrf().disable(); // cross-side request forgery
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.headers().frameOptions().sameOrigin(); // it solved to access denied issue on attempt to access h2 db
+//      http.headers().frameOptions().sameOrigin(); // it solved to access denied issue on attempt to access h2 db
 //      http.headers().frameOptions().disable(); // it also solved access issue to h2 but this is less securely than above
 
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
+        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(authenticationManager());
+        authenticationFilter.setFilterProcessesUrl(SLASH + LOGIN_PATH);
+        return authenticationFilter;
     }
-
 }

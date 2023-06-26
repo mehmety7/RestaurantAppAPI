@@ -9,6 +9,9 @@ public final class ConfigConstant {
     public static final String SECRET = "secret";
     public static final String ACCESS_TOKEN = "access-token";
     public static final String REFRESH_TOKEN = "refresh-token";
+    public static final String SLASH = "/";
+    public static final String LOGIN_PATH = "login";
+    public static final String REFRESH_PATH = "user/refresh-token";
 
     private ConfigConstant() {}
 }

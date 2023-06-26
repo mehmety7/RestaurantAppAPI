@@ -20,12 +20,21 @@ spring:
     user:
       name: user
       password: pass
+  devtools:
+    add-properties: false
 
 server:
   port: 8080
-  servlet:
-    context-path: /rest-app
 
-token:
-  login-url: /login
-  refresh-url: /refresh-token
+logging:
+  level:
+    root: info
+    web: info
+
+springfox:
+  documentation:
+    swagger-ui:
+      base-url: /swagger-ui.html
+    swagger:
+      v2:
+        enabled: true

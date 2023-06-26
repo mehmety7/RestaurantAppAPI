@@ -6,7 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finartz.restaurantapp.model.constant.ConfigConstant;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,15 +28,9 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
-    @Value("token.login-url")
-    private String customLoginPath;
-
-    @Value("token.refresh-url")
-    private String customRefreshTokenPath;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals(customLoginPath) || request.getServletPath().equals(customRefreshTokenPath)) {
+        if(request.getServletPath().equals("/" + ConfigConstant.LOGIN_PATH) || request.getServletPath().equals("/" + ConfigConstant.REFRESH_PATH)) {
             filterChain.doFilter(request, response);
         } else {
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -54,7 +47,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
-                } catch (Exception exception){
+                } catch (Exception exception) {
                     response.setHeader(ConfigConstant.ERROR, exception.getMessage());
                     response.setStatus(FORBIDDEN.value());
                     Map<String,String> error = new HashMap<>();

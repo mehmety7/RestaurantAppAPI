@@ -32,9 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws EntityNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(email);
-        if(userEntity == null)
-            throw new EntityNotFoundException("User not found in database");
+        UserEntity userEntity = Objects.requireNonNull(userRepository.findByEmail(email));
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         userEntity.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.toString())));
         return new org.springframework.security.core.userdetails.User(userEntity.getEmail(), userEntity.getPassword(), authorities);
