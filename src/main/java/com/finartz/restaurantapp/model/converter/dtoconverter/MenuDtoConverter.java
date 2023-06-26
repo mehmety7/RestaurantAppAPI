@@ -35,9 +35,7 @@ public class MenuDtoConverter implements GenericConverter<MenuEntity, MenuDto> {
 
         List<MealDto> meals = new ArrayList<>();
         if(Objects.nonNull(menuEntity.getMealEntities())){
-            menuEntity.getMealEntities().forEach(mealEntity -> {
-                meals.add(convert(mealEntity));
-            });
+            menuEntity.getMealEntities().forEach(mealEntity -> meals.add(convert(mealEntity)));
         }
         menuDto.setMeals(meals);
 

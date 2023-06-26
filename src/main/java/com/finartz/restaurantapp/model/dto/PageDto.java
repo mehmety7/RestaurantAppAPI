@@ -1,17 +1,16 @@
 package com.finartz.restaurantapp.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageDto<T> extends BaseDto {
+public class PageDto<T extends Serializable> extends BaseDto {
 
     private List<T> response;
 

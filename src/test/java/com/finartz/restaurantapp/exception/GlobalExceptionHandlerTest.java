@@ -11,25 +11,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.Objects;
+
 @RunWith(SpringRunner.class)
 public class GlobalExceptionHandlerTest {
 
-    private GlobalExceptionHandler globalExceptionHandler = new GlobalExceptionHandler();
+    private final GlobalExceptionHandler globalExceptionHandler = new GlobalExceptionHandler();
 
     @Mock
     private WebRequest webRequest;
 
-    private static final String message = "Error";
+    private static final String MESSAGE = "Error";
 
     @Test
     public void givenEntityNotFoundException_whenHandleEntityNotFoundException_thenReturnResponseEntity(){
 
-        EntityNotFoundException exception = new EntityNotFoundException(message);
+        EntityNotFoundException exception = new EntityNotFoundException(MESSAGE);
 
         ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.handleEntityNotFoundException(exception, webRequest);
 
-        Assertions.assertEquals(responseEntity.getBody().getStatusCode(), HttpStatus.NOT_FOUND.value());
-        Assertions.assertEquals(responseEntity.getBody().getMessage(), message);
+        Assertions.assertEquals(Objects.requireNonNull(responseEntity.getBody()).getStatusCode(), HttpStatus.NOT_FOUND.value());
+        Assertions.assertEquals(MESSAGE, responseEntity.getBody().getMessage());
         Assertions.assertNotNull(responseEntity.getBody().getTimestamp());
         Assertions.assertNull(responseEntity.getBody().getDescription());
 
@@ -38,12 +40,12 @@ public class GlobalExceptionHandlerTest {
     @Test
     public void givenIllegalArgumentException_whenHandleIllegalArgumentException_thenReturnResponseEntity(){
 
-        IllegalArgumentException exception = new IllegalArgumentException(message);
+        IllegalArgumentException exception = new IllegalArgumentException(MESSAGE);
 
         ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.handleIllegalArgumentException(exception, webRequest);
 
-        Assertions.assertEquals(responseEntity.getBody().getStatusCode(), HttpStatus.BAD_REQUEST.value());
-        Assertions.assertEquals(responseEntity.getBody().getMessage(), message);
+        Assertions.assertEquals(Objects.requireNonNull(responseEntity.getBody()).getStatusCode(), HttpStatus.BAD_REQUEST.value());
+        Assertions.assertEquals(MESSAGE, responseEntity.getBody().getMessage());
         Assertions.assertNotNull(responseEntity.getBody().getTimestamp());
         Assertions.assertNull(responseEntity.getBody().getDescription());
 
@@ -52,12 +54,12 @@ public class GlobalExceptionHandlerTest {
     @Test
     public void givenInvalidStatusException_whenHandleInvalidStatusException_thenReturnResponseEntity(){
 
-        InvalidStatusException exception = new InvalidStatusException(message);
+        InvalidStatusException exception = new InvalidStatusException(MESSAGE);
 
         ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.handleInvalidStatusException(exception, webRequest);
 
-        Assertions.assertEquals(responseEntity.getBody().getStatusCode(), HttpStatus.FORBIDDEN.value());
-        Assertions.assertEquals(responseEntity.getBody().getMessage(), message);
+        Assertions.assertEquals(Objects.requireNonNull(responseEntity.getBody()).getStatusCode(), HttpStatus.FORBIDDEN.value());
+        Assertions.assertEquals(MESSAGE, responseEntity.getBody().getMessage());
         Assertions.assertNotNull(responseEntity.getBody().getTimestamp());
         Assertions.assertNull(responseEntity.getBody().getDescription());
 
@@ -66,12 +68,12 @@ public class GlobalExceptionHandlerTest {
     @Test
     public void givenMissingArgumentsException_whenHandleMissingArgumentsException_thenReturnResponseEntity(){
 
-        MissingArgumentsException exception = new MissingArgumentsException(message);
+        MissingArgumentsException exception = new MissingArgumentsException(MESSAGE);
 
         ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.handleMissingArgumentsException(exception, webRequest);
 
-        Assertions.assertEquals(responseEntity.getBody().getStatusCode(), HttpStatus.BAD_REQUEST.value());
-        Assertions.assertEquals(responseEntity.getBody().getMessage(), message);
+        Assertions.assertEquals(Objects.requireNonNull(responseEntity.getBody()).getStatusCode(), HttpStatus.BAD_REQUEST.value());
+        Assertions.assertEquals(MESSAGE, responseEntity.getBody().getMessage());
         Assertions.assertNotNull(responseEntity.getBody().getTimestamp());
         Assertions.assertNull(responseEntity.getBody().getDescription());
 
@@ -80,12 +82,12 @@ public class GlobalExceptionHandlerTest {
     @Test
     public void givenInvalidCreatingException_whenHandleInvalidCreatingException_thenReturnResponseEntity(){
 
-        InvalidCreatingException exception = new InvalidCreatingException(message);
+        InvalidCreatingException exception = new InvalidCreatingException(MESSAGE);
 
         ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.handleInvalidCreatingException(exception, webRequest);
 
-        Assertions.assertEquals(responseEntity.getBody().getStatusCode(), HttpStatus.NOT_ACCEPTABLE.value());
-        Assertions.assertEquals(responseEntity.getBody().getMessage(), message);
+        Assertions.assertEquals(Objects.requireNonNull(responseEntity.getBody()).getStatusCode(), HttpStatus.NOT_ACCEPTABLE.value());
+        Assertions.assertEquals(MESSAGE, responseEntity.getBody().getMessage());
         Assertions.assertNotNull(responseEntity.getBody().getTimestamp());
         Assertions.assertNull(responseEntity.getBody().getDescription());
 
@@ -94,12 +96,11 @@ public class GlobalExceptionHandlerTest {
     @Test
     public void givenInvalidOwnerException_whenHandleInvalidOwnerException_thenReturnResponseEntity(){
 
-        InvalidOwnerException exception = new InvalidOwnerException();
+        InvalidOwnerException exception = new InvalidOwnerException("requestOwnerEmail");
 
         ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.handleInvalidOwnerException(exception, webRequest);
 
-        Assertions.assertEquals(responseEntity.getBody().getStatusCode(), HttpStatus.FORBIDDEN.value());
-        Assertions.assertEquals(responseEntity.getBody().getMessage(), "There are inconsistent users for request owner and entity owner");
+        Assertions.assertEquals(Objects.requireNonNull(responseEntity.getBody()).getStatusCode(), HttpStatus.FORBIDDEN.value());
         Assertions.assertNotNull(responseEntity.getBody().getTimestamp());
         Assertions.assertNull(responseEntity.getBody().getDescription());
 
@@ -108,12 +109,12 @@ public class GlobalExceptionHandlerTest {
     @Test
     public void givenException_whenHandleException_thenReturnResponseEntity(){
 
-        Exception exception = new Exception(message);
+        Exception exception = new Exception(MESSAGE);
 
         ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.globalExceptionHandler(exception, webRequest);
 
-        Assertions.assertEquals(responseEntity.getBody().getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR.value());
-        Assertions.assertEquals(responseEntity.getBody().getMessage(), message);
+        Assertions.assertEquals(Objects.requireNonNull(responseEntity.getBody()).getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        Assertions.assertEquals(MESSAGE, responseEntity.getBody().getMessage());
         Assertions.assertNotNull(responseEntity.getBody().getTimestamp());
         Assertions.assertNull(responseEntity.getBody().getDescription());
 

@@ -33,7 +33,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuDto getBranchMenu(Long branchId){
-        MenuEntity menuEntity = menuRepository.getMenuEntityByBranchEntity_Id(branchId);
+        MenuEntity menuEntity = menuRepository.getMenuEntityByBranchEntityId(branchId);
         if(Objects.nonNull(menuEntity)){
             return menuDtoConverter.convert(menuEntity);
         }else{
@@ -45,7 +45,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuDto createMenu(MenuCreateRequest menuCreateRequest){
         // Check the person is seller of the restaurant who attempt to create menu
-        MenuEntity existingMenu = menuRepository.getMenuEntityByBranchEntity_Id(menuCreateRequest.getBranchId());
+        MenuEntity existingMenu = menuRepository.getMenuEntityByBranchEntityId(menuCreateRequest.getBranchId());
 
         if (Objects.isNull(existingMenu)) {
             MenuEntity menuEntity = menuCreateRequestToEntityConverter.convert(menuCreateRequest);

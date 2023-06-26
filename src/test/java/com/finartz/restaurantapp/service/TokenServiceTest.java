@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -74,32 +75,31 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void givenRequestOwnerIsEntityOwner_whenIsRequestOwnerAuthoritative_thenReturnTrue(){
-        UserEntity requestOwner = UserEntity.builder().id(1l).email(USERNAME).roles(Arrays.asList(Role.USER)).build();
+    public void givenRequestOwnerIsEntityOwner_whenIsRequestOwnerAuthoritative_thenReturnNothing(){
+        UserEntity requestOwner = UserEntity.builder().id(1L).email(USERNAME).roles(Collections.singletonList(Role.USER)).build();
 
         Mockito.when(request.getHeader("Authorization")).thenReturn(token);
         Mockito.when(userRepository.findByEmail(user.getUsername())).thenReturn(requestOwner);
 
-        Boolean result = tokenService.isRequestOwnerAuthoritative(1l);
-        Assertions.assertEquals(result, true);
-
+        tokenService.checkRequestOwnerAuthoritative(1L);
+        Mockito.verify(userRepository, Mockito.atLeastOnce()).findByEmail(anyString());
     }
 
     @Test(expected = InvalidOwnerException.class)
     public void givenRequestOwnerIsNotOwnerOfEntity_whenIsRequestOwnerAuthoritative_thenThrowInvalidOwnerException(){
-        UserEntity requestOwner = UserEntity.builder().id(1l).email(USERNAME).roles(Arrays.asList(Role.USER)).build();
+        UserEntity requestOwner = UserEntity.builder().id(1L).email(USERNAME).roles(Collections.singletonList(Role.USER)).build();
 
         Mockito.when(request.getHeader("Authorization")).thenReturn(token);
         Mockito.when(userRepository.findByEmail(user.getUsername())).thenReturn(requestOwner);
 
-        tokenService.isRequestOwnerAuthoritative(20l);
+        tokenService.checkRequestOwnerAuthoritative(20L);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void givenNullToken_whenIsRequestOwnerAuthoritative_thenThrowEntityNotFoundException(){
 
         Mockito.when(request.getHeader("Authorization")).thenReturn(null);
-        tokenService.isRequestOwnerAuthoritative(anyLong());
+        tokenService.checkRequestOwnerAuthoritative(anyLong());
 
     }
 
@@ -117,7 +117,7 @@ public class TokenServiceTest {
         MockHttpServletResponse mockResponse = new MockHttpServletResponse();
         mockRequest.addHeader(HttpHeaders.AUTHORIZATION, token);
 
-        UserEntity requestOwner = UserEntity.builder().id(1l).email(USERNAME).roles(Arrays.asList(Role.USER)).build();
+        UserEntity requestOwner = UserEntity.builder().id(1L).email(USERNAME).roles(Collections.singletonList(Role.USER)).build();
         Mockito.when(userRepository.findByEmail(anyString())).thenReturn(requestOwner);
 
         tokenService.refreshToken(mockRequest, mockResponse);

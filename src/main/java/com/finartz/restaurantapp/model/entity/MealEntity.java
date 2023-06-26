@@ -1,14 +1,16 @@
 package com.finartz.restaurantapp.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -32,6 +34,19 @@ public class MealEntity extends BaseEntity {
     @JoinTable(name = "meal_item"
             , joinColumns = @JoinColumn(name = "meal_id", referencedColumnName = "id", nullable = false)
             , inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false))
+    @ToString.Exclude
     private List<ItemEntity> itemEntities;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        MealEntity that = (MealEntity) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

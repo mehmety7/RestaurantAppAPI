@@ -38,9 +38,7 @@ public class CityServiceImpl implements CityService {
     public List<CityDto> getCities(){
         List<CityEntity> cityEntities = cityRepository.findAll();
         List<CityDto> cities = new ArrayList<>();
-        cityEntities.forEach(cityEntity -> {
-            cities.add(cityDtoConverter.convert(cityEntity));
-        });
+        cityEntities.forEach(cityEntity -> cities.add(cityDtoConverter.convert(cityEntity)));
         return cities;
     }
 

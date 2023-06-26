@@ -19,12 +19,12 @@ public class MealController {
 
     @GetMapping("{id}")
     public ResponseEntity<MealDto> getMeal(@PathVariable Long id){
-        return new ResponseEntity(mealService.getMeal(id), HttpStatus.OK);
+        return new ResponseEntity<>(mealService.getMeal(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<MealDto> createMeal(@Valid @RequestBody MealCreateRequest mealCreateRequest){
-        return new ResponseEntity(mealService.createMeal(mealCreateRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(mealService.createMeal(mealCreateRequest), HttpStatus.CREATED);
     }
 
 }

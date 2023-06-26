@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -54,8 +55,8 @@ public class ItemControllerTest {
     public void whenGetAll_thenReturnAllItems() throws Exception {
 
         ItemPageGetRequest itemPageGetRequest = ItemPageGetRequest.builder().pageNo(0).pageSize(1).sortBy("id").build();
-        ItemDto item = ItemDto.builder().id(1l).name(NAME_HAMBURGER).unitType("piece").build();
-        List<ItemDto> items = Arrays.asList(item);
+        ItemDto item = ItemDto.builder().id(1L).name(NAME_HAMBURGER).unitType("piece").build();
+        List<ItemDto> items = Collections.singletonList(item);
         PageDto<ItemDto> pageDto = new PageDto<>(items, 1, 1);
 
         Mockito.when(itemService.getItems(itemPageGetRequest)).thenReturn(pageDto);
@@ -75,9 +76,9 @@ public class ItemControllerTest {
     @Test
     public void whenGetById_thenReturnItem() throws Exception {
 
-        ItemDto item = ItemDto.builder().id(1l).name(NAME_HAMBURGER).build();
+        ItemDto item = ItemDto.builder().id(1L).name(NAME_HAMBURGER).build();
 
-        Mockito.when(itemService.getItem(1l)).thenReturn(item);
+        Mockito.when(itemService.getItem(1L)).thenReturn(item);
 
         mockMvc.perform(get(URI_ITEM + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -89,7 +90,7 @@ public class ItemControllerTest {
     @Test
     public void whenCreateNewItem_thenReturnItem() throws Exception {
 
-        ItemDto item = ItemDto.builder().id(1l).name(NAME_HAMBURGER).build();
+        ItemDto item = ItemDto.builder().id(1L).name(NAME_HAMBURGER).build();
         ItemCreateRequest itemCreateRequest = ItemCreateRequest.builder().name(NAME_HAMBURGER).unitType(anyString()).build();
 
         Mockito.when(itemService.createItem(itemCreateRequest)).thenReturn(item);

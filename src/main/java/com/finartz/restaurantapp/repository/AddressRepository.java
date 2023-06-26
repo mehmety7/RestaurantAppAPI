@@ -10,11 +10,11 @@ import java.util.List;
 @Repository
 public interface AddressRepository extends BaseRepository<AddressEntity>{
 
-    List<AddressEntity> getAddressEntitiesByUserEntity_Id(Long user_id);
+    List<AddressEntity> getAddressEntitiesByUserEntityId(Long userId);
 
-    AddressEntity getAddressEntityByBranchEntity_Id(Long branch_id);
+    AddressEntity getAddressEntityByBranchEntityId(Long branchId);
 
-    @Query(value = "SELECT * FROM ADDRESSES a WHERE a.enable = true AND a.user_id = :user_id", nativeQuery = true)
-    AddressEntity getActiveAddressByUserId(@Param("user_id") Long user_id);
+    @Query(value = "SELECT * FROM ADDRESSES a WHERE a.enable = true AND a.user_id = :userId", nativeQuery = true)
+    AddressEntity getActiveAddressByUserId(@Param("userId") Long userId);
 
 }

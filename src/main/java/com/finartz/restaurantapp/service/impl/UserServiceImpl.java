@@ -36,9 +36,7 @@ public class UserServiceImpl implements UserService {
         if(userEntity == null)
             throw new EntityNotFoundException("User not found in database");
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        userEntity.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.toString()));
-        });
+        userEntity.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.toString())));
         return new org.springframework.security.core.userdetails.User(userEntity.getEmail(), userEntity.getPassword(), authorities);
     }
 

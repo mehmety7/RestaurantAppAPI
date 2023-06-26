@@ -15,6 +15,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CityDtoConverterTest {
@@ -28,13 +29,13 @@ public class CityDtoConverterTest {
 
     @Test
     public void whenPassValidCityEntity_thenReturnCityDto(){
-        CountyEntity countyEntity = CountyEntity.builder().id(1l).build();
+        CountyEntity countyEntity = CountyEntity.builder().id(1L).build();
         CountyDto countyDto = CountyDto.builder().build();
 
         CityEntity cityEntity = CityEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("City")
-                .countyEntities(Arrays.asList(countyEntity))
+                .countyEntities(Collections.singletonList(countyEntity))
                 .build();
 
         Mockito.when(countyDtoConverter.convert(countyEntity)).thenReturn(countyDto);

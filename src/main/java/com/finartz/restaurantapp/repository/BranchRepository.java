@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BranchRepository extends BaseRepository<BranchEntity> {
 
-    Page<BranchEntity> getBranchEntitiesByAddressEntity_CountyEntity_Id(Long countyId, Pageable paging);
+    Page<BranchEntity> getBranchEntitiesByAddressEntityCountyEntityId(Long countyId, Pageable paging);
 
-    Integer countBranchEntitiesByAddressEntity_CountyEntity_Id(Long countyId);
+    Integer countBranchEntitiesByAddressEntityCountyEntityId(Long countyId);
 
     @Query(value = "SELECT r.user_id FROM branches b " +
-            "LEFT JOIN restaurants r ON b.restaurant_id = :r.id",nativeQuery = true)
+            "LEFT JOIN restaurants r ON b.restaurant_id = :r.id", nativeQuery = true)
     Long getEntityOwnerUserIdByRestaurantId(@Param("r.id") Long restaurantId);
 
 }

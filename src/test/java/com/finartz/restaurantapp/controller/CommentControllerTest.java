@@ -129,13 +129,13 @@ public class CommentControllerTest {
                 .build();
 
         CommentDto commentUpdate = CommentDto.builder()
-                .id(1l)
+                .id(1L)
                 .comment(COMMENT_ORTALAMA)
                 .build();
 
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest
                 .builder()
-                .id(1l)
+                .id(1L)
                 .comment(COMMENT_ORTALAMA)
                 .build();
 

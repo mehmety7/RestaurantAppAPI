@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface TokenService {
 
-    Boolean isRequestOwnerAuthoritative(Long entityOwnerId);
+    void checkRequestOwnerAuthoritative(Long entityOwnerId);
 
     String getUserEmailByToken(String token);
 

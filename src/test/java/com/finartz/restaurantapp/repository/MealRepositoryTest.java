@@ -20,7 +20,7 @@ public class MealRepositoryTest {
     public void whenGetEntityOwnerUserIdByMenuId(){
         Long entityOwnerId = mealRepository.getEntityOwnerUserIdByMenuId(1L);
 
-        Assertions.assertEquals(entityOwnerId, 2L);
+        Assertions.assertEquals(2L, entityOwnerId);
     }
 
 }

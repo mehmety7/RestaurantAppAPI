@@ -33,9 +33,7 @@ public class MealDtoConverter implements GenericConverter<MealEntity, MealDto> {
 
         List<ItemDto> items = new ArrayList<>();
         if(Objects.nonNull(mealEntity.getItemEntities())){
-            mealEntity.getItemEntities().forEach(itemEntity -> {
-                items.add(convert(itemEntity));
-            });
+            mealEntity.getItemEntities().forEach(itemEntity -> items.add(convert(itemEntity)));
         }
         mealDto.setItems(items);
 

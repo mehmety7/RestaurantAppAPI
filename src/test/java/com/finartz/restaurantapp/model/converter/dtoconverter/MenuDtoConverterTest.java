@@ -16,6 +16,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MenuDtoConverterTest {
@@ -33,9 +34,9 @@ public class MenuDtoConverterTest {
         MealDto mealDto = MealDto.builder().build();
 
         MenuEntity menuEntity = MenuEntity.builder()
-                .id(1l)
-                .mealEntities(Arrays.asList(MealEntity.builder().build()))
-                .branchEntity(BranchEntity.builder().id(1l).build())
+                .id(1L)
+                .mealEntities(Collections.singletonList(MealEntity.builder().build()))
+                .branchEntity(BranchEntity.builder().id(1L).build())
                 .build();
 
 

@@ -20,10 +20,10 @@ public class CommentDtoConverterTest {
     @Test
     public void whenPassValidCommentEntity_thenReturnCommentDto(){
         CommentEntity commentEntity = CommentEntity.builder()
-                .id(1l)
+                .id(1L)
                 .comment("Comment")
-                .userEntity(UserEntity.builder().id(1l).build())
-                .branchEntity(BranchEntity.builder().id(1l).build())
+                .userEntity(UserEntity.builder().id(1L).build())
+                .branchEntity(BranchEntity.builder().id(1L).build())
                 .build();
 
         CommentDto commentDto = commentDtoConverter.convert(commentEntity);

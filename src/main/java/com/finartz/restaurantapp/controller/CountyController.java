@@ -18,12 +18,12 @@ public class CountyController {
 
     @GetMapping("{id}")
     public ResponseEntity<CountyDto> getCounty(@PathVariable Long id){
-        return new ResponseEntity(countyService.getCounty(id), HttpStatus.OK);
+        return new ResponseEntity<>(countyService.getCounty(id), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<CountyDto>> getCounties(@RequestParam Long city_id){
-        return new ResponseEntity(countyService.getCounties(city_id), HttpStatus.OK);
+    public ResponseEntity<List<CountyDto>> getCounties(@RequestParam("city_id") Long cityId){
+        return new ResponseEntity<>(countyService.getCounties(cityId), HttpStatus.OK);
     }
 
 }

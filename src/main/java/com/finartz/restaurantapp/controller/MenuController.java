@@ -19,17 +19,17 @@ public class MenuController {
 
     @GetMapping("{id}")
     public ResponseEntity<MenuDto> getMenu(@PathVariable Long id){
-        return new ResponseEntity(menuService.getMenu(id), HttpStatus.OK);
+        return new ResponseEntity<>(menuService.getMenu(id), HttpStatus.OK);
     }
 
     @GetMapping("branch")
-    public ResponseEntity<MenuDto> getBranchMenu(@RequestParam Long branch_id){
-        return new ResponseEntity(menuService.getBranchMenu(branch_id), HttpStatus.OK);
+    public ResponseEntity<MenuDto> getBranchMenu(@RequestParam("branch_id") Long branchId){
+        return new ResponseEntity<>(menuService.getBranchMenu(branchId), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<MenuDto> createMenu(@Valid @RequestBody MenuCreateRequest menuCreateRequest){
-        return new ResponseEntity(menuService.createMenu(menuCreateRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(menuService.createMenu(menuCreateRequest), HttpStatus.CREATED);
     }
 
 }

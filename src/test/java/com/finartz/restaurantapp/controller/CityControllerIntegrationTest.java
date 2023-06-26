@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Objects;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.main.banner-mode=off")
@@ -25,16 +26,16 @@ public class CityControllerIntegrationTest {
     public void whenGetAllCity_thenReturnAllCity() {
         ResponseEntity<List<CityDto>> response = cityController.getCities();
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().get(0).getId(), 34l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(34L, Objects.requireNonNull(response.getBody()).get(0).getId());
     }
 
     @Test
     public void whenGetCityById_thenReturnCity() {
-        ResponseEntity<CityDto> response = cityController.getCity(34l);
+        ResponseEntity<CityDto> response = cityController.getCity(34L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getId(), 34l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(34L, Objects.requireNonNull(response.getBody()).getId());
     }
 
 

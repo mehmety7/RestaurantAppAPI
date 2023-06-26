@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -67,7 +68,7 @@ public class AddressControllerTest {
 
         AddressDto address = AddressDto.builder().name(NAME_EV).district(DISTRICT_MERKEZ).id(1L).build();
 
-        Mockito.when(addressService.getUserAddresses(1L)).thenReturn(Arrays.asList(address));
+        Mockito.when(addressService.getUserAddresses(1L)).thenReturn(Collections.singletonList(address));
 
         mockMvc.perform(get(URI_ADDRESS + "/user?user_id=1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -102,11 +103,11 @@ public class AddressControllerTest {
                 .builder()
                 .name(NAME_EV)
                 .district(DISTRICT_MERKEZ)
-                .cityId(1l)
-                .countyId(1l)
+                .cityId(1L)
+                .countyId(1L)
                 .branchId(null)
                 .otherContent(anyString())
-                .userId(1l)
+                .userId(1L)
                 .build();
 
         Mockito.when(addressService.createAddress(addressCreateRequest)).thenReturn(address);

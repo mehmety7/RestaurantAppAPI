@@ -13,15 +13,18 @@ import com.finartz.restaurantapp.repository.RestaurantRepository;
 import com.finartz.restaurantapp.service.RestaurantService;
 import com.finartz.restaurantapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = {"restaurants"})
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
@@ -33,21 +36,15 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
     @Override
-    public List<RestaurantDto> getRestaurants(RestaurantStatus restaurantStatus){
-        try{
-            Thread.sleep(1000);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+    public List<RestaurantDto> getRestaurants(RestaurantStatus restaurantStatus) {
         List<RestaurantEntity> restaurantEntities = restaurantRepository.findByRestaurantStatus(restaurantStatus);
         List<RestaurantDto> restaurants = new ArrayList<>();
-        restaurantEntities.forEach(restaurantEntity -> {
-            restaurants.add(restaurantDtoConverter.convert(restaurantEntity));
-        });
+        restaurantEntities.forEach(restaurantEntity -> restaurants.add(restaurantDtoConverter.convert(restaurantEntity)));
         return restaurants;
     }
 
     @Override
+    @Cacheable
     public RestaurantDto getRestaurant(Long id){
         return restaurantDtoConverter.convert(restaurantRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Not found Restaurant with id:" + id)
@@ -56,32 +53,29 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantDto createRestaurant(RestaurantCreateRequest restaurantCreateRequest){
-        if (tokenService.isRequestOwnerAuthoritative(restaurantCreateRequest.getUserId())){}
-
+        tokenService.checkRequestOwnerAuthoritative(restaurantCreateRequest.getUserId());
         RestaurantEntity restaurantEntity = restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest);
         return restaurantDtoConverter.convert(restaurantRepository.save(restaurantEntity));
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "restaurants", key = "#restaurantUpdateRequest.getId()")
     public RestaurantDto updateRestaurantStatus(RestaurantUpdateRequest restaurantUpdateRequest){
-        RestaurantEntity restaurantExisted = restaurantRepository.getById(restaurantUpdateRequest.getId());
-        if(Objects.nonNull(restaurantExisted)){
-            RestaurantEntity restaurantUpdated = restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisted);
-            return restaurantDtoConverter.convert(restaurantRepository.save(restaurantUpdated));
-        }else {
+        RestaurantEntity restaurantExisted;
+        try {
+            restaurantExisted = restaurantRepository.getById(restaurantUpdateRequest.getId());
+        } catch (Exception e) {
             throw new EntityNotFoundException("Not found Restaurant with id: " + restaurantUpdateRequest.getId());
         }
-
+        RestaurantEntity restaurantUpdated = restaurantUpdateRequestToEntityConverter.convert(restaurantUpdateRequest, restaurantExisted);
+        return restaurantDtoConverter.convert(restaurantRepository.save(restaurantUpdated));
     }
 
     @Override
-    public Boolean isRestaurantApproved(Long restaurant_id){
-        RestaurantEntity restaurantEntity = restaurantRepository.getById(restaurant_id);
-        if(restaurantEntity.getRestaurantStatus().equals(RestaurantStatus.APPROVED))
-            return true;
-        else
-            return false;
+    public boolean isRestaurantApproved(Long restaurantId){
+        RestaurantEntity restaurantEntity = restaurantRepository.getById(restaurantId);
+        return RestaurantStatus.APPROVED.equals(restaurantEntity.getRestaurantStatus());
     }
 
 }

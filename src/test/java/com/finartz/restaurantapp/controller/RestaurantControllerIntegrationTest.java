@@ -21,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 
@@ -38,15 +39,15 @@ public class RestaurantControllerIntegrationTest {
 
     @BeforeEach
     public void init(){
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
     }
 
     @Test
     public void whenGetRestaurantById_thenReturnRestaurant() {
-        ResponseEntity<RestaurantDto> response = restaurantController.getRestaurant(1l);
+        ResponseEntity<RestaurantDto> response = restaurantController.getRestaurant(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getId(), 1l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(1L, Objects.requireNonNull(response.getBody()).getId());
     }
 
     @Test
@@ -54,13 +55,13 @@ public class RestaurantControllerIntegrationTest {
         RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest
                 .builder()
                 .name("Restaurant")
-                .userId(2l)
+                .userId(2L)
                 .build();
 
         ResponseEntity<RestaurantDto> response = restaurantController.createRestaurant(restaurantCreateRequest);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
-        Assertions.assertEquals(response.getBody().getRestaurantStatus(), RestaurantStatus.WAITING);
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertEquals(RestaurantStatus.WAITING, Objects.requireNonNull(response.getBody()).getRestaurantStatus());
 
     }
 
@@ -68,26 +69,24 @@ public class RestaurantControllerIntegrationTest {
     public void whenGetRestaurantIsWaiting_thenReturnRestaurant() {
         ResponseEntity<List<RestaurantDto>> response = restaurantController.getRestaurants(RestaurantStatus.WAITING);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        if(! response.getBody().isEmpty()) {
-            Assertions.assertEquals(response.getBody().get(0).getRestaurantStatus(), RestaurantStatus.WAITING);
-        }
+        Assertions.assertEquals(RestaurantStatus.WAITING, Objects.requireNonNull(response.getBody()).get(0).getRestaurantStatus());
     }
 
     @Test
     public void whenUpdateRestaurant_thenReturnRestaurant() {
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest
                 .builder()
-                .id(2l)
+                .id(2L)
                 .restaurantStatus(RestaurantStatus.CANCELED)
                 .build();
 
         ResponseEntity<RestaurantDto> response = restaurantController.updateRestaurantStatus(restaurantUpdateRequest);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertNotEquals(response.getBody().getRestaurantStatus(), RestaurantStatus.WAITING);
-        Assertions.assertEquals(response.getBody().getRestaurantStatus(), RestaurantStatus.CANCELED);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotEquals(RestaurantStatus.WAITING, Objects.requireNonNull(response.getBody()).getRestaurantStatus());
+        Assertions.assertEquals(RestaurantStatus.CANCELED, response.getBody().getRestaurantStatus());
     }
 
 }

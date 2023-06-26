@@ -47,14 +47,12 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public PageDto<BranchDto> getBranches(BranchPageGetRequest branchPageGetRequest) {
         Pageable paging = PageRequest.of(branchPageGetRequest.getPageNo(), branchPageGetRequest.getPageSize(), Sort.by(branchPageGetRequest.getSortBy()));
-        Page<BranchEntity> branchEntityPage = branchRepository.getBranchEntitiesByAddressEntity_CountyEntity_Id(branchPageGetRequest.getCountyId(), paging);
+        Page<BranchEntity> branchEntityPage = branchRepository.getBranchEntitiesByAddressEntityCountyEntityId(branchPageGetRequest.getCountyId(), paging);
 
         List<BranchDto> branches = new ArrayList<>();
-        branchEntityPage.forEach(branchEntity -> {
-            branches.add(branchDtoConverter.convert(branchEntity));
-        });
+        branchEntityPage.forEach(branchEntity -> branches.add(branchDtoConverter.convert(branchEntity)));
 
-        Integer totalCount = branchRepository.countBranchEntitiesByAddressEntity_CountyEntity_Id(branchPageGetRequest.getCountyId());
+        Integer totalCount = branchRepository.countBranchEntitiesByAddressEntityCountyEntityId(branchPageGetRequest.getCountyId());
         Integer pageCount = (totalCount / branchPageGetRequest.getPageSize()) + 1;
 
         return  new PageDto<>(branches, totalCount, pageCount);
@@ -64,9 +62,8 @@ public class BranchServiceImpl implements BranchService {
     @Transactional
     public BranchDto createBranch(BranchCreateRequest branchCreateRequest) {
         Long entityOwnerId = branchRepository.getEntityOwnerUserIdByRestaurantId(branchCreateRequest.getRestaurantId());
-        if(Objects.nonNull(entityOwnerId) && tokenService.isRequestOwnerAuthoritative(entityOwnerId)){}
-
-        if (!restaurantService.isRestaurantApproved(branchCreateRequest.getRestaurantId())) {
+        tokenService.checkRequestOwnerAuthoritative(entityOwnerId);
+        if (Boolean.FALSE.equals(restaurantService.isRestaurantApproved(branchCreateRequest.getRestaurantId()))) {
             throw new InvalidStatusException("The status of restaurant must be APPROVED by admin to create branch");
         }
 

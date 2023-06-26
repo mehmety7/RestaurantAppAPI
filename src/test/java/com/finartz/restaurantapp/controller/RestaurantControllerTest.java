@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -84,7 +85,7 @@ public class RestaurantControllerTest {
                 .restaurantStatus(RestaurantStatus.WAITING)
                 .build();
 
-        List<RestaurantDto> restaurantList = Arrays.asList(restaurant);
+        List<RestaurantDto> restaurantList = Collections.singletonList(restaurant);
 
         Mockito.when(restaurantService.getRestaurants(RestaurantStatus.WAITING)).thenReturn(restaurantList);
 
@@ -145,7 +146,7 @@ public class RestaurantControllerTest {
 
         RestaurantUpdateRequest restaurantUpdateRequest = RestaurantUpdateRequest
                 .builder()
-                .id(1l)
+                .id(1L)
                 .restaurantStatus(RestaurantStatus.APPROVED)
                 .build();
 

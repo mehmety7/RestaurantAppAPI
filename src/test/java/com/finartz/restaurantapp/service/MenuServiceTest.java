@@ -59,10 +59,10 @@ public class MenuServiceTest {
 
     @Test
     public void whenFetchByValidBranchId_thenReturnMenu() {
-        MenuEntity menuEntity = MenuEntity.builder().id(1l).build();
-        MenuDto menu = MenuDto.builder().id(1l).build();
+        MenuEntity menuEntity = MenuEntity.builder().id(1L).build();
+        MenuDto menu = MenuDto.builder().id(1L).build();
 
-        Mockito.when(menuRepository.getMenuEntityByBranchEntity_Id(anyLong())).thenReturn(menuEntity);
+        Mockito.when(menuRepository.getMenuEntityByBranchEntityId(anyLong())).thenReturn(menuEntity);
         Mockito.when(menuDtoConverter.convert(menuEntity)).thenReturn(menu);
 
         MenuDto resultMenu = menuService.getBranchMenu(anyLong());
@@ -74,7 +74,7 @@ public class MenuServiceTest {
 
     public void whenFetchByInvalidBranchId_thenThrowEntityNotFoundException() {
 
-        Mockito.when(menuRepository.getMenuEntityByBranchEntity_Id(anyLong())).thenReturn(null);
+        Mockito.when(menuRepository.getMenuEntityByBranchEntityId(anyLong())).thenReturn(null);
         menuService.getBranchMenu(anyLong());
 
     }
@@ -99,7 +99,7 @@ public class MenuServiceTest {
         MenuEntity menuEntity = MenuEntity.builder().build();
         MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(anyLong()).build();
 
-        Mockito.when(menuRepository.getMenuEntityByBranchEntity_Id(menuCreateRequest.getBranchId())).thenReturn(menuEntity);
+        Mockito.when(menuRepository.getMenuEntityByBranchEntityId(menuCreateRequest.getBranchId())).thenReturn(menuEntity);
         menuService.createMenu(menuCreateRequest);
 
     }

@@ -70,13 +70,13 @@ public class MealServiceTest {
     public void givenValidMenuId_whenAddMeal_thenReturnSavedMeal() {
         MealEntity mealEntity = MealEntity.builder().name(NAME_FIRSAT).build();
         MealDto meal = MealDto.builder().name(NAME_FIRSAT).build();
-        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().menuId(1l).name(NAME_FIRSAT).build();
+        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().menuId(1L).name(NAME_FIRSAT).build();
 
-        MenuDto menu = MenuDto.builder().id(1l).branchId(1l).build();
+        MenuDto menu = MenuDto.builder().id(1L).branchId(1L).build();
 
-        Mockito.when(menuService.getMenu(1l)).thenReturn(menu);
+        Mockito.when(menuService.getMenu(1L)).thenReturn(menu);
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
         Mockito.when(mealCreateRequestToEntityConverter.convert(mealCreateRequest)).thenReturn(mealEntity);
         Mockito.when(mealRepository.save(mealEntity)).thenReturn(mealEntity);
         Mockito.when(mealDtoConverter.convert(mealEntity)).thenReturn(meal);
@@ -90,13 +90,13 @@ public class MealServiceTest {
     public void givenValidBranchId_whenAddMeal_thenReturnSavedMeal() {
         MealEntity mealEntity = MealEntity.builder().name(NAME_FIRSAT).build();
         MealDto meal = MealDto.builder().name(NAME_FIRSAT).build();
-        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().branchId(1l).name(NAME_FIRSAT).build();
+        MealCreateRequest mealCreateRequest = MealCreateRequest.builder().branchId(1L).name(NAME_FIRSAT).build();
 
-        MenuDto menu = MenuDto.builder().id(1l).branchId(1l).build();
+        MenuDto menu = MenuDto.builder().id(1L).branchId(1L).build();
 
-        Mockito.when(menuService.getBranchMenu(1l)).thenReturn(menu);
+        Mockito.when(menuService.getBranchMenu(1L)).thenReturn(menu);
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
         Mockito.when(mealCreateRequestToEntityConverter.convert(mealCreateRequest)).thenReturn(mealEntity);
         Mockito.when(mealRepository.save(mealEntity)).thenReturn(mealEntity);
         Mockito.when(mealDtoConverter.convert(mealEntity)).thenReturn(meal);

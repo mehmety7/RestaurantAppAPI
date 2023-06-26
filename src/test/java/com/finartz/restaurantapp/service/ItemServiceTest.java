@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,12 +49,12 @@ public class ItemServiceTest {
 
     @Test
     public void whenFetchItemPage_thenReturnItemPage() {
-        ItemEntity itemEntity = ItemEntity.builder().id(1l).name(NAME_HAMBURGER).build();
-        ItemDto item = ItemDto.builder().id(1l).name(NAME_HAMBURGER).build();
+        ItemEntity itemEntity = ItemEntity.builder().id(1L).name(NAME_HAMBURGER).build();
+        ItemDto item = ItemDto.builder().id(1L).name(NAME_HAMBURGER).build();
         ItemPageGetRequest itemPageGetRequest = ItemPageGetRequest.builder().pageNo(0).pageSize(1).sortBy("id").build();
 
-        List<ItemEntity> itemEntities = Arrays.asList(itemEntity);
-        List<ItemDto> items = Arrays.asList(item);
+        List<ItemEntity> itemEntities = Collections.singletonList(itemEntity);
+        List<ItemDto> items = Collections.singletonList(item);
 
         Page<ItemEntity> itemEntityPage = new PageImpl<>(itemEntities);
 
@@ -61,15 +62,15 @@ public class ItemServiceTest {
         Mockito.when(itemRepository.findAll(PageRequest.of(0, 1, Sort.by("id")))).thenReturn(itemEntityPage);
         Mockito.when(itemRepository.countItemEntitiesBy()).thenReturn(items.size());
 
-        PageDto resultPage = itemService.getItems(itemPageGetRequest);
+        PageDto<ItemDto> resultPage = itemService.getItems(itemPageGetRequest);
 
         assertEquals(items.size(), resultPage.getResponse().size());
         assertEquals(items.size(), resultPage.getTotalCount());
-        assertEquals((items.size()/1)+1, resultPage.getPageCount());
+        assertEquals(items.size()+1, resultPage.getPageCount());
     }
 
     @Test
-    public void whenFetchByValidId_thenReturnItem() throws Exception {
+    public void whenFetchByValidId_thenReturnItem() {
         ItemEntity itemEntity = ItemEntity.builder().name(NAME_HAMBURGER).build();
         ItemDto item = ItemDto.builder().name(NAME_HAMBURGER).build();
 

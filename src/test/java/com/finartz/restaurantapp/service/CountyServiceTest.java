@@ -62,7 +62,7 @@ public class CountyServiceTest {
         CountyDto county = CountyDto.builder().name(COUNTY_UMRANIYE).build();
 
         Mockito.when(countyDtoConverter.convert(countyEntity)).thenReturn(county);
-        Mockito.when(countyRepository.getCountyEntitiesByCityEntity_Id(1L)).thenReturn(Arrays.asList(countyEntity));
+        Mockito.when(countyRepository.getCountyEntitiesByCityEntityId(1L)).thenReturn(Arrays.asList(countyEntity));
 
         List<CountyDto> resultCounties = countyService.getCounties(1L);
 

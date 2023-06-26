@@ -33,8 +33,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
-    private final static String NAME_ALI_AKAY = "Ali Akay";
-    private final static String EMAIL_ALI_GMAIL_COM = "ali@gmail.com";
+    private static final String NAME_ALI_AKAY = "Ali Akay";
+    private static final String EMAIL_ALI_GMAIL_COM = "ali@gmail.com";
 
     @InjectMocks
     private UserServiceImpl userService;

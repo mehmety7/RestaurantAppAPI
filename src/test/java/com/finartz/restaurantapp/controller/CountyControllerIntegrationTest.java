@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Objects;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest("spring.main.banner-mode=off")
@@ -23,17 +24,17 @@ public class CountyControllerIntegrationTest {
 
     @Test
     public void whenGetCountyById_thenReturnCounty(){
-        ResponseEntity<CountyDto> response = countyController.getCounty(855l);
+        ResponseEntity<CountyDto> response = countyController.getCounty(855L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getId(), 855l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(855L, Objects.requireNonNull(response.getBody()).getId());
     }
 
     @Test
     public void whenGetCountyByCityId_thenReturnCounties(){
-        ResponseEntity<List<CountyDto>> response = countyController.getCounties(34l);
+        ResponseEntity<List<CountyDto>> response = countyController.getCounties(34L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().get(0).getCityId(), 34l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(34L, Objects.requireNonNull(response.getBody()).get(0).getCityId());
     }
 }

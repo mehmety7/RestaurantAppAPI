@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends BaseRepository<UserEntity> {
 
-    UserEntity findByEmail(String Email);
+    UserEntity findByEmail(String email);
 
 }

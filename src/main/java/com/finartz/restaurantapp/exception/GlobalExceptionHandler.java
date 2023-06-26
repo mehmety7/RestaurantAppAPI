@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
             webRequest.getDescription(false)
         );
 
-        return new ResponseEntity(errorMessage, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 webRequest.getDescription(false)
         );
-        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {InvalidStatusException.class})
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false)
         );
 
-        return new ResponseEntity(errorMessage, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = {MissingArgumentsException.class})
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false)
         );
 
-        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {InvalidCreatingException.class})
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false)
         );
 
-        return new ResponseEntity(errorMessage, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(value = {InvalidOwnerException.class})
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false)
         );
 
-        return new ResponseEntity(errorMessage, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)
@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

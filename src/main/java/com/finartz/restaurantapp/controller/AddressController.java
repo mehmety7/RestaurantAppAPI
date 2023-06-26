@@ -20,29 +20,29 @@ public class AddressController {
 
     @GetMapping("{id}")
     public ResponseEntity<AddressDto> getAddress(@PathVariable Long id){
-        return new ResponseEntity(addressService.getAddress(id), HttpStatus.OK);
+        return new ResponseEntity<>(addressService.getAddress(id), HttpStatus.OK);
     }
 
     @GetMapping("user")
-    public ResponseEntity<List<AddressDto>> getUserAddresses(@RequestParam Long user_id){
-        return new ResponseEntity(addressService.getUserAddresses(user_id), HttpStatus.OK);
+    public ResponseEntity<List<AddressDto>> getUserAddresses(@RequestParam("user_id") Long userId){
+        return new ResponseEntity<>(addressService.getUserAddresses(userId), HttpStatus.OK);
     }
 
     @GetMapping("branch")
-    public ResponseEntity<AddressDto> getBranchAddress(@RequestParam Long branch_id) {
-        return new ResponseEntity(addressService.getBranchAddress(branch_id), HttpStatus.OK);
+    public ResponseEntity<AddressDto> getBranchAddress(@RequestParam("branch_id") Long branchId) {
+        return new ResponseEntity<>(addressService.getBranchAddress(branchId), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<AddressDto> createAddress(@Valid @RequestBody AddressCreateRequest addressCreateRequest){
-        addressCreateRequest.setIsFirst(false);
-        return new ResponseEntity(addressService.createAddress(addressCreateRequest), HttpStatus.CREATED);
+        addressCreateRequest.setFirst(false);
+        return new ResponseEntity<>(addressService.createAddress(addressCreateRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity setActiveAddress(@PathVariable Long id){
+    public ResponseEntity<AddressDto> setActiveAddress(@PathVariable Long id){
         addressService.setActiveAddress(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

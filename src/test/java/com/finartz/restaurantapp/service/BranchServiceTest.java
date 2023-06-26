@@ -29,6 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,7 +68,7 @@ public class BranchServiceTest {
 
     @Test
     public void whenFetchByValidId_thenReturnBranch() {
-        BranchEntity branchEntity = BranchEntity.builder().id(1l).name(NAME_KB_UMRANIYE).build();
+        BranchEntity branchEntity = BranchEntity.builder().id(1L).name(NAME_KB_UMRANIYE).build();
         BranchDto branch = BranchDto.builder().id(1L).name(NAME_KB_UMRANIYE).build();
 
         Mockito.when(branchDtoConverter.convert(branchEntity)).thenReturn(branch);
@@ -87,23 +88,21 @@ public class BranchServiceTest {
     }
 
     @Test
-    public void whenFetchedByAddressEntity_CountyEntity_Id_thenReturnSomeBranches() {
-        BranchPageGetRequest branchPageGetRequest = BranchPageGetRequest.builder().pageNo(0).pageSize(1).sortBy("id").countyId(1l).build();
+    public void whenFetchedByAddressEntity_CountyEntityId_thenReturnSomeBranches() {
+        BranchPageGetRequest branchPageGetRequest = BranchPageGetRequest.builder().pageNo(0).pageSize(1).sortBy("id").countyId(1L).build();
         Pageable paging = PageRequest.of(0, 1, Sort.by("id"));
 
         BranchEntity branchEntity = BranchEntity.builder().build();
-        List<BranchEntity> branchEntities = Arrays.asList(branchEntity);
+        List<BranchEntity> branchEntities = Collections.singletonList(branchEntity);
 
         Page<BranchEntity> branchEntityPage = new PageImpl<>(branchEntities.subList(0, branchEntities.size()), paging, branchEntities.size());
 
         BranchDto branch = BranchDto.builder().build();
-        List<BranchDto> branches = Arrays.asList(branch);
+        List<BranchDto> branches = Collections.singletonList(branch);
 
-        PageDto<BranchDto> pageDto = new PageDto<>(branches, 1, 1);
-
-        Mockito.when(branchRepository.getBranchEntitiesByAddressEntity_CountyEntity_Id(1l, paging)).thenReturn(branchEntityPage);
+        Mockito.when(branchRepository.getBranchEntitiesByAddressEntityCountyEntityId(1L, paging)).thenReturn(branchEntityPage);
         Mockito.when(branchDtoConverter.convert(branchEntity)).thenReturn(branch);
-        Mockito.when(branchRepository.countBranchEntitiesByAddressEntity_CountyEntity_Id(anyLong())).thenReturn(branchEntities.size());
+        Mockito.when(branchRepository.countBranchEntitiesByAddressEntityCountyEntityId(anyLong())).thenReturn(branchEntities.size());
 
         PageDto<BranchDto> result = branchService.getBranches(branchPageGetRequest);
 
@@ -112,8 +111,8 @@ public class BranchServiceTest {
 
     @Test
     public void givenRestaurantIsApproved_whenAddBranch_thenReturnSavedBranch() {
-        UserEntity userEntity = UserEntity.builder().id(1l).build();
-        RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1l).userEntity(userEntity).build();
+        UserEntity userEntity = UserEntity.builder().id(1L).build();
+        RestaurantEntity restaurantEntity = RestaurantEntity.builder().id(1L).userEntity(userEntity).build();
         AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().build();
         AddressDto addressDto = AddressDto.builder().build();
         BranchEntity branchEntity = BranchEntity
@@ -134,15 +133,15 @@ public class BranchServiceTest {
                 .name(NAME_KB_UMRANIYE)
                 .build();
         MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder().branchId(branchEntity.getId()).build();
-        MenuDto menuDto = MenuDto.builder().branchId(branchEntity.getId()).id(1l).build();
+        MenuDto menuDto = MenuDto.builder().branchId(branchEntity.getId()).id(1L).build();
 
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
         Mockito.when(restaurantService.isRestaurantApproved(anyLong())).thenReturn(true);
         Mockito.when(branchCreateRequestToEntityConverter.convert(branchCreateRequest)).thenReturn(branchEntity);
         Mockito.when(branchDtoConverter.convert(branchEntity)).thenReturn(branch);
         Mockito.when(branchRepository.save(branchEntity)).thenReturn(branchEntity);
-        Mockito.when(restaurantService.isRestaurantApproved(1l)).thenReturn(true);
+        Mockito.when(restaurantService.isRestaurantApproved(1L)).thenReturn(true);
         Mockito.doReturn(addressDto).when(addressService).createAddress(addressCreateRequest);
         Mockito.when(menuService.createMenu(menuCreateRequest)).thenReturn(menuDto);
 
@@ -155,7 +154,7 @@ public class BranchServiceTest {
     public void givenRestaurantIsNotApproved_whenAddBranch_thenThrowInvalidStatusException(){
         BranchCreateRequest branchCreateRequest = BranchCreateRequest.builder().build();
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
         //Mockito.when(restaurantService.isRestaurantApproved(anyLong())).thenReturn(false);
 
         branchService.createBranch(branchCreateRequest);

@@ -21,12 +21,12 @@ public class CityController {
 
     @GetMapping("{id}")
     public ResponseEntity<CityDto> getCity(@PathVariable Long id){
-        return new ResponseEntity(cityService.getCity(id), HttpStatus.OK);
+        return new ResponseEntity<>(cityService.getCity(id), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<CityDto>> getCities(){
-        return new ResponseEntity(cityService.getCities(), HttpStatus.OK);
+        return new ResponseEntity<>(cityService.getCities(), HttpStatus.OK);
     }
 
 }

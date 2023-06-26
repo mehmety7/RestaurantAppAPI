@@ -20,21 +20,21 @@ public class CommentController {
 
     @GetMapping("{id}")
     public ResponseEntity<CommentDto> getComment(@PathVariable Long id){
-        return new ResponseEntity(commentService.getComment(id), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.getComment(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentCreateRequest commentCreateRequest){
-        return new ResponseEntity(commentService.createComment(commentCreateRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(commentService.createComment(commentCreateRequest), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<CommentDto> updateComment(@Valid @RequestBody CommentUpdateRequest commentUpdateRequest){
-        return new ResponseEntity(commentService.updateComment(commentUpdateRequest), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.updateComment(commentUpdateRequest), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteComment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

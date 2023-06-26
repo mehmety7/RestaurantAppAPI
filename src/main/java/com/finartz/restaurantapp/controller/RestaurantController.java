@@ -22,22 +22,22 @@ public class RestaurantController {
 
     @GetMapping("waiting")
     public ResponseEntity<List<RestaurantDto>> getRestaurants(@RequestParam(defaultValue = "WAITING") RestaurantStatus restaurantStatus){
-        return new ResponseEntity(restaurantService.getRestaurants(restaurantStatus), HttpStatus.OK);
+        return new ResponseEntity<>(restaurantService.getRestaurants(restaurantStatus), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<RestaurantDto> getRestaurant(@PathVariable Long id){
-        return new ResponseEntity(restaurantService.getRestaurant(id), HttpStatus.OK);
+        return new ResponseEntity<>(restaurantService.getRestaurant(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<RestaurantDto> createRestaurant(@Valid @RequestBody RestaurantCreateRequest restaurantCreateRequest){
-        return new ResponseEntity(restaurantService.createRestaurant(restaurantCreateRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(restaurantService.createRestaurant(restaurantCreateRequest), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<RestaurantDto> updateRestaurantStatus(@Valid @RequestBody RestaurantUpdateRequest restaurantUpdateRequest){
-        return new ResponseEntity(restaurantService.updateRestaurantStatus(restaurantUpdateRequest), HttpStatus.OK);
+        return new ResponseEntity<>(restaurantService.updateRestaurantStatus(restaurantUpdateRequest), HttpStatus.OK);
     }
 
 }

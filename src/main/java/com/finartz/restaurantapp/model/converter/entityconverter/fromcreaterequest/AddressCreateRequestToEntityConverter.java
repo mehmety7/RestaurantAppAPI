@@ -49,7 +49,7 @@ public class AddressCreateRequestToEntityConverter implements GenericConverter<A
             addressEntity.setBranchEntity(branchEntity);
         } else if(Objects.isNull(addressCreateRequest.getUserId())
                 && Objects.isNull(addressCreateRequest.getBranchId())
-                && addressCreateRequest.getIsFirst()){
+                && addressCreateRequest.isFirst()){
             addressEntity.setUserEntity(null);
             addressEntity.setBranchEntity(null);
         } else {

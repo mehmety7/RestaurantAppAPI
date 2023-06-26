@@ -32,7 +32,8 @@ public class AddressCreateRequest {
 
     private Long branchId;
 
-    private Boolean isFirst = true;
+    @Builder.Default
+    private boolean isFirst = true;
 
 }
 

@@ -18,10 +18,10 @@ public class MenuRepositoryTest {
     private MenuRepository menuRepository;
 
     @Test
-    public void whenGetMenuEntityByBranchEntity_Id_thenReturnMenuEntity(){
-        MenuEntity menuEntity = menuRepository.getMenuEntityByBranchEntity_Id(1l);
+    public void whenGetMenuEntityByBranchEntityId_thenReturnMenuEntity(){
+        MenuEntity menuEntity = menuRepository.getMenuEntityByBranchEntityId(1L);
 
-        Assertions.assertEquals(menuEntity.getBranchEntity().getId(), 1l);
+        Assertions.assertEquals(1L, menuEntity.getBranchEntity().getId());
     }
 
 }

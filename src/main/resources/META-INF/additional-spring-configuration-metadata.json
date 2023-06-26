@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "token.login-url",
+      "type": "java.lang.String",
+      "description": "Description for token.login-url."
+    },
+    {
+      "name": "token.refresh-url",
+      "type": "java.lang.String",
+      "description": "Description for token.refresh-url."
+    }
+  ]
+}

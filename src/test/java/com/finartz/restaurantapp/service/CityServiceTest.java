@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,10 +38,10 @@ public class CityServiceTest {
 
     @Test
     public void whenFetchAll_thenReturnAllCity() {
-        CityEntity cityEntity = CityEntity.builder().id(1l).name(CITY_ISTANBUL).build();
-        CityDto city = CityDto.builder().id(1l).name(CITY_ISTANBUL).build();
-        List<CityEntity> cityEntities = Arrays.asList(cityEntity);
-        List<CityDto> cities = Arrays.asList(city);
+        CityEntity cityEntity = CityEntity.builder().id(1L).name(CITY_ISTANBUL).build();
+        CityDto city = CityDto.builder().id(1L).name(CITY_ISTANBUL).build();
+        List<CityEntity> cityEntities = Collections.singletonList(cityEntity);
+        List<CityDto> cities = Collections.singletonList(city);
 
 
         Mockito.when(cityDtoConverter.convert(cityEntity)).thenReturn(city);

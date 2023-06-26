@@ -3,15 +3,17 @@ package com.finartz.restaurantapp.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.finartz.restaurantapp.model.enumerated.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -37,19 +39,29 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "userEntity")
     @JsonIgnore
+    @ToString.Exclude
     private List<AddressEntity> addressEntities;
 
     @OneToMany(mappedBy = "userEntity")
     @JsonIgnore
+    @ToString.Exclude
     private List<RestaurantEntity> restaurantEntities;
 
     @OneToMany(mappedBy = "userEntity")
     @JsonIgnore
+    @ToString.Exclude
     private List<CommentEntity> commentEntities;
 
-//  EnumType.ORDINAL --> STRING saves as a VARCHAR, HOWEVER ORDINAL saves as a INT with INDEX of role string.
-//  In ORDINAL type has a mapping issue when add a new role in the middle or rearrange the enum's order.
-//  @Enumerated(EnumType.STRING)
-//  private Role role;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        UserEntity that = (UserEntity) o;
+        return id != null && Objects.equals(id, that.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

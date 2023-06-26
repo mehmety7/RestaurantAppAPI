@@ -34,14 +34,12 @@ public class ItemServiceImpl implements ItemService {
         Pageable paging = PageRequest.of(itemPageGetRequest.getPageNo(), itemPageGetRequest.getPageSize(), Sort.by(itemPageGetRequest.getSortBy()));
         Page<ItemEntity> itemEntityPage = itemRepository.findAll(paging);
         List<ItemDto> itemPage = new ArrayList<>();
-        itemEntityPage.forEach(itemEntity -> {
-            itemPage.add(itemDtoConverter.convert(itemEntity));
-        });
+        itemEntityPage.forEach(itemEntity -> itemPage.add(itemDtoConverter.convert(itemEntity)));
 
         Integer totalCount = itemRepository.countItemEntitiesBy();
         Integer pageCount = (totalCount / itemPageGetRequest.getPageSize()) + 1;
 
-        return new PageDto<ItemDto>(itemPage, totalCount, pageCount);
+        return new PageDto<>(itemPage, totalCount, pageCount);
     }
 
     @Override

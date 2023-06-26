@@ -1,6 +1,7 @@
 package com.finartz.restaurantapp.service.impl;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
+import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.exception.MissingArgumentsException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.AddressDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.AddressCreateRequestToEntityConverter;
@@ -39,24 +40,25 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDto> getUserAddresses(Long user_id) {
-        List<AddressEntity> addressEntities = addressRepository.getAddressEntitiesByUserEntity_Id(user_id);
+    public List<AddressDto> getUserAddresses(Long userId) {
+        List<AddressEntity> addressEntities = addressRepository.getAddressEntitiesByUserEntityId(userId);
         List<AddressDto> addresses = new ArrayList<>();
-        addressEntities.forEach(addressEntity -> {
-            addresses.add(addressDtoConverter.convert(addressEntity));
-        });
+        addressEntities.forEach(addressEntity -> addresses.add(addressDtoConverter.convert(addressEntity)));
         return addresses;
     }
 
     @Override
-    public AddressDto getBranchAddress(Long branch_id) {
-        return addressDtoConverter.convert(addressRepository.getAddressEntityByBranchEntity_Id(branch_id));
+    public AddressDto getBranchAddress(Long branchId) {
+        return addressDtoConverter.convert(addressRepository.getAddressEntityByBranchEntityId(branchId));
     }
 
     @Override
     @Transactional
     public AddressDto createAddress(AddressCreateRequest addressCreateRequest) {
-        if (!addressCreateRequest.getIsFirst() && tokenService.isRequestOwnerAuthoritative(addressCreateRequest.getUserId())){}
+        if (addressCreateRequest.isFirst()) {
+            throw new InvalidStatusException("Attempted to invalid creating address operation!");
+        }
+        tokenService.checkRequestOwnerAuthoritative(addressCreateRequest.getUserId());
         if(Objects.nonNull(addressCreateRequest.getUserId())){
             AddressEntity existingActiveAddress = addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId());
             if(Objects.nonNull(existingActiveAddress)){

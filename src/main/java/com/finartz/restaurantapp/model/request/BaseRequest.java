@@ -4,6 +4,6 @@ import java.io.Serializable;
 
 public class BaseRequest implements Serializable {
 
-    private final static long serialVersionUID = 64987687L;
+    private static final long serialVersionUID = 64987687L;
 
 }

@@ -71,12 +71,12 @@ public class CommentServiceTest {
 
     @Test
     public void whenAddComment_thenReturnSavedComment() {
-        UserEntity userEntity = UserEntity.builder().id(1l).build();
+        UserEntity userEntity = UserEntity.builder().id(1L).build();
         CommentEntity commentEntity = CommentEntity.builder().userEntity(userEntity).comment(COMMENT_HARIKA).build();
-        CommentDto comment = CommentDto.builder().userId(1l).comment(COMMENT_HARIKA).build();
-        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder().userId(1l).build();
+        CommentDto comment = CommentDto.builder().userId(1L).comment(COMMENT_HARIKA).build();
+        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder().userId(1L).build();
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(commentCreateRequest.getUserId())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
         Mockito.when(commentDtoConverter.convert(commentEntity)).thenReturn(comment);
         Mockito.when(commentCreateRequestToEntityConverter.convert(commentCreateRequest)).thenReturn(commentEntity);
         Mockito.when(commentRepository.save(commentEntity)).thenReturn(commentEntity);
@@ -88,23 +88,23 @@ public class CommentServiceTest {
 
     @Test
     public void whenUpdateComment_thenReturnUpdatedComment(){
-        UserEntity userEntity = UserEntity.builder().id(1l).build();
-        CommentEntity commentEntity = CommentEntity.builder().id(1l).userEntity(userEntity).comment(COMMENT_HARIKA).build();
-        CommentEntity commentEntityUpdated = CommentEntity.builder().id(1l).userEntity(userEntity).comment(COMMENT_ORTALAMA).build();
-        CommentDto comment = CommentDto.builder().id(1l).comment(COMMENT_HARIKA).build();
-        CommentDto commentUpdated = CommentDto.builder().id(1l).comment(COMMENT_ORTALAMA).build();
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder().id(1l).build();
+        UserEntity userEntity = UserEntity.builder().id(1L).build();
+        CommentEntity commentEntity = CommentEntity.builder().id(1L).userEntity(userEntity).comment(COMMENT_HARIKA).build();
+        CommentEntity commentEntityUpdated = CommentEntity.builder().id(1L).userEntity(userEntity).comment(COMMENT_ORTALAMA).build();
+        CommentDto comment = CommentDto.builder().id(1L).comment(COMMENT_HARIKA).build();
+        CommentDto commentUpdated = CommentDto.builder().id(1L).comment(COMMENT_ORTALAMA).build();
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder().id(1L).build();
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(commentEntity.getUserEntity().getId())).thenReturn(true);
-        Mockito.when(commentRepository.findById(1l)).thenReturn(Optional.of(commentEntity));
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
+        Mockito.when(commentRepository.findById(1L)).thenReturn(Optional.of(commentEntity));
         Mockito.when(commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentEntity)).thenReturn(commentEntityUpdated);
         Mockito.when(commentRepository.save(commentEntityUpdated)).thenReturn(commentEntityUpdated);
         Mockito.when(commentDtoConverter.convert(commentEntityUpdated)).thenReturn(commentUpdated);
 
         CommentDto resultComment = commentService.updateComment(commentUpdateRequest);
 
-        Assertions.assertNotEquals(comment.getComment(), COMMENT_ORTALAMA);
-        Assertions.assertEquals(resultComment.getComment(), COMMENT_ORTALAMA);
+        Assertions.assertNotEquals(COMMENT_ORTALAMA, comment.getComment());
+        Assertions.assertEquals(COMMENT_ORTALAMA, resultComment.getComment());
 
     }
 

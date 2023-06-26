@@ -51,8 +51,7 @@ public class MealServiceImpl implements MealService {
         }
 
         Long entityOwnerId = mealRepository.getEntityOwnerUserIdByMenuId(mealCreateRequest.getMenuId());
-        if(Objects.nonNull(entityOwnerId) && tokenService.isRequestOwnerAuthoritative(entityOwnerId)){}
-
+        tokenService.checkRequestOwnerAuthoritative(entityOwnerId);
         MealEntity mealEntity = mealCreateRequestToEntityConverter.convert(mealCreateRequest);
         return mealDtoConverter.convert(mealRepository.save(mealEntity));
     }

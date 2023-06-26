@@ -19,9 +19,9 @@ public class RestaurantDtoConverterTest {
     @Test
     public void whenPassValidRestaurantEntity_thenReturnRestaurantDto(){
         RestaurantEntity restaurantEntity = RestaurantEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("Restaurant")
-                .userEntity(UserEntity.builder().id(1l).build())
+                .userEntity(UserEntity.builder().id(1L).build())
                 .build();
 
         RestaurantDto restaurantDto = restaurantDtoConverter.convert(restaurantEntity);

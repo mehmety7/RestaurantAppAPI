@@ -35,8 +35,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto createComment(CommentCreateRequest commentCreateRequest){
-        if (tokenService.isRequestOwnerAuthoritative(commentCreateRequest.getUserId())){}
-
+        tokenService.checkRequestOwnerAuthoritative(commentCreateRequest.getUserId());
         CommentEntity commentEntity = commentCreateRequestToEntityConverter.convert(commentCreateRequest);
         return commentDtoConverter.convert(commentRepository.save(commentEntity));
     }
@@ -47,9 +46,7 @@ public class CommentServiceImpl implements CommentService {
         CommentEntity commentExisted = commentRepository.findById(commentUpdateRequest.getId()).orElseThrow(
                 () -> new EntityNotFoundException("Not found comment entity with id: " + commentUpdateRequest.getId())
         );
-
-        if (tokenService.isRequestOwnerAuthoritative(commentExisted.getUserEntity().getId())){}
-
+        tokenService.checkRequestOwnerAuthoritative(commentExisted.getUserEntity().getId());
         CommentEntity commentUpdated = commentUpdateRequestToEntityConverter.convert(commentUpdateRequest, commentExisted);
         return commentDtoConverter.convert(commentRepository.save(commentUpdated));
     }

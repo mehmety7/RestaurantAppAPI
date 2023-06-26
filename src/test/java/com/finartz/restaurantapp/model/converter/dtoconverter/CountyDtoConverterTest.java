@@ -19,9 +19,9 @@ public class CountyDtoConverterTest {
     @Test
     public void whenPassValidCountyEntity_thenReturnCountyDto(){
         CountyEntity countyEntity = CountyEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("County")
-                .cityEntity(CityEntity.builder().id(1l).build())
+                .cityEntity(CityEntity.builder().id(1L).build())
                 .build();
 
         CountyDto countyDto = countyDtoConverter.convert(countyEntity);

@@ -20,10 +20,10 @@ public class CountyRepositoryTest {
     private CountyRepository countyRepository;
 
     @Test
-    public void whenGetCountyEntitiesByCityEntity_Id_thenReturnCountyEntities(){
-        List<CountyEntity> countyEntities = countyRepository.getCountyEntitiesByCityEntity_Id(34l);
+    public void whenGetCountyEntitiesByCityEntityId_thenReturnCountyEntities(){
+        List<CountyEntity> countyEntities = countyRepository.getCountyEntitiesByCityEntityId(34L);
 
-        Assertions.assertEquals(countyEntities.get(0).getCityEntity().getId(), 34l);
+        Assertions.assertEquals(34L, countyEntities.get(0).getCityEntity().getId());
     }
 
 }

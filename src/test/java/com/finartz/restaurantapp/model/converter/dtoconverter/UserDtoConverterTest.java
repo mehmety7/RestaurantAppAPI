@@ -11,6 +11,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserDtoConverterTest {
@@ -21,9 +22,9 @@ public class UserDtoConverterTest {
     @Test
     public void whenPassValidUserEntity_thenReturnUserDto(){
         UserEntity userEntity = UserEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("User")
-                .roles(Arrays.asList(Role.USER))
+                .roles(Collections.singletonList(Role.USER))
                 .build();
 
         UserDto userDto = userDtoConverter.convert(userEntity);

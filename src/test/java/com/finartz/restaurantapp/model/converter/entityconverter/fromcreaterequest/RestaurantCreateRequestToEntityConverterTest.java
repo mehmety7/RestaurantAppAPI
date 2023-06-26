@@ -19,7 +19,7 @@ public class RestaurantCreateRequestToEntityConverterTest {
     public void whenPassValidRestaurantCreateRequest_thenReturnRestaurantEntity(){
         RestaurantCreateRequest restaurantCreateRequest = RestaurantCreateRequest.builder()
                 .name("Restaurant")
-                .userId(1l)
+                .userId(1L)
                 .build();
 
         RestaurantEntity restaurantEntity = restaurantCreateRequestToEntityConverter.convert(restaurantCreateRequest);

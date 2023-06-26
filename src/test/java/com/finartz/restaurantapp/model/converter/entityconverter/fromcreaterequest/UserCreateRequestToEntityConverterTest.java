@@ -27,7 +27,7 @@ public class UserCreateRequestToEntityConverterTest {
     @Test
     public void whenPassValidUserCreateRequestWithAddressCreateRequest_thenReturnUserEntity(){
 
-        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().isFirst(true).userId(1l).build();
+        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().isFirst(true).userId(1L).build();
         AddressEntity addressEntity = AddressEntity.builder().build();
 
         UserCreateRequest userCreateRequest = UserCreateRequest.builder()

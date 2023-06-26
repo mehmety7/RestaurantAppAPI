@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Objects;
+
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(SpringRunner.class)
@@ -35,15 +37,15 @@ public class CommentControllerIntegrationTest {
 
     @BeforeEach
     public void init(){
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
     }
 
     @Test
     public void whenGetCommentById_thenReturnComment() {
-        ResponseEntity<CommentDto> response = commentController.getComment(1l);
+        ResponseEntity<CommentDto> response = commentController.getComment(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getId(), 1l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(1L, Objects.requireNonNull(response.getBody()).getId());
     }
 
     @Test
@@ -51,32 +53,32 @@ public class CommentControllerIntegrationTest {
         CommentCreateRequest commentCreateRequest = CommentCreateRequest
                 .builder()
                 .comment("").tastePoint(8).speedPoint(9)
-                .userId(3l).branchId(1l)
+                .userId(3L).branchId(1L)
                 .build();
 
         ResponseEntity<CommentDto> response = commentController.createComment(commentCreateRequest);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
     public void whenUpdateComment_thenReturnComment() {
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest
                 .builder()
-                .id(1l)
+                .id(1L)
                 .speedPoint(5)
                 .build();
 
         ResponseEntity<CommentDto> response = commentController.updateComment(commentUpdateRequest);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     public void whenZDeleteComment_thenReturnComment(){
-        ResponseEntity response = commentController.deleteComment(1L);
+        ResponseEntity<Void> response = commentController.deleteComment(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
 

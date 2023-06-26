@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockFilterChain;
@@ -19,8 +20,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @RunWith(SpringRunner.class)
@@ -31,9 +34,9 @@ public class CustomAuthorizationTest {
 
     private CustomAuthorizationFilter customAuthorizationFilter;
 
-    private MockHttpServletRequest request = new MockHttpServletRequest("POST", "/login");
-    private MockHttpServletResponse response = new MockHttpServletResponse();
-    private MockFilterChain filterChain = new MockFilterChain();
+    private final MockHttpServletRequest request = new MockHttpServletRequest("POST", "/login");
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
+    private final MockFilterChain filterChain = Mockito.spy(new MockFilterChain());
     private String accessToken;
 
     @Before
@@ -46,7 +49,7 @@ public class CustomAuthorizationTest {
                 .withSubject("ali@gmail.com")
                 .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", Arrays.asList(Role.ADMIN.toString()))
+                .withClaim("roles", Collections.singletonList(Role.ADMIN.toString()))
                 .sign(algorithm);
 
     }
@@ -56,7 +59,7 @@ public class CustomAuthorizationTest {
 
         request.setServletPath("/login");
         customAuthorizationFilter.doFilterInternal(request, response, filterChain);
-
+        Mockito.verify(filterChain, Mockito.atLeastOnce()).doFilter(any(), any());
     }
 
     @Test
@@ -64,6 +67,7 @@ public class CustomAuthorizationTest {
 
         request.addHeader(HttpHeaders.AUTHORIZATION, "");
         customAuthorizationFilter.doFilterInternal(request, response, filterChain);
+        Mockito.verify(filterChain, Mockito.atLeastOnce()).doFilter(any(), any());
 
     }
 
@@ -73,6 +77,7 @@ public class CustomAuthorizationTest {
         accessToken = "Bearer " + accessToken;
         request.addHeader(HttpHeaders.AUTHORIZATION, accessToken);
         customAuthorizationFilter.doFilterInternal(request, response, filterChain);
+        Mockito.verify(filterChain, Mockito.atLeastOnce()).doFilter(any(), any());
 
     }
 

@@ -7,6 +7,8 @@ import com.finartz.restaurantapp.model.entity.CountyEntity;
 import com.finartz.restaurantapp.repository.CountyRepository;
 import com.finartz.restaurantapp.service.CountyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,11 +16,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = {"counties"})
 public class CountyServiceImpl implements CountyService {
 
     private final CountyRepository countyRepository;
     private final CountyDtoConverter countyDtoConverter;
 
+    @Cacheable
     @Override
     public CountyDto getCounty(Long id){
         return countyDtoConverter.convert(countyRepository.findById(id).orElseThrow(
@@ -26,13 +30,12 @@ public class CountyServiceImpl implements CountyService {
         ));
     }
 
+    @Cacheable
     @Override
-    public List<CountyDto> getCounties(Long city_id) {
-        List<CountyEntity> countyEntities = countyRepository.getCountyEntitiesByCityEntity_Id(city_id);
+    public List<CountyDto> getCounties(Long cityId) {
+        List<CountyEntity> countyEntities = countyRepository.getCountyEntitiesByCityEntityId(cityId);
         List<CountyDto> counties = new ArrayList<>();
-        countyEntities.forEach(countyEntity -> {
-            counties.add(countyDtoConverter.convert(countyEntity));
-        });
+        countyEntities.forEach(countyEntity -> counties.add(countyDtoConverter.convert(countyEntity)));
         return counties;
     }
 

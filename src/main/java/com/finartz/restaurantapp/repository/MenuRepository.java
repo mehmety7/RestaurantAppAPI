@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MenuRepository extends BaseRepository<MenuEntity>{
 
-    MenuEntity getMenuEntityByBranchEntity_Id(Long branch_id);
+    MenuEntity getMenuEntityByBranchEntityId(Long branchId);
 
 }

@@ -14,6 +14,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.main.banner-mode=off")
@@ -25,23 +27,23 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void whenGetUserById_thenReturnUser() {
-        ResponseEntity<UserDto> response = userController.getUser(1l);
+        ResponseEntity<UserDto> response = userController.getUser(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getId(), 1l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(1L, Objects.requireNonNull(response.getBody()).getId());
     }
 
     @Test
     public void whenCreateNewUser_thenReturnUser() {
         UserCreateRequest userCreateRequest = UserCreateRequest
                 .builder()
-                .name("name").email("email").password("pass").roles(Arrays.asList(Role.USER)).addressCreateRequest(null)
+                .name("name").email("email").password("pass").roles(Collections.singletonList(Role.USER)).addressCreateRequest(null)
                 .build();
 
         ResponseEntity<UserDto> response = userController.createUser(userCreateRequest);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
-        Assertions.assertEquals(response.getBody().getName(), "name");
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertEquals("name", Objects.requireNonNull(response.getBody()).getName());
     }
 
 

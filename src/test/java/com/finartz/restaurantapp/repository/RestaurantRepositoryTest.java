@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Objects;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -24,7 +25,7 @@ public class RestaurantRepositoryTest {
     public void whenFindByStatus_thenReturnRestaurantEntities(){
         List<RestaurantEntity> restaurantEntities = restaurantRepository.findByRestaurantStatus(RestaurantStatus.WAITING);
 
-        Assertions.assertEquals(restaurantEntities.get(0).getRestaurantStatus(), RestaurantStatus.WAITING);
+        Assertions.assertEquals(RestaurantStatus.WAITING, Objects.requireNonNull(restaurantEntities.get(0)).getRestaurantStatus());
     }
 
 }

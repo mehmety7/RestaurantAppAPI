@@ -5,13 +5,11 @@ import java.util.Objects;
 
 public class InvalidOwnerException extends RuntimeException{
 
-    private String requestOwnerEmail;
+    private final String requestOwnerEmail;
 
     public InvalidOwnerException(String requestOwnerEmail){
         this.requestOwnerEmail = requestOwnerEmail;
     }
-
-    public InvalidOwnerException() {}
 
     @Override
     public String getMessage(){

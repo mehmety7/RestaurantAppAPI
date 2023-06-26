@@ -18,7 +18,7 @@ public class ItemDtoConverterTest {
     @Test
     public void whenPassValidItemEntity_thenReturnItemDto(){
         ItemEntity itemEntity = ItemEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("Item")
                 .build();
 

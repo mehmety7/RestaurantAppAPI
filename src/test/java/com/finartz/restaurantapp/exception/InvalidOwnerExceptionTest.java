@@ -14,11 +14,7 @@ public class InvalidOwnerExceptionTest {
 
     @Test
     public void givenInvalidOwnerWithEmail_whenDoSomething_thenThrowInvalidOwnerExceptionWithEmail(){
-
-        InvalidOwnerException exception = new InvalidOwnerException(USERNAME);
-
-        Assertions.assertEquals(exception.getMessage(), MESSAGE);
-
+        Assertions.assertEquals(MESSAGE, new InvalidOwnerException(USERNAME).getMessage());
     }
 
 

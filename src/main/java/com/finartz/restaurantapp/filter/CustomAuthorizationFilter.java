@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finartz.restaurantapp.model.constant.ConfigConstant;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,40 +29,40 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
-    private final String CUSTOM_LOGIN_PATH = "/login";
-    private final String CUSTOM_REFRESH_TOKEN_PATH = "/user/refresh-token";
+    @Value("token.login-url")
+    private String customLoginPath;
+
+    @Value("token.refresh-url")
+    private String customRefreshTokenPath;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals(CUSTOM_LOGIN_PATH) || request.getServletPath().equals(CUSTOM_REFRESH_TOKEN_PATH)) {
+        if(request.getServletPath().equals(customLoginPath) || request.getServletPath().equals(customRefreshTokenPath)) {
             filterChain.doFilter(request, response);
-        }else{
+        } else {
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            if(authorizationHeader != null && authorizationHeader.startsWith(ConfigConstant.BEARER)){
                 try {
-                    String token = authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                    String token = authorizationHeader.substring(ConfigConstant.BEARER.length());
+                    Algorithm algorithm = Algorithm.HMAC256(ConfigConstant.SECRET.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String email = decodedJWT.getSubject();
-                    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+                    String[] roles = decodedJWT.getClaim(ConfigConstant.ROLES).asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    stream(roles).forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(email, null, authorities);
+                    stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
-                }catch(Exception exception){
-                    response.setHeader("error", exception.getMessage());
+                } catch (Exception exception){
+                    response.setHeader(ConfigConstant.ERROR, exception.getMessage());
                     response.setStatus(FORBIDDEN.value());
                     Map<String,String> error = new HashMap<>();
-                    error.put("error_msg", exception.getMessage());
+                    error.put(ConfigConstant.ERROR_MSG, exception.getMessage());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
                 }
-            }else {
+            } else {
                 filterChain.doFilter(request,response);
             }
         }

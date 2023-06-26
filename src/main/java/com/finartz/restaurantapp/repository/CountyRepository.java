@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface CountyRepository extends BaseRepository<CountyEntity> {
 
-    List<CountyEntity> getCountyEntitiesByCityEntity_Id(Long city_id);
+    List<CountyEntity> getCountyEntitiesByCityEntityId(Long cityId);
 
 }

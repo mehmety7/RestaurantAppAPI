@@ -24,12 +24,12 @@ public class UserController {
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id){
-        return new ResponseEntity(userService.getUser(id), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest){
-        return new ResponseEntity(userService.createUser(userCreateRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.createUser(userCreateRequest), HttpStatus.CREATED);
     }
 
     @GetMapping("refresh-token")

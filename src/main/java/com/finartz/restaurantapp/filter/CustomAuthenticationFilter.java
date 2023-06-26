@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.finartz.restaurantapp.model.constant.ConfigConstant;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,17 +12,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final Integer ACCESS_TOKEN_MINUTE = 60; // an hour
-    private final Integer REFRESH_TOKEN_MINUTE = 60 * 24 * 15; // half-month
+    private static final Integer ACCESS_TOKEN_MINUTE = 60; // an hour
+    private static final Integer REFRESH_TOKEN_MINUTE = 60 * 24 * 15; // half-month
 
     private final AuthenticationManager authenticationManager;
 
@@ -38,15 +37,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
         User user = (User)authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        Algorithm algorithm = Algorithm.HMAC256(ConfigConstant.SECRET.getBytes());
 
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_MINUTE * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim(ConfigConstant.ROLES, user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
         String refreshToken = JWT.create()
@@ -56,16 +55,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .sign(algorithm);
 
         // Tokens in headers
-        response.setHeader("access-token", accessToken);
-        response.setHeader("refresh-token", refreshToken);
-
-        // Tokens in body
-//        Map<String,String> tokens = new HashMap<>();
-//        tokens.put("access-token", accessToken);
-//        tokens.put("refresh-token", refreshToken);
-//
-//        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-
+        response.setHeader(ConfigConstant.ACCESS_TOKEN, accessToken);
+        response.setHeader(ConfigConstant.REFRESH_TOKEN, refreshToken);
     }
 }

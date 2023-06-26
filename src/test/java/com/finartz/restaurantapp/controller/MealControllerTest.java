@@ -56,7 +56,7 @@ public class MealControllerTest {
 
     @BeforeEach
     public void init(){
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
     }
 
     @Test

@@ -18,11 +18,11 @@ public class AddressDtoConverterTest {
     @Test
     public void whenPassValidUserAddressEntity_thenReturnAddressDto(){
         AddressEntity addressEntity = AddressEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("Address")
-                .cityEntity(CityEntity.builder().id(1l).name("city").build())
-                .countyEntity(CountyEntity.builder().id(1l).name("county").build())
-                .userEntity(UserEntity.builder().id(1l).build())
+                .cityEntity(CityEntity.builder().id(1L).name("city").build())
+                .countyEntity(CountyEntity.builder().id(1L).name("county").build())
+                .userEntity(UserEntity.builder().id(1L).build())
                 .branchEntity(null)
                 .build();
 
@@ -33,12 +33,12 @@ public class AddressDtoConverterTest {
     @Test
     public void whenPassValidBranchAddressEntity_thenReturnAddressDto(){
         AddressEntity addressEntity = AddressEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("Address")
-                .cityEntity(CityEntity.builder().id(1l).name("city").build())
-                .countyEntity(CountyEntity.builder().id(1l).name("county").build())
+                .cityEntity(CityEntity.builder().id(1L).name("city").build())
+                .countyEntity(CountyEntity.builder().id(1L).name("county").build())
                 .userEntity(null)
-                .branchEntity(BranchEntity.builder().id(1l).build())
+                .branchEntity(BranchEntity.builder().id(1L).build())
                 .build();
 
         AddressDto addressDto = addressDtoConverter.convert(addressEntity);

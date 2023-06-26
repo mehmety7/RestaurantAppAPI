@@ -1,7 +1,7 @@
 package com.finartz.restaurantapp.service;
 
 import com.finartz.restaurantapp.exception.EntityNotFoundException;
-import com.finartz.restaurantapp.exception.MissingArgumentsException;
+import com.finartz.restaurantapp.exception.InvalidStatusException;
 import com.finartz.restaurantapp.model.converter.dtoconverter.AddressDtoConverter;
 import com.finartz.restaurantapp.model.converter.entityconverter.fromcreaterequest.AddressCreateRequestToEntityConverter;
 import com.finartz.restaurantapp.model.dto.AddressDto;
@@ -22,6 +22,7 @@ import javax.validation.Validator;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -76,7 +77,7 @@ public class AddressServiceTest {
         AddressDto address = AddressDto.builder().name(NAME_EV).district(DISTRICT_MERKEZ).build();
 
         Mockito.when(addressDtoConverter.convert(addressEntity)).thenReturn(address);
-        Mockito.when(addressRepository.getAddressEntitiesByUserEntity_Id(1L)).thenReturn(Arrays.asList(addressEntity));
+        Mockito.when(addressRepository.getAddressEntitiesByUserEntityId(1L)).thenReturn(Collections.singletonList(addressEntity));
 
         List<AddressDto> result = addressService.getUserAddresses(1L);
 
@@ -89,7 +90,7 @@ public class AddressServiceTest {
         AddressDto address = AddressDto.builder().name(NAME_EV).district(DISTRICT_MERKEZ).build();
 
         Mockito.when(addressDtoConverter.convert(addressEntity)).thenReturn(address);
-        Mockito.when(addressRepository.getAddressEntityByBranchEntity_Id(1L)).thenReturn(addressEntity);
+        Mockito.when(addressRepository.getAddressEntityByBranchEntityId(1L)).thenReturn(addressEntity);
 
         AddressDto result = addressService.getBranchAddress(1L);
 
@@ -98,22 +99,22 @@ public class AddressServiceTest {
 
     @Test
     public void givenValidCreatingArguments_whenAddAddress_thenReturnSavedAddress() {
-        UserEntity userEntity = UserEntity.builder().id(1l).build();
+        UserEntity userEntity = UserEntity.builder().id(1L).build();
         AddressEntity addressEntity = AddressEntity.builder().name(NAME_EV).userEntity(userEntity).build();
-        AddressDto address = AddressDto.builder().name(NAME_EV).userId(1l).build();
+        AddressDto address = AddressDto.builder().name(NAME_EV).userId(1L).build();
         AddressCreateRequest addressCreateRequest = AddressCreateRequest
                 .builder()
                 .name(NAME_EV)
                 .district(DISTRICT_MERKEZ)
-                .cityId(1l)
-                .countyId(1l)
+                .cityId(1L)
+                .countyId(1L)
                 .branchId(null)
                 .otherContent(OTHER_CONTENT_SOKAK_NO)
-                .userId(1l)
+                .userId(1L)
                 .isFirst(false)
                 .build();
 
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
         Mockito.doReturn(addressEntity).when(addressRepository).save(addressEntity);
         Mockito.doReturn(addressEntity).when(addressCreateRequestToEntityConverter).convert(addressCreateRequest);
         Mockito.doReturn(address).when(addressDtoConverter).convert(addressEntity);
@@ -130,30 +131,25 @@ public class AddressServiceTest {
     }
 
     // to do - ask it how create constraint violation instance
-    @Test(expected = MissingArgumentsException.class)
+    @Test(expected = InvalidStatusException.class)
     public void givenMissingCreatingArguments_whenAddInitialAddress_thenThrowMissingArgumentsException() {
-        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().userId(1l).isFirst(true).build();
-
-        Mockito.when(addressRepository.getActiveAddressByUserId(addressCreateRequest.getUserId())).thenReturn(null);
-
-        Mockito.when(validator.validate(addressCreateRequest)).thenThrow(MissingArgumentsException.class); // hand-made throwing
-
+        AddressCreateRequest addressCreateRequest = AddressCreateRequest.builder().userId(1L).isFirst(true).build();
         addressService.createAddress(addressCreateRequest);
-
     }
 
     @Test
     public void givenValidId_whenSetActiveAddress_thenReturnNothing(){
-        UserEntity userEntity = UserEntity.builder().id(1l).build();
-        AddressEntity newActiveAddressEntity = AddressEntity.builder().id(1l).userEntity(userEntity).build();
-        AddressEntity existActiveAddressEntity = AddressEntity.builder().id(2l).userEntity(userEntity).build();
+        UserEntity userEntity = UserEntity.builder().id(1L).build();
+        AddressEntity newActiveAddressEntity = AddressEntity.builder().id(1L).userEntity(userEntity).build();
+        AddressEntity existActiveAddressEntity = AddressEntity.builder().id(2L).userEntity(userEntity).build();
 
-        Mockito.doReturn(Optional.ofNullable(newActiveAddressEntity)).when(addressRepository).findById(1l);
-        Mockito.doReturn(existActiveAddressEntity).when(addressRepository).getActiveAddressByUserId(1l);
-        Mockito.doReturn(newActiveAddressEntity).when(addressRepository).save(newActiveAddressEntity);
+        Mockito.doReturn(Optional.ofNullable(newActiveAddressEntity)).when(addressRepository).findById(1L);
+        Mockito.doReturn(existActiveAddressEntity).when(addressRepository).getActiveAddressByUserId(1L);
+        Mockito.doReturn(newActiveAddressEntity).when(addressRepository).save(Objects.requireNonNull(newActiveAddressEntity));
         Mockito.doReturn(existActiveAddressEntity).when(addressRepository).save(existActiveAddressEntity);
 
-        addressService.setActiveAddress(1l);
+        addressService.setActiveAddress(1L);
+        Mockito.verify(addressRepository, Mockito.atLeastOnce()).save(any());
     }
 
     @Test(expected = EntityNotFoundException.class)

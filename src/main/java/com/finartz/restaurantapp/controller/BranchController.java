@@ -21,17 +21,17 @@ public class BranchController {
 
     @GetMapping("{id}")
     public ResponseEntity<BranchDto> getBranch(@PathVariable Long id){
-        return new ResponseEntity(branchService.getBranch(id), HttpStatus.OK);
+        return new ResponseEntity<>(branchService.getBranch(id), HttpStatus.OK);
     }
 
     @GetMapping()
     public ResponseEntity<PageDto<BranchDto>> getBranches(@Valid @RequestBody BranchPageGetRequest branchPageGetRequest){
-        return new ResponseEntity(branchService.getBranches(branchPageGetRequest), HttpStatus.OK);
+        return new ResponseEntity<>(branchService.getBranches(branchPageGetRequest), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<BranchDto> createBranch(@Valid @RequestBody BranchCreateRequest branchCreateRequest){
-        return new ResponseEntity(branchService.createBranch(branchCreateRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(branchService.createBranch(branchCreateRequest), HttpStatus.CREATED);
     }
 
 }

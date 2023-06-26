@@ -14,10 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 
@@ -34,58 +34,58 @@ public class AddressControllerIntegrationTest {
 
     @BeforeEach
     public void init(){
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
     }
 
     @Test
     public void whenGetByValidAddressId_thenReturnAddress() {
-        ResponseEntity<AddressDto> response = addressController.getAddress(1l);
+        ResponseEntity<AddressDto> response = addressController.getAddress(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getId(), 1l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(1L, Objects.requireNonNull(response.getBody()).getId());
     }
 
     @Test
     public void whenGetByValidUserId_thenReturnUserAddresses() {
-        ResponseEntity<List<AddressDto>> response = addressController.getUserAddresses(3l);
+        ResponseEntity<List<AddressDto>> response = addressController.getUserAddresses(3L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().get(0).getUserId(), 3l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(3L, Objects.requireNonNull(response.getBody()).get(0).getUserId());
     }
 
     @Test
     public void whenGetByValidBranchId_thenReturnBranchAddress() {
-        ResponseEntity<AddressDto> response = addressController.getBranchAddress(1l);
+        ResponseEntity<AddressDto> response = addressController.getBranchAddress(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getBranchId(), 1l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(1L, Objects.requireNonNull(response.getBody()).getBranchId());
     }
 
     @Test
     public void givenValidAddressCreateRequest_whenCreateNewAddress_thenReturnCreated() {
         AddressCreateRequest addressCreateRequest = AddressCreateRequest
                 .builder()
-                .name("Address").cityId(34l).countyId(116l).district("District").otherContent("Other Info")
-                .userId(3l).branchId(null)
+                .name("Address").cityId(34L).countyId(116L).district("District").otherContent("Other Info")
+                .userId(3L).branchId(null)
                 .build();
 
         ResponseEntity<AddressDto> response = addressController.createAddress(addressCreateRequest);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
-        Assertions.assertEquals(response.getBody().getUserId(), 3l);
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertEquals(3L, Objects.requireNonNull(response.getBody()).getUserId());
     }
 
     @Test
     public void whenSetActiveAddress_thenReturnOk() {
-        // Change the active address from address id 5l to address id 2l for user who has user id 3
-        ResponseEntity<AddressDto> response = addressController.setActiveAddress(2l);
+        // Change the active address from address id 5l to address id 2L for user who has user id 3
+        ResponseEntity<AddressDto> response = addressController.setActiveAddress(2L);
 
-        ResponseEntity<AddressDto> addressId2 = addressController.getAddress(2l);
-        ResponseEntity<AddressDto> addressId5 = addressController.getAddress(5l);
+        ResponseEntity<AddressDto> addressId2 = addressController.getAddress(2L);
+        ResponseEntity<AddressDto> addressId5 = addressController.getAddress(5L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(addressId2.getBody().getEnable(), true);
-        Assertions.assertEquals(addressId5.getBody().getEnable(), false);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(true, Objects.requireNonNull(addressId2.getBody()).getEnable());
+        Assertions.assertEquals(false, Objects.requireNonNull(addressId5.getBody()).getEnable());
     }
 
 

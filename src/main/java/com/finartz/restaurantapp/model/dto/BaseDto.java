@@ -4,6 +4,6 @@ import java.io.Serializable;
 
 public class BaseDto implements Serializable {
 
-    private final static long serialVersionUID = 2316546546L;
+    private static final long serialVersionUID = 2316546546L;
 
 }

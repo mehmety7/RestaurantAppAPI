@@ -13,6 +13,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.main.banner-mode=off")
 @ActiveProfiles("test")
@@ -23,20 +25,20 @@ public class MenuControllerIntegrationTest {
 
     @Test
     public void whenGetMenuById_thenReturnMenu() {
-        ResponseEntity<MenuDto> response = menuController.getMenu(1l);
+        ResponseEntity<MenuDto> response = menuController.getMenu(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getId(), 1l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(1L, Objects.requireNonNull(response.getBody()).getId());
     }
 
     @Test
-    public void whenGetMenuByBranchId_thenReturnBrancheMenu() {
-        ResponseEntity<MenuDto> response = menuController.getBranchMenu(1l);
+    public void whenGetMenuByBranchId_thenReturnBranchMenu() {
+        ResponseEntity<MenuDto> response = menuController.getBranchMenu(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
 
 //      Reminder : INSERT INTO menus (id, branch_id) values (1, 1);
-        Assertions.assertEquals(response.getBody().getId(), 1l);
+        Assertions.assertEquals(1L, Objects.requireNonNull(response.getBody()).getId());
     }
 
     @Test
@@ -44,12 +46,12 @@ public class MenuControllerIntegrationTest {
     public void whenCreateNewMenu_thenReturnMenu() {
         MenuCreateRequest menuCreateRequest = MenuCreateRequest
                 .builder()
-                .branchId(2l)
+                .branchId(2L)
                 .build();
 
         ResponseEntity<MenuDto> response = menuController.createMenu(menuCreateRequest);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
 }

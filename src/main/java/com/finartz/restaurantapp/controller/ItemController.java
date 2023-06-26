@@ -21,17 +21,17 @@ public class ItemController {
 
     @GetMapping("{id}")
     public ResponseEntity<ItemDto> getItem(@PathVariable Long id){
-        return new ResponseEntity(itemService.getItem(id), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.getItem(id), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<PageDto<ItemDto>> getItems(@Valid @RequestBody ItemPageGetRequest itemPageGetRequest){
-        return new ResponseEntity(itemService.getItems(itemPageGetRequest), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.getItems(itemPageGetRequest), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@Valid @RequestBody ItemCreateRequest itemCreateRequest){
-        return new ResponseEntity(itemService.createItem(itemCreateRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(itemService.createItem(itemCreateRequest), HttpStatus.CREATED);
     }
 
 }

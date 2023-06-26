@@ -9,9 +9,9 @@ public interface AddressService {
 
     AddressDto getAddress(Long id);
 
-    List<AddressDto> getUserAddresses(Long user_id);
+    List<AddressDto> getUserAddresses(Long userId);
 
-    AddressDto getBranchAddress(Long branch_id);
+    AddressDto getBranchAddress(Long branchId);
 
     AddressDto createAddress(AddressCreateRequest addressCreateRequest);
 

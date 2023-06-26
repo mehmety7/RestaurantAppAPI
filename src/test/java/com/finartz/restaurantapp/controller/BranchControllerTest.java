@@ -26,6 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -86,7 +87,7 @@ public class BranchControllerTest {
                 .pageNo(0)
                 .pageSize(1)
                 .sortBy("id")
-                .countyId(1l)
+                .countyId(1L)
                 .build();
 
         BranchDto branch = BranchDto
@@ -97,7 +98,7 @@ public class BranchControllerTest {
                 .restaurantId(1L)
                 .build();
 
-        PageDto<BranchDto> pageDto = new PageDto(Arrays.asList(branch), 1, 1);
+        PageDto<BranchDto> pageDto = new PageDto<>(Collections.singletonList(branch), 1, 1);
 
         Mockito.when(branchService.getBranches(branchPageGetRequest)).thenReturn(pageDto);
 
@@ -116,17 +117,17 @@ public class BranchControllerTest {
 
         BranchDto branch = BranchDto
                 .builder()
-                .id(1l)
+                .id(1L)
                 .name(NAME_KRAL_SISLI)
-                .restaurantId(1l)
-                .menuId(1l)
+                .restaurantId(1L)
+                .menuId(1L)
                 .build();
 
         BranchCreateRequest branchCreateRequest = BranchCreateRequest
                 .builder()
                 .name(NAME_KRAL_SISLI)
                 .addressCreateRequest(AddressCreateRequest.builder().build())
-                .restaurantId(1l)
+                .restaurantId(1L)
                 .build();
 
         Mockito.when(branchService.createBranch(branchCreateRequest)).thenReturn(branch);

@@ -21,7 +21,7 @@ public class UserRepositoryTest {
     public void whenFindByEmail_thenReturnUserEntities(){
         UserEntity userEntity = userRepository.findByEmail("ali@gmail.com");
 
-        Assertions.assertEquals(userEntity.getEmail(), "ali@gmail.com");
+        Assertions.assertEquals("ali@gmail.com", userEntity.getEmail());
     }
 
 }

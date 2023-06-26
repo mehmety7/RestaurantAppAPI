@@ -20,10 +20,10 @@ public class BranchDtoConverterTest {
     @Test
     public void whenPassValidBranchEntity_thenReturnBranchDto(){
         BranchEntity branchEntity = BranchEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("Branch")
-                .restaurantEntity(RestaurantEntity.builder().id(1l).build())
-                .menuEntity(MenuEntity.builder().id(1l).build())
+                .restaurantEntity(RestaurantEntity.builder().id(1L).build())
+                .menuEntity(MenuEntity.builder().id(1L).build())
                 .build();
 
         BranchDto branchDto = branchDtoConverter.convert(branchEntity);
@@ -35,9 +35,9 @@ public class BranchDtoConverterTest {
     @Test
     public void whenPassValidBranchEntityWithoutMenuId_thenReturnBranchDto(){
         BranchEntity branchEntity = BranchEntity.builder()
-                .id(1l)
+                .id(1L)
                 .name("Branch")
-                .restaurantEntity(RestaurantEntity.builder().id(1l).build())
+                .restaurantEntity(RestaurantEntity.builder().id(1L).build())
                 .menuEntity(null)
                 .build();
 

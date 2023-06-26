@@ -18,7 +18,7 @@ public class MenuCreateRequestToEntityConverterTest {
     @Test
     public void whenPassValidMenuCreateRequest_thenReturnMenuEntity(){
         MenuCreateRequest menuCreateRequest = MenuCreateRequest.builder()
-                .branchId(1l)
+                .branchId(1L)
                 .build();
 
         MenuEntity menuEntity = menuCreateRequestToEntityConverter.convert(menuCreateRequest);

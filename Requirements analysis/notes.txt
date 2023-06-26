@@ -1,0 +1,18 @@
+        // Tokens in headers
+        response.setHeader("access-token", accessToken);
+        response.setHeader("refresh-token", refreshToken);
+
+        // Tokens in body
+        Map<String,String> tokens = new HashMap<>();
+        tokens.put("access-token", accessToken);
+        tokens.put("refresh-token", refreshToken);
+
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
+---------------------------------------------------------------------------------------------------------------------
+
+        EnumType.ORDINAL --> STRING saves as a VARCHAR, HOWEVER ORDINAL saves as a INT with INDEX of role string.
+        In ORDINAL type has a mapping issue when add a new role in the middle or rearrange the enum's order.
+        @Enumerated(EnumType.STRING)
+        private Role role;

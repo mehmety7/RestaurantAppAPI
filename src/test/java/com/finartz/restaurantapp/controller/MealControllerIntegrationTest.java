@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Objects;
+
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(SpringRunner.class)
@@ -31,15 +33,15 @@ public class MealControllerIntegrationTest {
 
     @BeforeEach
     public void init(){
-        Mockito.when(tokenService.isRequestOwnerAuthoritative(anyLong())).thenReturn(true);
+        Mockito.doNothing().when(tokenService).checkRequestOwnerAuthoritative(anyLong());
     }
 
     @Test
     public void whenGetMealById_thenReturnMeal(){
-        ResponseEntity<MealDto> response = mealController.getMeal(1l);
+        ResponseEntity<MealDto> response = mealController.getMeal(1L);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(response.getBody().getId(), 1l);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(1L, Objects.requireNonNull(response.getBody()).getId());
 
     }
 
@@ -50,12 +52,12 @@ public class MealControllerIntegrationTest {
                 .name("Meal")
                 .price(10.55)
                 .itemIds(null)
-                .menuId(1l)
+                .menuId(1L)
                 .build();
 
         ResponseEntity<MealDto> response = mealController.createMeal(mealCreateRequest);
 
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
 }
