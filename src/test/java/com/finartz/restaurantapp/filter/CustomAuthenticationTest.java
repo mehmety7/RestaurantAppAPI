@@ -2,6 +2,7 @@ package com.finartz.restaurantapp.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.finartz.restaurantapp.model.constant.ConfigConstant;
 import com.finartz.restaurantapp.model.enumerated.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,12 +40,9 @@ public class CustomAuthenticationTest {
     private AuthenticationManager authenticationManager;
 
     private Authentication authentication;
-    private MockHttpServletRequest request = new MockHttpServletRequest("POST", "/login");
-    private MockHttpServletResponse response = new MockHttpServletResponse();
+    private final MockHttpServletRequest request = new MockHttpServletRequest("GET", "/login");
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
     private MockFilterChain filterChain;
-
-    private final Integer ACCESS_TOKEN_MINUTE = 60; // an hour
-    private final Integer REFRESH_TOKEN_MINUTE = 60 * 24 * 15; // half-month
 
     @Before
     public void init(){
@@ -61,42 +60,36 @@ public class CustomAuthenticationTest {
     @Test
     public void whenPassValidRequest_thenReturnAuthentication(){
 
-        List<Role> roles = Arrays.asList(Role.ADMIN);
+        List<Role> roles = Collections.singletonList(Role.ADMIN);
         List<String> authorities = roles.stream().map(Role::name).collect(Collectors.toList());
-
         List<String> result = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-
         Assertions.assertEquals(result, authorities);
 
     }
 
     @Test
-    public void whenSuccessfulAuthentication_thenSetResponseWithNewToken() throws ServletException, IOException {
+    public void whenSuccessfulAuthentication_thenSetResponseWithNewToken() {
 
         customAuthenticationFilter.successfulAuthentication(request, response, filterChain, authentication);
 
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        Algorithm algorithm = Algorithm.HMAC256(ConfigConstant.SECRET.getBytes());
+        int ACCESS_TOKEN_MINUTE = 60;
         String accessToken = JWT.create()
                 .withSubject("ali@gmail.com")
                 .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_MINUTE * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim(ConfigConstant.ROLES, authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
+        int REFRESH_TOKEN_MINUTE = 60 * 24 * 15;
         String refreshToken = JWT.create()
                 .withSubject("ali@gmail.com")
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_MINUTE * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
 
-        Assertions.assertEquals(response.getHeader("refresh-token"), refreshToken);
-        Assertions.assertEquals(response.getHeader("access-token"), accessToken);
+        Assertions.assertEquals(response.getHeader(ConfigConstant.REFRESH_TOKEN), refreshToken);
+        Assertions.assertEquals(response.getHeader(ConfigConstant.ACCESS_TOKEN), accessToken);
 
     }
-
-    @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter(){
-        return new CustomAuthenticationFilter(authenticationManager);
-    }
-
 }

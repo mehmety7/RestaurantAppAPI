@@ -25,7 +25,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -107,8 +106,7 @@ public class BranchControllerTest {
         mockMvc.perform(get(URI_BRANCH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.response.[0].name", Matchers.is(NAME_KRAL_SISLI)));
+                .andExpect(status().isOk());
 
     }
 

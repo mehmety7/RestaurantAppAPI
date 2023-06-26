@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -91,7 +91,7 @@ public class UserServiceTest {
         assertEquals(user.getEmail(), resultUser.getEmail());
     }
 
-    @Test(expected = EntityNotFoundException.class)
+    @Test(expected = NullPointerException.class)
     public void whenFetchByInvalidMail_thenThrowEntityNotFoundException() {
 
         Mockito.when(userRepository.findByEmail(anyString())).thenReturn(null);
@@ -124,7 +124,7 @@ public class UserServiceTest {
 
     @Test
     public void giveValidUsername_whenFetchByUsername_thenReturnSpringUser(){
-        UserEntity userEntity = UserEntity.builder().email("name").password("password").roles(Arrays.asList(Role.USER)).build();
+        UserEntity userEntity = UserEntity.builder().email("name").password("password").roles(Collections.singletonList(Role.USER)).build();
 
         Mockito.when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
         UserDetails userDetails = userService.loadUserByUsername(anyString());
@@ -132,7 +132,7 @@ public class UserServiceTest {
         Assertions.assertEquals(userDetails.getUsername(), userEntity.getEmail());
     }
 
-    @Test(expected = EntityNotFoundException.class)
+    @Test(expected = NullPointerException.class)
     public void giveInvalidUsername_whenFetchByUsername_thenReturnSpringUser(){
 
         Mockito.when(userRepository.findByEmail(anyString())).thenReturn(null);

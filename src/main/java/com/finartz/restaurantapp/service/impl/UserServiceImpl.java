@@ -10,6 +10,7 @@ import com.finartz.restaurantapp.repository.UserRepository;
 import com.finartz.restaurantapp.service.AddressService;
 import com.finartz.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Qualifier("UserServiceImpl")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -40,16 +42,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(Long id){
-        return userDtoConverter.convert(userRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Not found User with id: " + id)
-        ));
+        return userDtoConverter.convert(userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found User with id: " + id)));
     }
 
     @Override
     public UserDto getUser(String email) {
-        UserEntity userEntity = userRepository.findByEmail(email);
-        if (Objects.isNull(userEntity))
-            throw new EntityNotFoundException("Not found User with email: " + email);
+        UserEntity userEntity = Objects.requireNonNull(userRepository.findByEmail(email));
         return userDtoConverter.convert(userEntity);
     }
 

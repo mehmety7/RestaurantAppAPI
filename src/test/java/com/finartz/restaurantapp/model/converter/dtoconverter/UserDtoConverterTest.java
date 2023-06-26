@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)

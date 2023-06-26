@@ -15,13 +15,11 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MenuDtoConverterTest {
 
-    @Spy
     @InjectMocks
     private MenuDtoConverter menuDtoConverter;
 
@@ -30,21 +28,15 @@ public class MenuDtoConverterTest {
 
     @Test
     public void whenPassValidMenuEntity_thenReturnMenuDto(){
-        MealEntity mealEntity = MealEntity.builder().build();
-        MealDto mealDto = MealDto.builder().build();
-
         MenuEntity menuEntity = MenuEntity.builder()
                 .id(1L)
                 .mealEntities(Collections.singletonList(MealEntity.builder().build()))
                 .branchEntity(BranchEntity.builder().id(1L).build())
                 .build();
 
-
-        Mockito.when(mealDtoConverter.convert(mealEntity)).thenReturn(mealDto);
         MenuDto menuDto = menuDtoConverter.convert(menuEntity);
 
         Assertions.assertEquals(menuDto.getId(), menuEntity.getId());
-
     }
 
     @Test(expected = EntityNotFoundException.class)

@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -95,7 +95,7 @@ public class UserControllerTest {
                 .name(NAME_ALI_AKAY)
                 .email(EMAIL_ALI)
                 .password(PASSWORD_ALI1212)
-                .roles(Arrays.asList(Role.USER))
+                .roles(Collections.singletonList(Role.USER))
                 .addressCreateRequest(AddressCreateRequest.builder().build())
                 .build();
 
