@@ -1,6 +1,6 @@
 # Restaurant APP API 
 
-Restaurant App API is Spring Boot application that focused on user operations and restaurant bussiness for online ordering in generally.<br/>
+Restaurant App API is Spring Boot application that focused on user operations and restaurant business of locations.<br/>
 
 ## Descriptions
 
