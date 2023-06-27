@@ -16,3 +16,16 @@
         In ORDINAL type has a mapping issue when add a new role in the middle or rearrange the enum's order.
         @Enumerated(EnumType.STRING)
         private Role role;
+
+        ---------------------------------------------------------------------------------------------------------------------
+
+
+        http.authorizeRequests().antMatchers().permitAll();
+        http.authorizeRequests().anyRequest().authenticated(); // Obligation of authentication of all endpoints
+        http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)); // 401 will throw for missing token
+        http.authorizeRequests().anyRequest().permitAll();   // It throws SpringSecurity out of picture.
+        http.addFilter(customAuthenticationFilter);
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable(); // cross-side request forgery
+        http.headers().frameOptions().sameOrigin(); // it solved to access denied issue on attempt to access h2 db
+        http.headers().frameOptions().disable(); // it also solved access issue to h2 but this is less securely than above

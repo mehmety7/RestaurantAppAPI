@@ -27,6 +27,19 @@ import static com.finartz.restaurantapp.model.constant.ConfigConstant.SLASH;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] AUTH_WHITE_LIST = {
+            "/v2/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html/**",
+            "/swagger-resources/**",
+            "/configuration/**",
+            "/login/**",
+            "/login",
+            "/user/refresh-token/**",
+            "/h2/**",
+            "/webjars/**"
+    };
+
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -41,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(SLASH + LOGIN_PATH, "**/refresh-token/**", "**/h2/**").permitAll()
+                .antMatchers(AUTH_WHITE_LIST).permitAll()
                 .antMatchers(HttpMethod.GET, "/restaurant/waiting/**").hasAnyAuthority(Role.ADMIN.toString())
                 .antMatchers(HttpMethod.PUT , "/restaurant/{id}").hasAnyAuthority(Role.ADMIN.toString())
                 .antMatchers(HttpMethod.POST , "/restaurant").hasAnyAuthority(Role.SELLER.toString())

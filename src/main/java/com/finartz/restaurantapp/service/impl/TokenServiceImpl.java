@@ -93,7 +93,7 @@ public class TokenServiceImpl implements TokenService {
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
         } else {
-            throw new EntityNotFoundException("Refresh token is missing");
+            throw new EntityNotFoundException("Access token is missing");
         }
     }
 
