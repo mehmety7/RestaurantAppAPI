@@ -15,7 +15,7 @@ For building and running the application: you need:
 - **JDK 1.8** 
 - **IDE** (IntelliJ Idea)
 - **[Get Docker](https://docs.docker.com/get-docker/)** *(optional)*
-- **Apache Maven 3.8.2** *(optional)*
+- **Apache Maven 3.8.2**
 
 ## Running the application locally
 
